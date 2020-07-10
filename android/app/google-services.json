@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "725237582945",
+    "firebase_url": "https://fito-report.firebaseio.com",
+    "project_id": "fito-report",
+    "storage_bucket": "fito-report.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725237582945:android:a5287396a4cc70c017ae20",
+        "android_client_info": {
+          "package_name": "com.example.LikeApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "725237582945-u5lraut5i78rrft8kugulvhkn9soi3b1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.LikeApp",
+            "certificate_hash": "22cffb37458e80f2121e43c507babccd934231f6"
+          }
+        },
+        {
+          "client_id": "725237582945-9sv3qph5e9p3lbcoa66aairs4l8on0fh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4g5g_pEjXx38lTuU05WkVB6Qv9xvPlG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "725237582945-9sv3qph5e9p3lbcoa66aairs4l8on0fh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
