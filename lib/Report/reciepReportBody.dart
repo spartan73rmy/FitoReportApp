@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ReciepReportBody extends StatefulWidget {
   final List<Product> allProducts;
 
-  ReciepReportBody(this.allProducts);
+  ReciepReportBody(this.allProducts, {Key key}) : super(key: key);
 
   @override
   _ReciepReportBodyState createState() => _ReciepReportBodyState();

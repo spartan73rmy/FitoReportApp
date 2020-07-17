@@ -15,6 +15,7 @@ List<GlobalKey<FormState>> formKeys = [
 ];
 
 class StepperBody extends StatefulWidget {
+  StepperBody({Key key}) : super(key: key);
   @override
   _StepperBodyState createState() => _StepperBodyState();
 }
@@ -416,6 +417,10 @@ class _StepperBodyState extends State<StepperBody> {
             style: TextStyle(color: Colors.black),
           ),
           onPressed: () {
+            // Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //   return ReciepReport(data);
+            // }));
+
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ReciepReport(data)),

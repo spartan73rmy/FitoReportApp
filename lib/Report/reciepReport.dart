@@ -5,17 +5,53 @@ import 'reciepReportBody.dart';
 
 class ReciepReport extends StatefulWidget {
   static ReportData data;
-  ReciepReport(ReportData data);
+  ReciepReport(ReportData data, {Key key}) : super(key: key);
 
   @override
   _ReciepReportState createState() => _ReciepReportState();
 }
 
 class _ReciepReportState extends State<ReciepReport> {
-  List<Product> products = new List();
+  List<Product> products = <Product>[
+    new Product(
+        name: "Cal",
+        cantity: 100,
+        iActive: "Calcio",
+        concentration: "50",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
+        cantity: 10,
+        iActive: "Calcio",
+        concentration: "10",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
+        cantity: 20,
+        iActive: "Calcio",
+        concentration: "80",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
+        cantity: 10000,
+        iActive: "Calcio",
+        concentration: "10",
+        securityInterval: "10"),
+  ];
+
+  TextEditingController _controller = TextEditingController();
+  String inputString = "";
+  addProduct(Product product) {
+    setState(() {
+      products.add(product);
+      print(product.name);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: UniqueKey(),
       appBar: AppBar(
         title: Text('Productos'),
       ),
@@ -24,10 +60,36 @@ class _ReciepReportState extends State<ReciepReport> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
         onPressed: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => {AddReport()}),
-          // );
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Agregar Productos"),
+                content: TextFormField(
+                  controller: _controller,
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Agregar"),
+                    onPressed: () {
+                      // Navigator.push(
+                      //     context, MaterialPageRoute(builder: (context) {}));
+                      // Navigator.pop(context, _controller.text);
+                    },
+                  )
+                ],
+              );
+            },
+          ).then((val) {
+            Product a = new Product(
+              name: val,
+              cantity: 3,
+              iActive: "Ingrediente activo",
+              securityInterval: "25 dias",
+            );
+            addProduct(a);
+            inputString = val;
+          });
         },
       ),
     );
