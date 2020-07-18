@@ -285,7 +285,7 @@ class _StepperBodyState extends State<StepperBody> {
                   }
                 },
                 maxLines: 1,
-                onSaved: (String value) {
+                onChanged: (String value) {
                   data.age = value;
                 },
                 decoration: InputDecoration(
@@ -298,12 +298,6 @@ class _StepperBodyState extends State<StepperBody> {
             ],
           ),
         )),
-    //  Step(
-    //     title: const Text('Fifth Step'),
-    //     subtitle: const Text('Subtitle'),
-    //     isActive: true,
-    //     state: StepState.complete,
-    //     content: const Text('Enjoy Step Fifth'))
   ];
 
   @override

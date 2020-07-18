@@ -39,15 +39,6 @@ class _ReciepReportState extends State<ReciepReport> {
         securityInterval: "10"),
   ];
 
-  TextEditingController _controller = TextEditingController();
-  String inputString = "";
-  addProduct(Product product) {
-    setState(() {
-      products.add(product);
-      print(product.name);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,38 +51,132 @@ class _ReciepReportState extends State<ReciepReport> {
         tooltip: 'Increment',
         child: Icon(Icons.add),
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Agregar Productos"),
-                content: TextFormField(
-                  controller: _controller,
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text("Agregar"),
-                    onPressed: () {
-                      // Navigator.push(
-                      //     context, MaterialPageRoute(builder: (context) {}));
-                      // Navigator.pop(context, _controller.text);
-                    },
-                  )
-                ],
-              );
-            },
-          ).then((val) {
-            Product a = new Product(
-              name: val,
-              cantity: 3,
-              iActive: "Ingrediente activo",
-              securityInterval: "25 dias",
-            );
-            addProduct(a);
-            inputString = val;
+          createDialog(context).then((value) {
+            addProduct(value);
           });
         },
       ),
+    );
+  }
+
+  addProduct(Product product) {
+    setState(() {
+      products.add(product);
+      print(product.cantity);
+    });
+  }
+
+  Future<Product> createDialog(BuildContext context) {
+    List<TextEditingController> _controller = [
+      new TextEditingController(),
+      new TextEditingController(),
+      new TextEditingController(),
+      new TextEditingController(),
+      new TextEditingController(),
+    ];
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.only(left: 25, right: 25),
+          title: Center(child: Text("Agregar Producto")),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: Container(
+            height: 200,
+            width: 300,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextField(
+                    controller: _controller[0],
+                    keyboardType: TextInputType.number,
+                    autocorrect: false,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                        labelText: 'Cantidad',
+                        hintText: 'Cantidad',
+                        icon: const Icon(Icons.ac_unit),
+                        labelStyle: TextStyle(
+                            decorationStyle: TextDecorationStyle.solid)),
+                  ),
+                  TextField(
+                    controller: _controller[1],
+                    keyboardType: TextInputType.text,
+                    autocorrect: false,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                        labelText: 'Producto',
+                        hintText: 'Producto',
+                        //filled: true,
+                        icon: const Icon(Icons.ac_unit),
+                        labelStyle: TextStyle(
+                            decorationStyle: TextDecorationStyle.solid)),
+                  ),
+                  TextField(
+                    controller: _controller[2],
+                    keyboardType: TextInputType.text,
+                    autocorrect: false,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                        labelText: 'Ingrediente Activo',
+                        hintText: 'Ingrediente Activo',
+                        //filled: true,
+                        icon: const Icon(Icons.ac_unit),
+                        labelStyle: TextStyle(
+                            decorationStyle: TextDecorationStyle.solid)),
+                  ),
+                  TextField(
+                    controller: _controller[3],
+                    keyboardType: TextInputType.number,
+                    autocorrect: false,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                        labelText: 'Concentracion (%)',
+                        hintText: 'Concentracion',
+                        //filled: true,
+                        icon: const Icon(Icons.ac_unit),
+                        labelStyle: TextStyle(
+                            decorationStyle: TextDecorationStyle.solid)),
+                  ),
+                  TextField(
+                    controller: _controller[4],
+                    keyboardType: TextInputType.number,
+                    autocorrect: false,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                        labelText: 'Intervalo (Dias)',
+                        hintText: 'Intervalo de seguridad',
+                        //filled: true,
+                        icon: const Icon(Icons.ac_unit),
+                        labelStyle: TextStyle(
+                            decorationStyle: TextDecorationStyle.solid)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Agregar"),
+              onPressed: () {
+                Product newProduct = new Product(
+                    cantity: int.parse(_controller[0].text.toString()),
+                    name: _controller[1].text.toString(),
+                    iActive: _controller[2].text.toString(),
+                    concentration: _controller[3].text.toString(),
+                    securityInterval: _controller[4].text.toString());
+                Navigator.pop(context, newProduct);
+              },
+            )
+          ],
+        );
+      },
     );
   }
 }
