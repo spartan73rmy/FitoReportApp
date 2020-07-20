@@ -6,8 +6,8 @@ class Product {
   String securityInterval = '';
 
   Product(
-      {String this.name,
-      int this.cantity,
+      {this.name,
+      this.cantity,
       this.iActive,
       this.concentration,
       this.securityInterval});
