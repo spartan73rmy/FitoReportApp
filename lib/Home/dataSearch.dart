@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class DataSearch extends SearchDelegate<String> {
-  final List<String> cities = ["Hola","SomeMore", "Periban", "Los reyes"];
+  final List<String> busqueda = ["Hola", "SomeMore", "Periban", "Los reyes"];
 
-  final List<String> recentCities = ["Hola", "Periban", "Los reyes"];
+  final List<String> recentBusqueda = ["Hola", "Periban", "Los reyes"];
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -29,18 +29,22 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Card(color:Colors.white,child:Center(child: Text("$query"),));
+    return Card(
+        color: Colors.white,
+        child: Center(
+          child: Text("$query"),
+        ));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     final suggetionsList = query.isEmpty
-        ? recentCities
-        : cities.where((p) => p.contains(query)).toList();
+        ? recentBusqueda
+        : busqueda.where((p) => p.contains(query)).toList();
 
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
-        onTap: (){
+        onTap: () {
           showResults(context);
         },
         leading: Icon(Icons.location_city),
@@ -58,6 +62,5 @@ class DataSearch extends SearchDelegate<String> {
       ),
       itemCount: suggetionsList.length,
     );
-
   }
 }

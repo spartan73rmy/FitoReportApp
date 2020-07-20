@@ -10,9 +10,9 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: new Drawer(
-        child: drawerContent(context),
-      ),
+      // drawer: new Drawer(
+      //   child: drawerContent(context),
+      // ),
       appBar: AppBar(
         title: Text(this.title),
         actions: <Widget>[

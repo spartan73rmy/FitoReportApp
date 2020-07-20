@@ -1,6 +1,7 @@
 // Add a ListView to the drawer. This ensures the user can scroll
 // through the options in the drawer if there isn't enough vertical
 // space to fit everything.
+import 'package:LikeApp/CommonWidgets/progressBar.dart';
 import 'package:flutter/material.dart';
 
 ListView drawerContent(BuildContext context) {
@@ -9,26 +10,26 @@ ListView drawerContent(BuildContext context) {
     padding: EdgeInsets.zero,
     children: <Widget>[
       DrawerHeader(
-        child: Text('Drawer Header'),
+        child: Icon(Icons.apps),
         decoration: BoxDecoration(
+          shape: BoxShape.circle,
           color: Colors.blue,
         ),
       ),
       ListTile(
-        title: Text('AddReport'),
+        leading: Icon(Icons.work),
+        title: Text('Enviar reporte'),
+        subtitle: Text.rich(
+          TextSpan(
+              text: "Reportes guardados localmente",
+              style:
+                  TextStyle(color: Color(Colors.black45.value), fontSize: 15)),
+        ),
         onTap: () {
           // Navigator.push(
           //   context,
           //   MaterialPageRoute(builder: (context) => AddReport()),
           // );
-          Navigator.pop(context);
-        },
-      ),
-      ListTile(
-        title: Text('Item 2'),
-        onTap: () {
-          // Update the state of the app.
-          // ...
           Navigator.pop(context);
         },
       ),
