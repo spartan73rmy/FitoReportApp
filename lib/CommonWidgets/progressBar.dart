@@ -10,7 +10,7 @@ void loading(BuildContext context) {
           mainAxisSize: MainAxisSize.min,
           children: [
             new CircularProgressIndicator(),
-            new Text("Loading"),
+            new Text("Enviando Archivos"),
           ],
         ),
       );

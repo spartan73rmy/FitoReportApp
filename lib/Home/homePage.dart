@@ -1,4 +1,7 @@
+import 'package:LikeApp/CommonWidgets/TempReport.dart';
+import 'package:LikeApp/CommonWidgets/localStorage.dart';
 import 'package:LikeApp/Home/drawerContent.dart';
+import 'package:LikeApp/Models/reportData.dart';
 import 'package:flutter/material.dart';
 import '../Report/addReport.dart';
 import "dataSearch.dart";
@@ -24,7 +27,15 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      body: Column(),
+      body: Column(
+        children: <Widget>[
+          Text("Pendientes"),
+          IconButton(
+            icon: Icon(Icons.cloud_upload),
+            onPressed: () {},
+          )
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Increment',
         child: Icon(Icons.add),

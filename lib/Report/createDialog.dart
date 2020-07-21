@@ -36,7 +36,7 @@ Future<Product> createDialog(BuildContext context) {
                   decoration: InputDecoration(
                       labelText: 'Cantidad',
                       hintText: 'Cantidad',
-                      icon: const Icon(Icons.ac_unit),
+                      icon: const Icon(Icons.opacity),
                       labelStyle: TextStyle(
                           decorationStyle: TextDecorationStyle.solid)),
                 ),
@@ -49,7 +49,7 @@ Future<Product> createDialog(BuildContext context) {
                       labelText: 'Producto',
                       hintText: 'Producto',
                       //filled: true,
-                      icon: const Icon(Icons.ac_unit),
+                      icon: const Icon(Icons.filter_hdr),
                       labelStyle: TextStyle(
                           decorationStyle: TextDecorationStyle.solid)),
                 ),
@@ -62,7 +62,7 @@ Future<Product> createDialog(BuildContext context) {
                       labelText: 'Ingrediente Activo',
                       hintText: 'Ingrediente Activo',
                       //filled: true,
-                      icon: const Icon(Icons.ac_unit),
+                      icon: const Icon(Icons.build),
                       labelStyle: TextStyle(
                           decorationStyle: TextDecorationStyle.solid)),
                 ),
@@ -75,7 +75,7 @@ Future<Product> createDialog(BuildContext context) {
                       labelText: 'Concentracion (%)',
                       hintText: 'Concentracion',
                       //filled: true,
-                      icon: const Icon(Icons.ac_unit),
+                      icon: const Icon(Icons.colorize),
                       labelStyle: TextStyle(
                           decorationStyle: TextDecorationStyle.solid)),
                 ),
@@ -88,7 +88,7 @@ Future<Product> createDialog(BuildContext context) {
                       labelText: 'Intervalo (Dias)',
                       hintText: 'Intervalo de seguridad',
                       //filled: true,
-                      icon: const Icon(Icons.ac_unit),
+                      icon: const Icon(Icons.av_timer),
                       labelStyle: TextStyle(
                           decorationStyle: TextDecorationStyle.solid)),
                 ),

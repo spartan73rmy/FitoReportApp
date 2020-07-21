@@ -25,7 +25,7 @@ class _StepperBodyState extends State<StepperBody> {
   static var _focusNode = FocusNode();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   static ReportData data = ReportData();
-  static DateTime selectedDate = DateTime.now();
+  // static DateTime selectedDate = DateTime.now();
 
   List<Step> steps = [
     Step(
