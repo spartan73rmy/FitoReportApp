@@ -44,9 +44,12 @@ class _ReciepReportState extends State<ReciepReport> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: UniqueKey(),
-      appBar: AppBar(
-        title: Text('Productos'),
-      ),
+      appBar: AppBar(title: Text('Productos'), actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.save),
+          onPressed: () {},
+        )
+      ]),
       body: ReciepReportBody(products),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Increment',

@@ -11,7 +11,7 @@ class _AddReportState extends State<AddReport> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Agregar Reporte'),
+        title: Text('Reporte'),
       ),
       body: StepperBody(),
     );

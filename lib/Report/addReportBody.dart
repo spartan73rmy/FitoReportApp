@@ -405,23 +405,35 @@ class _StepperBodyState extends State<StepperBody> {
             });
           },
         ),
-        RaisedButton(
-          child: Text(
-            'Agregar Receta',
-            style: TextStyle(color: Colors.black),
-          ),
+        FloatingActionButton.extended(
+          icon: Icon(Icons.add),
+          backgroundColor: Color(Colors.green.value),
+          foregroundColor: Color(Colors.black.value),
           onPressed: () {
-            // Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //   return ReciepReport(data);
-            // }));
-
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ReciepReport(data)),
             );
           },
-          color: Colors.green,
+          label: Text("Agregar Productos"),
         )
+        // RaisedButton(
+        //   child: Text(
+        //     'Agregar Receta',
+        //     style: TextStyle(color: Colors.black),
+        //   ),
+        //   onPressed: () {
+        //     // Navigator.push(context, MaterialPageRoute(builder: (context) {
+        //     //   return ReciepReport(data);
+        //     // }));
+
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => ReciepReport(data)),
+        //     );
+        //   },
+        //   color: Colors.green,
+        // )
       ]),
     ));
   }
