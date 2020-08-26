@@ -28,6 +28,66 @@ class _ReciepReportState extends State<ReciepReport> {
         securityInterval: "10"),
     new Product(
         name: "Cal",
+        cantity: 100,
+        iActive: "Calcio",
+        concentration: "50",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
+        cantity: 10,
+        iActive: "Calcio",
+        concentration: "10",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
+        cantity: 100,
+        iActive: "Calcio",
+        concentration: "50",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
+        cantity: 10,
+        iActive: "Calcio",
+        concentration: "10",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
+        cantity: 100,
+        iActive: "Calcio",
+        concentration: "50",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
+        cantity: 10,
+        iActive: "Calcio",
+        concentration: "10",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
+        cantity: 100,
+        iActive: "Calcio",
+        concentration: "50",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
+        cantity: 10,
+        iActive: "Calcio",
+        concentration: "10",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
+        cantity: 100,
+        iActive: "Calcio",
+        concentration: "50",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
+        cantity: 10,
+        iActive: "Calcio",
+        concentration: "10",
+        securityInterval: "10"),
+    new Product(
+        name: "Cal",
         cantity: 20,
         iActive: "Calcio",
         concentration: "80",
@@ -47,12 +107,14 @@ class _ReciepReportState extends State<ReciepReport> {
       appBar: AppBar(title: Text('Productos'), actions: <Widget>[
         IconButton(
           icon: Icon(Icons.save),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
         )
       ]),
       body: ReciepReportBody(products),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Increment',
         child: Icon(Icons.add),
         onPressed: () {
           createDialog(context).then((value) {

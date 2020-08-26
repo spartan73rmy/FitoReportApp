@@ -13,9 +13,6 @@ dependencies:
   flutter_full_pdf_viewer: ^1.0.6
 
   image_picker: ^0.6.0+3
-  cloud_firestore: ^0.12.5
-  firebase_auth: ^0.11.1+6
-  firebase_storage: ^3.0.1
   font_awesome_flutter: ^8.4.0
   intl: ^0.15.8
   # modal_progres_hud: ^0.1.3
