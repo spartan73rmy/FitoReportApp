@@ -43,7 +43,7 @@ class _StepperBodyState extends State<StepperBody> {
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 onSaved: (String value) {
-                  data.name = value;
+                  data.productor = value;
                 },
                 maxLines: 1,
                 //initialValue: 'Aseem Wangoo',
@@ -78,7 +78,7 @@ class _StepperBodyState extends State<StepperBody> {
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 onSaved: (String value) {
-                  data.name = value;
+                  data.lugar = value;
                 },
                 maxLines: 1,
                 //initialValue: 'Aseem Wangoo',
@@ -113,7 +113,7 @@ class _StepperBodyState extends State<StepperBody> {
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 onSaved: (String value) {
-                  data.name = value;
+                  data.predio = value;
                 },
                 maxLines: 1,
                 //initialValue: 'Aseem Wangoo',
@@ -148,7 +148,7 @@ class _StepperBodyState extends State<StepperBody> {
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 onSaved: (String value) {
-                  data.name = value;
+                  data.cultivo = value;
                 },
                 maxLines: 1,
                 //initialValue: 'Aseem Wangoo',
@@ -183,7 +183,7 @@ class _StepperBodyState extends State<StepperBody> {
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 onSaved: (String value) {
-                  data.name = value;
+                  data.observaciones = value;
                 },
                 maxLines: 2,
                 //initialValue: 'Aseem Wangoo',
@@ -197,101 +197,6 @@ class _StepperBodyState extends State<StepperBody> {
                     hintText: '',
                     //filled: true,
                     icon: const Icon(Icons.person),
-                    labelStyle:
-                        TextStyle(decorationStyle: TextDecorationStyle.solid)),
-              ),
-            ],
-          ),
-        )),
-    Step(
-        title: const Text('Phone'),
-        //subtitle: const Text('Subtitle'),
-        isActive: true,
-        //state: StepState.editing,
-        state: StepState.indexed,
-        content: Form(
-          key: formKeys[6],
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                keyboardType: TextInputType.phone,
-                autocorrect: false,
-                validator: (String value) {
-                  if (value.isEmpty || value.length < 10) {
-                    return 'Please enter valid number';
-                  }
-                },
-                onSaved: (String value) {
-                  data.phone = value;
-                },
-                maxLines: 1,
-                decoration: InputDecoration(
-                    labelText: 'Enter your number',
-                    hintText: 'Enter a number',
-                    icon: const Icon(Icons.phone),
-                    labelStyle:
-                        TextStyle(decorationStyle: TextDecorationStyle.solid)),
-              ),
-            ],
-          ),
-        )),
-    Step(
-        title: const Text('Email'),
-        // subtitle: const Text('Subtitle'),
-        isActive: true,
-        state: StepState.indexed,
-        // state: StepState.disabled,
-        content: Form(
-          key: formKeys[7],
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                autocorrect: false,
-                validator: (String value) {
-                  if (value.isEmpty || !value.contains('@')) {
-                    return 'Please enter valid email';
-                  }
-                },
-                onSaved: (String value) {
-                  data.email = value;
-                },
-                maxLines: 1,
-                decoration: InputDecoration(
-                    labelText: 'Enter your email',
-                    hintText: 'Enter a email address',
-                    icon: const Icon(Icons.email),
-                    labelStyle:
-                        TextStyle(decorationStyle: TextDecorationStyle.solid)),
-              ),
-            ],
-          ),
-        )),
-    Step(
-        title: const Text('Age'),
-        // subtitle: const Text('Subtitle'),
-        isActive: true,
-        state: StepState.indexed,
-        content: Form(
-          key: formKeys[8],
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                keyboardType: TextInputType.number,
-                autocorrect: false,
-                validator: (String value) {
-                  if (value.isEmpty || value.length > 2) {
-                    return 'Please enter valid age';
-                  }
-                },
-                maxLines: 1,
-                onChanged: (String value) {
-                  data.age = value;
-                },
-                decoration: InputDecoration(
-                    labelText: 'Enter your age',
-                    hintText: 'Enter age',
-                    icon: const Icon(Icons.explicit),
                     labelStyle:
                         TextStyle(decorationStyle: TextDecorationStyle.solid)),
               ),
@@ -315,10 +220,7 @@ class _StepperBodyState extends State<StepperBody> {
         Navigator.of(context).pop();
       } else {
         formState.save();
-        print("Name: ${data.name}");
-        print("Phone: ${data.phone}");
-        print("Email: ${data.email}");
-        print("Age: ${data.age}");
+        // print("Name: ${data.name}");
 
         showDialog(
             context: context,
@@ -328,10 +230,10 @@ class _StepperBodyState extends State<StepperBody> {
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
-                    Text("Name : " + data.name),
-                    Text("Phone : " + data.phone),
-                    Text("Email : " + data.email),
-                    Text("Age : " + data.age),
+                    // Text("Name : " + data.name),
+                    // Text("Phone : " + data.phone),
+                    // Text("Email : " + data.email),
+                    // Text("Age : " + data.age),
                   ],
                 ),
               ),

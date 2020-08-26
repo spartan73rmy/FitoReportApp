@@ -1,14 +1,14 @@
 class Product {
-  int cantity = 0;
-  String name = '';
-  String iActive = '';
-  String concentration = '';
-  String securityInterval = '';
+  int cantidad = 0;
+  String nombre = '';
+  String ingredienteActivo = '';
+  String concentracion = '';
+  String intervaloSeguridad = '';
 
   Product(
-      {this.name,
-      this.cantity,
-      this.iActive,
-      this.concentration,
-      this.securityInterval});
+      {this.nombre,
+      this.cantidad,
+      this.ingredienteActivo,
+      this.concentracion,
+      this.intervaloSeguridad});
 }

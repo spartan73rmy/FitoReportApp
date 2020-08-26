@@ -32,7 +32,7 @@ class _ListTempReportCardState extends State<ListTempReportCard> {
                       color: Color(Colors.black.value)),
                   children: <TextSpan>[
                 TextSpan(
-                  text: '${data.name}',
+                  text: '${data.nombre}',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 18,
@@ -47,7 +47,7 @@ class _ListTempReportCardState extends State<ListTempReportCard> {
                   color: Color(Colors.black45.value)),
               children: <TextSpan>[
                 TextSpan(
-                  text: '${data.cantity}',
+                  text: '${data.cantidad}',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Color(Colors.black.value)),
@@ -59,7 +59,7 @@ class _ListTempReportCardState extends State<ListTempReportCard> {
                       color: Color(Colors.black45.value)),
                 ),
                 TextSpan(
-                  text: '${data.concentration}%',
+                  text: '${data.concentracion}%',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Color(Colors.black.value)),
@@ -71,7 +71,7 @@ class _ListTempReportCardState extends State<ListTempReportCard> {
                       color: Color(Colors.black45.value)),
                 ),
                 TextSpan(
-                  text: '${data.iActive}',
+                  text: '${data.ingredienteActivo}',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Color(Colors.black.value)),
@@ -83,7 +83,7 @@ class _ListTempReportCardState extends State<ListTempReportCard> {
                       color: Color(Colors.black45.value)),
                 ),
                 TextSpan(
-                  text: '${data.securityInterval} Dias\n',
+                  text: '${data.intervaloSeguridad} Dias\n',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Color(Colors.black.value)),

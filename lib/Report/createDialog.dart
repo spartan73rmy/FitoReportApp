@@ -101,11 +101,11 @@ Future<Product> createDialog(BuildContext context) {
             child: Text("Agregar"),
             onPressed: () {
               Product newProduct = new Product(
-                  cantity: int.parse(_controller[0].text.toString()),
-                  name: _controller[1].text.toString(),
-                  iActive: _controller[2].text.toString(),
-                  concentration: _controller[3].text.toString(),
-                  securityInterval: _controller[4].text.toString());
+                  cantidad: int.parse(_controller[0].text.toString()),
+                  nombre: _controller[1].text.toString(),
+                  ingredienteActivo: _controller[2].text.toString(),
+                  concentracion: _controller[3].text.toString(),
+                  intervaloSeguridad: _controller[4].text.toString());
               Navigator.pop(context, newProduct);
             },
           )
