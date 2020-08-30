@@ -1,4 +1,6 @@
 class Enfermedad {
   int id;
-  String nombre = '';
+  String nombre;
+
+  Enfermedad({this.id, this.nombre});
 }
