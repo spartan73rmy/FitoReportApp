@@ -1,5 +1,5 @@
 import 'package:LikeApp/Models/reportData.dart';
-import 'package:LikeApp/Models/product.dart';
+import 'package:LikeApp/Models/producto.dart';
 import 'package:flutter/material.dart';
 import 'createDialog.dart';
 import 'reciepReportBody.dart';
@@ -19,85 +19,7 @@ class _ReciepReportState extends State<ReciepReport> {
         cantidad: 100,
         ingredienteActivo: "Calcio",
         concentracion: "50",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 10,
-        ingredienteActivo: "Calcio",
-        concentracion: "10",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 100,
-        ingredienteActivo: "Calcio",
-        concentracion: "50",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 10,
-        ingredienteActivo: "Calcio",
-        concentracion: "10",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 100,
-        ingredienteActivo: "Calcio",
-        concentracion: "50",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 10,
-        ingredienteActivo: "Calcio",
-        concentracion: "10",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 100,
-        ingredienteActivo: "Calcio",
-        concentracion: "50",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 10,
-        ingredienteActivo: "Calcio",
-        concentracion: "10",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 100,
-        ingredienteActivo: "Calcio",
-        concentracion: "50",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 10,
-        ingredienteActivo: "Calcio",
-        concentracion: "10",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 100,
-        ingredienteActivo: "Calcio",
-        concentracion: "50",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 10,
-        ingredienteActivo: "Calcio",
-        concentracion: "10",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 20,
-        ingredienteActivo: "Calcio",
-        concentracion: "80",
-        intervaloSeguridad: "10"),
-    new Producto(
-        nombre: "Cal",
-        cantidad: 10000,
-        ingredienteActivo: "Calcio",
-        concentracion: "10",
-        intervaloSeguridad: "10"),
+        intervaloSeguridad: "10")
   ];
 
   @override
@@ -132,16 +54,3 @@ class _ReciepReportState extends State<ReciepReport> {
     });
   }
 }
-
-// @override
-//   Widget build(BuildContext ctxt) {
-//     return StreamBuilder(
-//       stream: Firestore.instance.collection('baby').snapshots(),
-//       builder: (_, AsyncSnapshot<QuerySnapshot> snapshot) {
-//         var documents = snapshot.data?.documents ?? [];
-//         var baby =
-//             documents.map((snapshot) => BabyData.from(snapshot)).toList();
-//         return BabyPage(baby);
-//       },
-//     );
-//   }

@@ -1,5 +1,5 @@
 import 'package:LikeApp/Models/reportData.dart';
-import 'package:LikeApp/Models/product.dart';
+import 'package:LikeApp/Models/producto.dart';
 import 'package:LikeApp/TempReports/listTempReportBody.dart';
 import 'package:flutter/material.dart';
 

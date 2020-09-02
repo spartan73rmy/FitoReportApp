@@ -14,6 +14,10 @@ class PlagaList {
 
   PlagaList({this.plagas});
 
+  List<Plaga> toList(PlagaList lista) {
+    return lista.plagas;
+  }
+
   factory PlagaList.fromJSON(Map<String, dynamic> parsedJson) {
     var list = parsedJson['plagas'] as List;
     List<Plaga> plagas = list.map((i) => Plaga.fromJSON(i)).toList();

@@ -1,5 +1,5 @@
 import 'package:LikeApp/Report/reciepReportCard.dart';
-import 'package:LikeApp/Models/product.dart';
+import 'package:LikeApp/Models/producto.dart';
 import 'package:flutter/material.dart';
 
 class ReciepReportBody extends StatefulWidget {

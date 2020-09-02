@@ -1,6 +1,6 @@
 import 'package:LikeApp/Models/enfermedad.dart';
 import 'package:LikeApp/Models/plaga.dart';
-import 'package:LikeApp/Models/product.dart';
+import 'package:LikeApp/Models/producto.dart';
 
 class ReportData {
   int id;
