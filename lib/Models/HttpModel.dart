@@ -1,5 +1,3 @@
-import 'package:http/http.dart' as http;
-
 class HttpModel {
   static const apiURL = "https://localhost:5001/api/";
   static const headers = {

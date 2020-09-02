@@ -9,7 +9,9 @@ class ReciepReport extends StatefulWidget {
   ReciepReport(ReportData data, {Key key}) : super(key: key);
 
   @override
-  _ReciepReportState createState() => _ReciepReportState();
+  _ReciepReportState createState() {
+    return new _ReciepReportState();
+  }
 }
 
 class _ReciepReportState extends State<ReciepReport> {

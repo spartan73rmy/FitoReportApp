@@ -2,18 +2,6 @@ import 'package:LikeApp/Report/reciepReport.dart';
 import 'package:flutter/material.dart';
 import '../Models/reportData.dart';
 
-List<GlobalKey<FormState>> formKeys = [
-  GlobalKey<FormState>(),
-  GlobalKey<FormState>(),
-  GlobalKey<FormState>(),
-  GlobalKey<FormState>(),
-  GlobalKey<FormState>(),
-  GlobalKey<FormState>(),
-  GlobalKey<FormState>(),
-  GlobalKey<FormState>(),
-  GlobalKey<FormState>()
-];
-
 class StepperBody extends StatefulWidget {
   StepperBody({Key key}) : super(key: key);
   @override
@@ -23,229 +11,20 @@ class StepperBody extends StatefulWidget {
 class _StepperBodyState extends State<StepperBody> {
   int currStep = 0;
   static var _focusNode = FocusNode();
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  static ReportData data;
-  // static DateTime selectedDate = DateTime.now();
-
-  List<Step> steps = [
-    Step(
-        title: const Text('Nombre'),
-        //subtitle: const Text('Enter your name'),
-        isActive: true,
-        //state: StepState.error,
-        state: StepState.indexed,
-        content: Form(
-          key: formKeys[0],
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                focusNode: _focusNode,
-                keyboardType: TextInputType.text,
-                autocorrect: false,
-                onSaved: (String value) {
-                  data.productor = value;
-                },
-                maxLines: 1,
-                //initialValue: 'Aseem Wangoo',
-                validator: (String value) {
-                  if (value.isEmpty || value.length < 1) {
-                    return 'Introduce el nombre';
-                  }
-                },
-                decoration: InputDecoration(
-                    labelText: 'Nombre del productor',
-                    hintText: 'Nombre completo',
-                    //filled: true,
-                    icon: const Icon(Icons.person),
-                    labelStyle:
-                        TextStyle(decorationStyle: TextDecorationStyle.solid)),
-              ),
-            ],
-          ),
-        )),
-    Step(
-        title: const Text('Lugar'),
-        //subtitle: const Text('Enter your name'),
-        isActive: true,
-        //state: StepState.error,
-        state: StepState.indexed,
-        content: Form(
-          key: formKeys[1],
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                focusNode: _focusNode,
-                keyboardType: TextInputType.text,
-                autocorrect: false,
-                onSaved: (String value) {
-                  data.lugar = value;
-                },
-                maxLines: 1,
-                //initialValue: 'Aseem Wangoo',
-                validator: (String value) {
-                  if (value.isEmpty || value.length < 1) {
-                    return 'Introduce el lugar';
-                  }
-                },
-                decoration: InputDecoration(
-                    labelText: 'Lugar',
-                    hintText: 'Lugar',
-                    //filled: true,
-                    icon: const Icon(Icons.person),
-                    labelStyle:
-                        TextStyle(decorationStyle: TextDecorationStyle.solid)),
-              ),
-            ],
-          ),
-        )),
-    Step(
-        title: const Text('Nombre del predio'),
-        //subtitle: const Text('Enter your name'),
-        isActive: true,
-        //state: StepState.error,
-        state: StepState.indexed,
-        content: Form(
-          key: formKeys[2],
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                focusNode: _focusNode,
-                keyboardType: TextInputType.text,
-                autocorrect: false,
-                onSaved: (String value) {
-                  data.predio = value;
-                },
-                maxLines: 1,
-                //initialValue: 'Aseem Wangoo',
-                validator: (String value) {
-                  if (value.isEmpty || value.length < 1) {
-                    return 'Introduce el nombre del predio';
-                  }
-                },
-                decoration: InputDecoration(
-                    labelText: 'Predio',
-                    hintText: 'Nombre del predio',
-                    //filled: true,
-                    icon: const Icon(Icons.person),
-                    labelStyle:
-                        TextStyle(decorationStyle: TextDecorationStyle.solid)),
-              ),
-            ],
-          ),
-        )),
-    Step(
-        title: const Text('Cultivo'),
-        //subtitle: const Text('Enter your name'),
-        isActive: true,
-        //state: StepState.error,
-        state: StepState.indexed,
-        content: Form(
-          key: formKeys[4],
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                focusNode: _focusNode,
-                keyboardType: TextInputType.text,
-                autocorrect: false,
-                onSaved: (String value) {
-                  data.cultivo = value;
-                },
-                maxLines: 1,
-                //initialValue: 'Aseem Wangoo',
-                validator: (String value) {
-                  if (value.isEmpty || value.length < 1) {
-                    return 'Introduce el nombre del cultivo';
-                  }
-                },
-                decoration: InputDecoration(
-                    labelText: 'Cultivo',
-                    hintText: 'Nombre del cultivo',
-                    //filled: true,
-                    icon: const Icon(Icons.person),
-                    labelStyle:
-                        TextStyle(decorationStyle: TextDecorationStyle.solid)),
-              ),
-            ],
-          ),
-        )),
-    Step(
-        title: const Text('Observaciones'),
-        //subtitle: const Text('Enter your name'),
-        isActive: true,
-        //state: StepState.error,
-        state: StepState.indexed,
-        content: Form(
-          key: formKeys[5],
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                focusNode: _focusNode,
-                keyboardType: TextInputType.text,
-                autocorrect: false,
-                onSaved: (String value) {
-                  data.observaciones = value;
-                },
-                maxLines: 2,
-                //initialValue: 'Aseem Wangoo',
-                validator: (String value) {
-                  if (value.isEmpty || value.length < 1) {
-                    return 'Introduce observaciones';
-                  }
-                },
-                decoration: InputDecoration(
-                    labelText: 'Observaciones',
-                    hintText: '',
-                    //filled: true,
-                    icon: const Icon(Icons.person),
-                    labelStyle:
-                        TextStyle(decorationStyle: TextDecorationStyle.solid)),
-              ),
-            ],
-          ),
-        )),
-  ];
+  final _formKey = GlobalKey<FormState>();
+  static ReportData data = new ReportData();
 
   @override
   Widget build(BuildContext context) {
-    void showSnackBarMessage(String message,
-        [MaterialColor color = Colors.red]) {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));
-    }
+    void _saveModel() {
+      final form = _formKey.currentState;
+      print(form.validate());
 
-    void _submitDetails() {
-      final FormState formState = _formKey.currentState;
-
-      if (!formState.validate()) {
-        // showSnackBarMessage('Please enter correct data');
-        Navigator.of(context).pop();
-      } else {
-        formState.save();
-        // print("Name: ${data.name}");
-
-        showDialog(
-            context: context,
-            child: AlertDialog(
-              title: Text("Details"),
-              //content:  Text("Hello World"),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    // Text("Name : " + data.name),
-                    // Text("Phone : " + data.phone),
-                    // Text("Email : " + data.email),
-                    // Text("Age : " + data.age),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ));
+      if (form.validate()) {
+        form.save();
+        for (var item in formKeys) {
+          item.currentState.save();
+        }
       }
     }
 
@@ -255,39 +34,182 @@ class _StepperBodyState extends State<StepperBody> {
       child: ListView(shrinkWrap: true, children: <Widget>[
         Stepper(
           physics: ClampingScrollPhysics(),
-          //  controlsBuilder: (BuildContext context,
-          // {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-          // return Row(
-          //   children: <Widget>[
-          //     FlatButton(
-          //       onPressed: onStepContinue,
-          //       child: const Text('Siguiente'),
-          //     ),
-          //     FlatButton(
-          //       onPressed: onStepCancel,
-          //       child: const Text('Regresar'),
-          //     ),
-          //   ],
-          // );
-          // },
-          steps: steps,
+          steps: [
+            Step(
+                title: const Text('Nombre'),
+                isActive: true,
+                state: StepState.indexed,
+                content: Form(
+                  key: formKeys[0],
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        focusNode: _focusNode,
+                        keyboardType: TextInputType.text,
+                        autocorrect: false,
+                        onSaved: (String value) => {data.productor = value},
+                        maxLines: 1,
+                        validator: (String value) {
+                          if (value.isEmpty || value.length < 1) {
+                            return 'Introduce el nombre';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            labelText: 'Nombre del productor',
+                            hintText: 'Nombre completo',
+                            icon: const Icon(Icons.person),
+                            labelStyle: TextStyle(
+                                decorationStyle: TextDecorationStyle.solid)),
+                      ),
+                    ],
+                  ),
+                )),
+            Step(
+                title: const Text('Lugar'),
+                isActive: true,
+                state: StepState.indexed,
+                content: Form(
+                  key: formKeys[1],
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        focusNode: _focusNode,
+                        keyboardType: TextInputType.text,
+                        autocorrect: false,
+                        onSaved: (String value) {
+                          data.lugar = value;
+                        },
+                        maxLines: 1,
+                        validator: (String value) {
+                          if (value.isEmpty || value.length < 1) {
+                            return 'Introduce el lugar';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            labelText: 'Lugar',
+                            hintText: 'Lugar',
+                            icon: const Icon(Icons.person),
+                            labelStyle: TextStyle(
+                                decorationStyle: TextDecorationStyle.solid)),
+                      ),
+                    ],
+                  ),
+                )),
+            Step(
+                title: const Text('Nombre del predio'),
+                isActive: true,
+                state: StepState.indexed,
+                content: Form(
+                  key: formKeys[2],
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        focusNode: _focusNode,
+                        keyboardType: TextInputType.text,
+                        autocorrect: false,
+                        onSaved: (String value) {
+                          data.predio = value;
+                        },
+                        maxLines: 1,
+                        validator: (String value) {
+                          if (value.isEmpty || value.length < 1) {
+                            return 'Introduce el nombre del predio';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            labelText: 'Predio',
+                            hintText: 'Nombre del predio',
+                            //filled: true,
+                            icon: const Icon(Icons.person),
+                            labelStyle: TextStyle(
+                                decorationStyle: TextDecorationStyle.solid)),
+                      ),
+                    ],
+                  ),
+                )),
+            Step(
+                title: const Text('Cultivo'),
+                isActive: true,
+                state: StepState.indexed,
+                content: Form(
+                  key: formKeys[3],
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        focusNode: _focusNode,
+                        keyboardType: TextInputType.text,
+                        autocorrect: false,
+                        onSaved: (String value) {
+                          data.cultivo = value;
+                        },
+                        maxLines: 1,
+                        initialValue: 'Aguacate',
+                        validator: (String value) {
+                          if (value.isEmpty || value.length < 1) {
+                            return 'Introduce el nombre del cultivo';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            labelText: 'Cultivo',
+                            hintText: 'Nombre del cultivo',
+                            icon: const Icon(Icons.person),
+                            labelStyle: TextStyle(
+                                decorationStyle: TextDecorationStyle.solid)),
+                      ),
+                    ],
+                  ),
+                )),
+            Step(
+                title: const Text('Observaciones'),
+                isActive: true,
+                state: StepState.indexed,
+                content: Form(
+                  key: formKeys[4],
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        focusNode: _focusNode,
+                        keyboardType: TextInputType.text,
+                        autocorrect: false,
+                        onSaved: (String value) {
+                          data.observaciones = value;
+                        },
+                        maxLines: 2,
+                        validator: (String value) {
+                          if (value.isEmpty || value.length < 1) {
+                            return 'Introduce observaciones';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            labelText: 'Observaciones',
+                            hintText: '',
+                            icon: const Icon(Icons.person),
+                            labelStyle: TextStyle(
+                                decorationStyle: TextDecorationStyle.solid)),
+                      ),
+                    ],
+                  ),
+                )),
+          ],
           type: StepperType.vertical,
           currentStep: this.currStep,
           onStepContinue: () {
             setState(() {
               if (formKeys[currStep].currentState.validate()) {
-                if (currStep < steps.length - 1) {
-                  currStep = currStep + 1;
+                if (currStep < 4) {
+                  currStep += 1;
                 } else {
                   currStep = 0;
                 }
               } else {
-                Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text('Llena correctamente el paso $currStep')));
-
-                if (currStep == 1) {
-                  print('First Step');
-                  print('object' + FocusScope.of(context).toStringDeep());
+                if (currStep > 1) {
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text('Llena correctamente el paso $currStep')));
                 }
               }
             });
@@ -295,7 +217,7 @@ class _StepperBodyState extends State<StepperBody> {
           onStepCancel: () {
             setState(() {
               if (currStep > 0) {
-                currStep = currStep - 1;
+                currStep -= 1;
               } else {
                 currStep = 0;
               }
@@ -312,6 +234,8 @@ class _StepperBodyState extends State<StepperBody> {
           backgroundColor: Color(Colors.green.value),
           foregroundColor: Color(Colors.black.value),
           onPressed: () {
+            _saveModel();
+
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ReciepReport(data)),
@@ -319,23 +243,6 @@ class _StepperBodyState extends State<StepperBody> {
           },
           label: Text("Agregar Productos"),
         )
-        // RaisedButton(
-        //   child: Text(
-        //     'Agregar Receta',
-        //     style: TextStyle(color: Colors.black),
-        //   ),
-        //   onPressed: () {
-        //     // Navigator.push(context, MaterialPageRoute(builder: (context) {
-        //     //   return ReciepReport(data);
-        //     // }));
-
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(builder: (context) => ReciepReport(data)),
-        //     );
-        //   },
-        //   color: Colors.green,
-        // )
       ]),
     ));
   }
@@ -343,15 +250,24 @@ class _StepperBodyState extends State<StepperBody> {
   @override
   void initState() {
     super.initState();
+    _focusNode = FocusNode();
+
     _focusNode.addListener(() {
       setState(() {});
       print('Has focus: $_focusNode.hasFocus');
     });
   }
 
-  // @override
-  // void dispose() {
-  // _focusNode.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }
+
+List<GlobalKey<FormState>> formKeys = [
+  GlobalKey<FormState>(),
+  GlobalKey<FormState>(),
+  GlobalKey<FormState>(),
+  GlobalKey<FormState>(),
+  GlobalKey<FormState>()
+];
