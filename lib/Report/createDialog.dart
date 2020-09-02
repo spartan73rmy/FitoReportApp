@@ -1,7 +1,7 @@
 import 'package:LikeApp/Models/product.dart';
 import 'package:flutter/material.dart';
 
-Future<Product> createDialog(BuildContext context) {
+Future<Producto> createDialog(BuildContext context) {
   List<TextEditingController> _controller = [
     new TextEditingController(),
     new TextEditingController(),
@@ -100,7 +100,7 @@ Future<Product> createDialog(BuildContext context) {
           FlatButton(
             child: Text("Agregar"),
             onPressed: () {
-              Product newProduct = new Product(
+              Producto newProduct = new Producto(
                   cantidad: int.parse(_controller[0].text.toString()),
                   nombre: _controller[1].text.toString(),
                   ingredienteActivo: _controller[2].text.toString(),

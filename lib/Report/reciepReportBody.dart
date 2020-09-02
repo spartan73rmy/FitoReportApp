@@ -3,7 +3,7 @@ import 'package:LikeApp/Models/product.dart';
 import 'package:flutter/material.dart';
 
 class ReciepReportBody extends StatefulWidget {
-  final List<Product> allProducts;
+  final List<Producto> allProducts;
 
   ReciepReportBody(this.allProducts, {Key key}) : super(key: key);
 

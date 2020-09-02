@@ -2,7 +2,7 @@ import 'package:LikeApp/Models/product.dart';
 import 'package:flutter/material.dart';
 
 class ReciepReportCard extends StatefulWidget {
-  final Product data;
+  final Producto data;
   ReciepReportCard(this.data, {Key key}) : super(key: key);
 
   @override
@@ -10,7 +10,7 @@ class ReciepReportCard extends StatefulWidget {
 }
 
 class _ReciepReportCardState extends State<ReciepReportCard> {
-  final Product data;
+  final Producto data;
 
   _ReciepReportCardState(this.data);
 

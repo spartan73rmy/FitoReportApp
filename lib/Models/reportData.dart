@@ -3,6 +3,7 @@ import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/product.dart';
 
 class ReportData {
+  int id;
   String lugar;
   String productor;
   double coordX;
@@ -15,11 +16,12 @@ class ReportData {
   int litros;
 
   List<Enfermedad> enfermedad;
-  List<Product> producto;
+  List<Producto> producto;
   List<Plaga> plaga;
 
   ReportData(
-      {this.lugar,
+      {this.id,
+      this.lugar,
       this.productor,
       this.coordX,
       this.coordY,
@@ -32,4 +34,20 @@ class ReportData {
       this.enfermedad,
       this.producto,
       this.plaga});
+
+  factory ReportData.fromJSON(Map<String, dynamic> item) {
+    return ReportData(
+      id: item["id"],
+      lugar: item["lugar"],
+      productor: item["productor"],
+      coordX: item["coordX"],
+      coordY: item["coordY"],
+      ubicacion: item["ubicacion"],
+      predio: item["predio"],
+      cultivo: item["cultivo"],
+      etapaFenologica: item["etapaFenologica"],
+      observaciones: item["observaciones"],
+      litros: item["litros"],
+    );
+  }
 }

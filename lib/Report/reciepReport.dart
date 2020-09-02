@@ -13,86 +13,86 @@ class ReciepReport extends StatefulWidget {
 }
 
 class _ReciepReportState extends State<ReciepReport> {
-  List<Product> products = <Product>[
-    new Product(
+  List<Producto> products = <Producto>[
+    new Producto(
         nombre: "Cal",
         cantidad: 100,
         ingredienteActivo: "Calcio",
         concentracion: "50",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 10,
         ingredienteActivo: "Calcio",
         concentracion: "10",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 100,
         ingredienteActivo: "Calcio",
         concentracion: "50",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 10,
         ingredienteActivo: "Calcio",
         concentracion: "10",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 100,
         ingredienteActivo: "Calcio",
         concentracion: "50",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 10,
         ingredienteActivo: "Calcio",
         concentracion: "10",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 100,
         ingredienteActivo: "Calcio",
         concentracion: "50",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 10,
         ingredienteActivo: "Calcio",
         concentracion: "10",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 100,
         ingredienteActivo: "Calcio",
         concentracion: "50",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 10,
         ingredienteActivo: "Calcio",
         concentracion: "10",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 100,
         ingredienteActivo: "Calcio",
         concentracion: "50",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 10,
         ingredienteActivo: "Calcio",
         concentracion: "10",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 20,
         ingredienteActivo: "Calcio",
         concentracion: "80",
         intervaloSeguridad: "10"),
-    new Product(
+    new Producto(
         nombre: "Cal",
         cantidad: 10000,
         ingredienteActivo: "Calcio",
@@ -125,7 +125,7 @@ class _ReciepReportState extends State<ReciepReport> {
     );
   }
 
-  addProduct(Product product) {
+  addProduct(Producto product) {
     setState(() {
       products.add(product);
       print(product.cantidad);

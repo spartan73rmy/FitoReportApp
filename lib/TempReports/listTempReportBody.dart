@@ -3,7 +3,7 @@ import 'package:LikeApp/Models/product.dart';
 import 'package:flutter/material.dart';
 
 class ListTempReportBody extends StatefulWidget {
-  final List<Product> allProducts;
+  final List<Producto> allProducts;
 
   ListTempReportBody(this.allProducts, {Key key}) : super(key: key);
 
