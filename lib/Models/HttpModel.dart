@@ -1,15 +1,11 @@
 class HttpModel {
-  static const apiURL = "https://localhost:5001/api/";
-  static const headers = {
-    'apiKey':
-        "yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQWxiZXJ0byIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiOCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwibmJmIjoxNTk5MDY5MDE2LCJleHAiOjE1OTkwNjkzMTYsImlzcyI6IkFwcElBUyIsImF1ZCI6IkV2ZXJ5b25lIn0.8xPuEYbVTi-Y9ls2MDTqj4hJHznMXwV7MqVK4RRWcgk"
-  };
+  static final String apiURL = developmentHost;
+  static final String productionHost =
+      'https://.herokuapp.com'; //TODO:add production host
+  static final String developmentHost = 'https://10.0.2.2:5001/api/';
+  // static final String developmentHost = 'https://192.168.56.1:5001/api/';
 
-  dynamic header() {
-    return headers;
-  }
-
-  String api() {
+  static String getUrl() {
     return apiURL;
   }
 }

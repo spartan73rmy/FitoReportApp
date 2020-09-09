@@ -1,4 +1,4 @@
-import 'package:LikeApp/Report/reciepReport.dart';
+import 'package:LikeApp/Report/selectPlaga.dart';
 import 'package:flutter/material.dart';
 import '../Models/reportData.dart';
 
@@ -16,7 +16,7 @@ class _StepperBodyState extends State<StepperBody> {
 
   @override
   Widget build(BuildContext context) {
-    void _saveModel() {
+    void _saveData() {
       final form = _formKey.currentState;
       print(form.validate());
 
@@ -234,11 +234,11 @@ class _StepperBodyState extends State<StepperBody> {
           backgroundColor: Color(Colors.green.value),
           foregroundColor: Color(Colors.black.value),
           onPressed: () {
-            _saveModel();
+            _saveData();
 
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ReciepReport(data)),
+              MaterialPageRoute(builder: (context) => SelectPlaga(data)),
             );
           },
           label: Text("Agregar Productos"),

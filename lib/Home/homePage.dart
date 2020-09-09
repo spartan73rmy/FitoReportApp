@@ -5,7 +5,7 @@ import '../Report/addReport.dart';
 import "dataSearch.dart";
 
 class HomePage extends StatelessWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+  HomePage(this.title, {Key key}) : super(key: key);
   final String title;
 
   @override

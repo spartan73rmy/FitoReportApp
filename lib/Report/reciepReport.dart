@@ -10,11 +10,14 @@ class ReciepReport extends StatefulWidget {
 
   @override
   _ReciepReportState createState() {
-    return new _ReciepReportState();
+    return new _ReciepReportState(data);
   }
 }
 
 class _ReciepReportState extends State<ReciepReport> {
+  ReportData data;
+  _ReciepReportState(this.data);
+
   List<Producto> products = <Producto>[
     new Producto(
         nombre: "Cal",
@@ -23,7 +26,6 @@ class _ReciepReportState extends State<ReciepReport> {
         concentracion: "50",
         intervaloSeguridad: "10")
   ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
