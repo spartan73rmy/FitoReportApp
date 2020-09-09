@@ -6,7 +6,6 @@ import 'package:LikeApp/Services/PlagaService.dart';
 import 'package:LikeApp/Services/UserService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import './Home/homePage.dart';
 
 String _title = "FitoReport";
 
@@ -35,10 +34,6 @@ void instanceGetIt() {
   GetIt.I.registerLazySingleton(() => UserService());
   GetIt.I.registerLazySingleton(() => PlagaService());
   GetIt.I.registerLazySingleton(() => Auth());
-
-  // locator.registerFactory(() => UserService());
-  // locator.registerFactory(() => PlagaService());
-  // locator.registerFactory(() => Auth());
 }
 
 class MyHttpOverrides extends HttpOverrides {

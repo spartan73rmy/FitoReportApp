@@ -10,8 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserService extends HttpModel {
   static String url = "Cuenta/Ingresar";
 
-  Future<APIResponse<dynamic>> authenticateUser2(
-      String email, String password) {
+  Future<APIResponse<dynamic>> authenticateUser(String email, String password) {
     var uri = HttpModel.getUrl() + url;
     return http.post(
       uri,
@@ -44,8 +43,10 @@ class UserService extends HttpModel {
     prefs.setString(Auth.authTokenKey, null);
     prefs.setString(Auth.refToken, null);
     prefs.setString(Auth.refToken, null);
-    // prefs.setString(Auth.userIdKey, null);
+
+    // prefs.setInt(Auth.userIdKey, null);
     // prefs.setString(Auth.nameKey, null);
+    // prefs.setInt(Auth.roleKey, null);
     Navigator.of(context).pushReplacementNamed('/');
   }
 

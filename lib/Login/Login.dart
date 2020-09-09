@@ -2,7 +2,6 @@ import 'package:LikeApp/CommonWidgets/emailField.dart';
 import 'package:LikeApp/CommonWidgets/loginButton.dart';
 import 'package:LikeApp/CommonWidgets/passField.dart';
 import 'package:LikeApp/Home/homePage.dart';
-import 'package:LikeApp/Report/addReport.dart';
 import 'package:LikeApp/Services/Auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -81,7 +80,7 @@ class _LoginState extends State<Login> {
   _authenticateUser() async {
     _showLoading();
     if (_isValid()) {
-      var res = await userService.authenticateUser2(
+      var res = await userService.authenticateUser(
           _userNameController.text, _passwordController.text);
       _hideLoading();
 
