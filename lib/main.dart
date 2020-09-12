@@ -1,13 +1,12 @@
 import 'dart:io';
-
 import 'package:LikeApp/Login/Login.dart';
+import 'package:LikeApp/Report/selectEnfermedad.dart';
 import 'package:LikeApp/Services/Auth.dart';
+import 'package:LikeApp/Services/EnfermedadService.dart';
 import 'package:LikeApp/Services/PlagaService.dart';
 import 'package:LikeApp/Services/UserService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-
-import 'Report/selectPlaga.dart';
 
 String _title = "FitoReport";
 
@@ -27,8 +26,8 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       // home: HomePage(title: _title),
-      // home: Login(_title),
-      home: SelectPlaga(),
+      home: Login(_title),
+      // home: SelectEnfermedad(),
     );
   }
 }
@@ -36,6 +35,7 @@ class MyApp extends StatelessWidget {
 void instanceGetIt() {
   GetIt.I.registerLazySingleton(() => UserService());
   GetIt.I.registerLazySingleton(() => PlagaService());
+  GetIt.I.registerLazySingleton(() => EnfermedadService());
   GetIt.I.registerLazySingleton(() => Auth());
 }
 

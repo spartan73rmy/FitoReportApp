@@ -10,14 +10,15 @@ class Enfermedad {
 }
 
 class EnfermedadList {
-  List<Enfermedad> plagas;
+  List<Enfermedad> enfermedades;
 
-  EnfermedadList({this.plagas});
+  EnfermedadList({this.enfermedades});
 
   factory EnfermedadList.fromJSON(Map<String, dynamic> parsedJson) {
     var list = parsedJson['enfermedades'] as List;
-    List<Enfermedad> plagas = list.map((i) => Enfermedad.fromJSON(i)).toList();
+    List<Enfermedad> enfermedades =
+        list.map((i) => Enfermedad.fromJSON(i)).toList();
 
-    return EnfermedadList(plagas: plagas);
+    return EnfermedadList(enfermedades: enfermedades);
   }
 }

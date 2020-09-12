@@ -2,6 +2,7 @@ import 'package:LikeApp/CommonWidgets/emailField.dart';
 import 'package:LikeApp/CommonWidgets/loginButton.dart';
 import 'package:LikeApp/CommonWidgets/passField.dart';
 import 'package:LikeApp/Home/homePage.dart';
+import 'package:LikeApp/Report/selectEnfermedad.dart';
 import 'package:LikeApp/Report/selectPlaga.dart';
 import 'package:LikeApp/Services/Auth.dart';
 import 'package:flutter/material.dart';
@@ -94,9 +95,10 @@ class _LoginState extends State<Login> {
         //   context,
         //   MaterialPageRoute(builder: (context) => HomePage(title)),
         // );
+
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => SelectPlaga()),
+          MaterialPageRoute(builder: (context) => SelectEnfermedad()),
         );
       }
       if (res.error) {
