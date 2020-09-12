@@ -236,10 +236,10 @@ class _StepperBodyState extends State<StepperBody> {
           onPressed: () {
             _saveData();
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SelectPlaga(data)),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => SelectPlaga(data)),
+            // );
           },
           label: Text("Agregar Productos"),
         )

@@ -7,6 +7,8 @@ import 'package:LikeApp/Services/UserService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import 'Report/selectPlaga.dart';
+
 String _title = "FitoReport";
 
 void main() {
@@ -25,7 +27,8 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       // home: HomePage(title: _title),
-      home: Login(_title),
+      // home: Login(_title),
+      home: SelectPlaga(),
     );
   }
 }

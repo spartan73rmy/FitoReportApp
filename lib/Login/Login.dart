@@ -2,6 +2,7 @@ import 'package:LikeApp/CommonWidgets/emailField.dart';
 import 'package:LikeApp/CommonWidgets/loginButton.dart';
 import 'package:LikeApp/CommonWidgets/passField.dart';
 import 'package:LikeApp/Home/homePage.dart';
+import 'package:LikeApp/Report/selectPlaga.dart';
 import 'package:LikeApp/Services/Auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -89,9 +90,13 @@ class _LoginState extends State<Login> {
 
         Auth.insertDetails(_sharedPreferences, res.data);
 
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => HomePage(title)),
+        // );
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(title)),
+          MaterialPageRoute(builder: (context) => SelectPlaga()),
         );
       }
       if (res.error) {
