@@ -1,7 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth {
-  // Keys to store and fetch data from SharedPreferences
   static final String authTokenKey = 'token';
   static final String refToken = 'refreshToken';
   static final String expDate = 'expirationDate';
@@ -11,6 +11,27 @@ class Auth {
 
   static String getToken(SharedPreferences prefs) {
     return prefs.getString(authTokenKey);
+  }
+
+  static bool isLogged(SharedPreferences prefs) {
+    print(getExpDate(prefs).compareTo(DateTime.now()) >= 0);
+    return getExpDate(prefs).compareTo(DateTime.now()) >= 0; //See value
+  }
+
+  static DateTime getExpDate(SharedPreferences prefs) {
+    DateTime date = DateTime.tryParse(prefs.getString(expDate));
+    date ?? DateTime.fromMicrosecondsSinceEpoch(0, isUtc: true);
+    print(date);
+    return date;
+  }
+
+  static logoutUser(BuildContext context, SharedPreferences prefs) {
+    prefs.setString(Auth.authTokenKey, null);
+    prefs.setString(Auth.refToken, null);
+    prefs.setString(Auth.expDate, null);
+    prefs.setString(Auth.userIdKey, null);
+    prefs.setString(Auth.nameKey, null);
+    prefs.setString(Auth.roleKey, null);
   }
 
   static insertDetails(SharedPreferences prefs, var response) {

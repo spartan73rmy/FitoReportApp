@@ -1,21 +1,24 @@
+import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Models/APIResponse.dart';
 import 'package:LikeApp/Models/enfermedad.dart';
 import 'package:LikeApp/Models/reportData.dart';
-import 'package:LikeApp/Services/Auth.dart';
-import 'package:LikeApp/Services/EnfermedadService.dart';
+import 'package:LikeApp/Report/reciepReport.dart';
+import 'package:LikeApp/Services/auth.dart';
+import 'package:LikeApp/Services/enfermedadService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectEnfermedad extends StatefulWidget {
-  // final ReportData data;
-  // SelectEnfermedad(this.data);
+  final ReportData data;
+  SelectEnfermedad({this.data});
 
   @override
   _SelectEnfermedadState createState() => _SelectEnfermedadState();
 }
 
 class _SelectEnfermedadState extends State<SelectEnfermedad> {
+  ReportData data;
   bool _isLoading = true;
   double padValue = 0;
   bool isVisible = true;
@@ -25,33 +28,45 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
   SharedPreferences _sharedPreferences;
   APIResponse<List<Enfermedad>> res;
 
-  final _saved = <Enfermedad>{};
+  final _saved = List<Enfermedad>();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(title: Text('Enfermedades')),
-            body: Builder(builder: (context) {
-              if (_isLoading) {
-                return Center(child: CircularProgressIndicator());
-              }
+    return Scaffold(
+        appBar: AppBar(title: Text('Plagas'), actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.skip_next),
+            onPressed: () {
+              saveData();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ReciepReport(data: data)),
+              );
+            },
+          )
+        ]),
+        body: Builder(builder: (context) {
+          if (_isLoading) {
+            return LoadingScreen();
+          }
 
-              if (res.error ?? false) {
-                return Center(child: Text(res.errorMessage));
-              }
+          if (res.error ?? false) {
+            return Center(child: Text(res.errorMessage));
+          }
 
-              return ListView.builder(
-                  itemCount: res.data.length,
-                  padding: EdgeInsets.all(16.0),
-                  itemBuilder: /*1*/ (context, i) {
-                    return _buildRow(res.data[i]);
-                  });
-            })));
+          return ListView.builder(
+              itemCount: res.data.length,
+              padding: EdgeInsets.all(16.0),
+              itemBuilder: /*1*/ (context, i) {
+                return _buildRow(res.data[i]);
+              });
+        }));
   }
 
   @override
   void initState() {
+    data = widget.data;
     _fetchPlaga();
     super.initState();
   }
@@ -103,6 +118,12 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
   _hideLoading() {
     setState(() {
       _isLoading = false;
+    });
+  }
+
+  void saveData() {
+    setState(() {
+      data.enfermedad = _saved;
     });
   }
 }

@@ -6,14 +6,10 @@ class ReciepReportCard extends StatefulWidget {
   ReciepReportCard(this.data, {Key key}) : super(key: key);
 
   @override
-  _ReciepReportCardState createState() => _ReciepReportCardState(data);
+  _ReciepReportCardState createState() => _ReciepReportCardState();
 }
 
 class _ReciepReportCardState extends State<ReciepReportCard> {
-  final Producto data;
-
-  _ReciepReportCardState(this.data);
-
   // Widget get reciepCard {}
 
   @override
@@ -32,7 +28,7 @@ class _ReciepReportCardState extends State<ReciepReportCard> {
                       color: Color(Colors.black.value)),
                   children: <TextSpan>[
                 TextSpan(
-                  text: '${data.nombre}',
+                  text: '${widget.data.nombre}',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 18,
@@ -47,7 +43,7 @@ class _ReciepReportCardState extends State<ReciepReportCard> {
                   color: Color(Colors.black45.value)),
               children: <TextSpan>[
                 TextSpan(
-                  text: '${data.cantidad}',
+                  text: '${widget.data.cantidad}',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Color(Colors.black.value)),
@@ -59,7 +55,7 @@ class _ReciepReportCardState extends State<ReciepReportCard> {
                       color: Color(Colors.black45.value)),
                 ),
                 TextSpan(
-                  text: '${data.concentracion}%',
+                  text: '${widget.data.concentracion}%',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Color(Colors.black.value)),
@@ -71,7 +67,7 @@ class _ReciepReportCardState extends State<ReciepReportCard> {
                       color: Color(Colors.black45.value)),
                 ),
                 TextSpan(
-                  text: '${data.ingredienteActivo}',
+                  text: '${widget.data.ingredienteActivo}',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Color(Colors.black.value)),
@@ -83,7 +79,7 @@ class _ReciepReportCardState extends State<ReciepReportCard> {
                       color: Color(Colors.black45.value)),
                 ),
                 TextSpan(
-                  text: '${data.intervaloSeguridad} Dias\n',
+                  text: '${widget.data.intervaloSeguridad} Dias\n',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Color(Colors.black.value)),

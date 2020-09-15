@@ -5,19 +5,17 @@ import 'createDialog.dart';
 import 'reciepReportBody.dart';
 
 class ReciepReport extends StatefulWidget {
-  static ReportData data;
-  ReciepReport(ReportData data, {Key key}) : super(key: key);
+  final ReportData data;
+  ReciepReport({this.data});
 
   @override
   _ReciepReportState createState() {
-    return new _ReciepReportState(data);
+    return new _ReciepReportState();
   }
 }
 
 class _ReciepReportState extends State<ReciepReport> {
   ReportData data;
-  _ReciepReportState(this.data);
-
   List<Producto> products = <Producto>[
     new Producto(
         nombre: "Cal",
@@ -26,6 +24,7 @@ class _ReciepReportState extends State<ReciepReport> {
         concentracion: "50",
         intervaloSeguridad: "10")
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +33,7 @@ class _ReciepReportState extends State<ReciepReport> {
         IconButton(
           icon: Icon(Icons.save),
           onPressed: () {
+            saveData();
             Navigator.pop(context);
             Navigator.pop(context);
           },
@@ -51,10 +51,33 @@ class _ReciepReportState extends State<ReciepReport> {
     );
   }
 
+  @override
+  @override
+  void initState() {
+    data = widget.data;
+    super.initState();
+  }
+
   addProduct(Producto product) {
     setState(() {
       products.add(product);
       print(product.cantidad);
     });
+  }
+
+  void saveData() {
+    setState(() {
+      data.producto = products;
+    });
+
+    // for (var i in data.plaga) {
+    //   print(i.nombre);
+    // }
+    // for (var i in data.enfermedad) {
+    //   print(i.nombre);
+    // }
+    // for (var i in data.producto) {
+    //   print(i.nombre);
+    // }
   }
 }

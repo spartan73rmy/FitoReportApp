@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:LikeApp/Models/APIResponse.dart';
 import 'package:LikeApp/Models/HttpModel.dart';
-import 'package:LikeApp/Services/Auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService extends HttpModel {
   static String url = "Cuenta/Ingresar";
@@ -39,20 +37,9 @@ class UserService extends HttpModel {
             "Ocurrio un error al conectar a internet" + error.toString()));
   }
 
-  static logoutUser(BuildContext context, SharedPreferences prefs) {
-    prefs.setString(Auth.authTokenKey, null);
-    prefs.setString(Auth.refToken, null);
-    prefs.setString(Auth.refToken, null);
-
-    // prefs.setInt(Auth.userIdKey, null);
-    // prefs.setString(Auth.nameKey, null);
-    // prefs.setInt(Auth.roleKey, null);
-    Navigator.of(context).pushReplacementNamed('/');
-  }
-
   static showSnackBar(GlobalKey<ScaffoldState> scaffoldKey, String message) {
     scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: new Text(message ?? 'You are offline'),
+      content: new Text(message ?? 'Estas desconectado de internet'),
     ));
   }
 
@@ -62,7 +49,7 @@ class UserService extends HttpModel {
     try {
       final response = await http.get(
         uri,
-        headers: {'Authorization': authToken},
+        headers: {'Authorization': "Bearer " + authToken},
       );
 
       final responseJson = json.decode(response.body);
@@ -70,7 +57,7 @@ class UserService extends HttpModel {
     } catch (exception) {
       print(exception);
       if (exception.toString().contains('SocketException')) {
-        return 'NetworkError';
+        return 'Error de red';
       } else {
         return null;
       }

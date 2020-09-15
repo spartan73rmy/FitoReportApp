@@ -1,14 +1,14 @@
 import 'package:LikeApp/CommonWidgets/emailField.dart';
+import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/CommonWidgets/loginButton.dart';
 import 'package:LikeApp/CommonWidgets/passField.dart';
 import 'package:LikeApp/Home/homePage.dart';
-import 'package:LikeApp/Report/selectEnfermedad.dart';
-import 'package:LikeApp/Report/selectPlaga.dart';
-import 'package:LikeApp/Services/Auth.dart';
+import 'package:LikeApp/Models/apiResponse.dart';
+import 'package:LikeApp/Services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:LikeApp/Services/UserService.dart';
+import 'package:LikeApp/Services/userService.dart';
 
 class Login extends StatefulWidget {
   final String title;
@@ -16,19 +16,16 @@ class Login extends StatefulWidget {
   Login(this.title, {Key key}) : super(key: key);
 
   @override
-  _LoginState createState() => _LoginState(this.title);
+  _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  final String title;
-  _LoginState(this.title);
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  SharedPreferences _sharedPreferences;
+  SharedPreferences sharedPreferences;
   bool _isLoading = false;
   bool _obscureText = true;
-
+  APIResponse<dynamic> response;
   TextEditingController _userNameController, _passwordController;
   String _emailError, _passwordError;
 
@@ -43,13 +40,16 @@ class _LoginState extends State<Login> {
   }
 
   _fetchSessionAndNavigate() async {
-    _sharedPreferences = await _prefs;
-    String authToken = Auth.getToken(_sharedPreferences);
-    if (authToken != null) {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => HomePage(title)),
-      // );
+    sharedPreferences = await _prefs;
+    String authToken = Auth.getToken(sharedPreferences);
+
+    if (authToken != null && Auth.isLogged(sharedPreferences)) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage(widget.title)),
+      );
+    } else {
+      Auth.logoutUser(context, sharedPreferences);
     }
   }
 
@@ -85,20 +85,16 @@ class _LoginState extends State<Login> {
       var res = await userService.authenticateUser(
           _userNameController.text, _passwordController.text);
       _hideLoading();
+      // response = res;
 
       if (res.data != null && !res.error) {
-        _sharedPreferences = await _prefs;
+        sharedPreferences = await _prefs;
 
-        Auth.insertDetails(_sharedPreferences, res.data);
+        Auth.insertDetails(sharedPreferences, res.data);
 
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => HomePage(title)),
-        // );
-
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => SelectEnfermedad()),
+          MaterialPageRoute(builder: (context) => HomePage(widget.title)),
         );
       }
       if (res.error) {
@@ -179,7 +175,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        key: _scaffoldKey,
-        body: _isLoading ? _loadingScreen() : _loginScreen());
+        key: _scaffoldKey, body: _isLoading ? LoadingScreen() : _loginScreen());
   }
 }

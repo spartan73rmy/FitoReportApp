@@ -1,21 +1,24 @@
+import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Models/APIResponse.dart';
 import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/reportData.dart';
-import 'package:LikeApp/Services/Auth.dart';
-import 'package:LikeApp/Services/PlagaService.dart';
+import 'package:LikeApp/Report/selectEnfermedad.dart';
+import 'package:LikeApp/Services/auth.dart';
+import 'package:LikeApp/Services/plagaService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectPlaga extends StatefulWidget {
-  // final ReportData data;
-  // SelectPlaga(this.data);
+  final ReportData data;
+  SelectPlaga({this.data});
 
   @override
   _SelectPlagaState createState() => _SelectPlagaState();
 }
 
 class _SelectPlagaState extends State<SelectPlaga> {
+  ReportData data;
   bool _isLoading = true;
   double padValue = 0;
   bool isVisible = true;
@@ -25,34 +28,48 @@ class _SelectPlagaState extends State<SelectPlaga> {
   SharedPreferences _sharedPreferences;
   APIResponse<List<Plaga>> res;
 
-  final _saved = <Plaga>{};
+  final _saved = List<Plaga>();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(title: Text('Plagas')),
-            body: Builder(builder: (context) {
-              if (_isLoading) {
-                return Center(child: CircularProgressIndicator());
-              }
+    return Scaffold(
+        key: UniqueKey(),
+        appBar: AppBar(title: Text('Plagas'), actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.skip_next),
+            onPressed: () {
+              saveData();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SelectEnfermedad(data: data)),
+              );
+            },
+          )
+        ]),
+        body: Builder(builder: (context) {
+          if (_isLoading) {
+            return LoadingScreen();
+          }
 
-              if (res.error ?? false) {
-                return Center(child: Text(res.errorMessage));
-              }
+          if (res.error ?? false) {
+            return Center(child: Text(res.errorMessage));
+          }
 
-              return ListView.builder(
+          return Container(
+              child: ListView.builder(
                   itemCount: res.data.length,
                   padding: EdgeInsets.all(16.0),
-                  itemBuilder: /*1*/ (context, i) {
+                  itemBuilder: (context, i) {
                     return _buildRow(res.data[i]);
-                  });
-            })));
+                  }));
+        }));
   }
 
   @override
   void initState() {
     _fetchPlaga();
+    data = widget.data;
     super.initState();
   }
 
@@ -73,13 +90,13 @@ class _SelectPlagaState extends State<SelectPlaga> {
   Widget _buildRow(Plaga plaga) {
     final alreadySaved = _saved.contains(plaga);
     return ListTile(
-      title: Text(
-        plaga.nombre,
-        style: TextStyle(fontSize: 18.0),
-      ),
       trailing: Icon(
         alreadySaved ? Icons.favorite : Icons.favorite_border,
         color: alreadySaved ? Colors.red : null,
+      ),
+      title: Text(
+        plaga.nombre,
+        style: TextStyle(fontSize: 18.0),
       ),
       onTap: () {
         setState(() {
@@ -103,6 +120,12 @@ class _SelectPlagaState extends State<SelectPlaga> {
   _hideLoading() {
     setState(() {
       _isLoading = false;
+    });
+  }
+
+  void saveData() {
+    setState(() {
+      data.plaga = _saved;
     });
   }
 }

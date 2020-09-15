@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'package:LikeApp/Login/Login.dart';
-import 'package:LikeApp/Report/selectEnfermedad.dart';
-import 'package:LikeApp/Services/Auth.dart';
-import 'package:LikeApp/Services/EnfermedadService.dart';
-import 'package:LikeApp/Services/PlagaService.dart';
-import 'package:LikeApp/Services/UserService.dart';
+import 'package:LikeApp/Services/auth.dart';
+import 'package:LikeApp/Services/enfermedadService.dart';
+import 'package:LikeApp/Services/plagaService.dart';
+import 'package:LikeApp/Services/userService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -25,9 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      // home: HomePage(title: _title),
       home: Login(_title),
-      // home: SelectEnfermedad(),
     );
   }
 }
