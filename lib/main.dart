@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'package:LikeApp/Login/Login.dart';
+import 'package:LikeApp/Models/enfermedad.dart';
+import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Services/enfermedadService.dart';
 import 'package:LikeApp/Services/plagaService.dart';
 import 'package:LikeApp/Services/userService.dart';
+import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 

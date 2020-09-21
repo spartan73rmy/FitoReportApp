@@ -21,6 +21,15 @@ class Producto {
       intervaloSeguridad: item["intervaloSeguridad"],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      "cantidad": this.cantidad,
+      "nombre": this.nombre,
+      "ingredienteActivo": this.ingredienteActivo,
+      "concentracion": this.concentracion,
+      "intervaloSeguridad": this.intervaloSeguridad,
+    };
+  }
 }
 
 class ProductoList {

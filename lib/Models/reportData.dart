@@ -37,17 +37,63 @@ class ReportData {
 
   factory ReportData.fromJSON(Map<String, dynamic> item) {
     return ReportData(
-      id: item["id"],
-      lugar: item["lugar"],
-      productor: item["productor"],
-      coordX: item["coordX"],
-      coordY: item["coordY"],
-      ubicacion: item["ubicacion"],
-      predio: item["predio"],
-      cultivo: item["cultivo"],
-      etapaFenologica: item["etapaFenologica"],
-      observaciones: item["observaciones"],
-      litros: item["litros"],
-    );
+        id: item["id"],
+        lugar: item["lugar"],
+        productor: item["productor"],
+        coordX: item["coordX"],
+        coordY: item["coordY"],
+        ubicacion: item["ubicacion"],
+        predio: item["predio"],
+        cultivo: item["cultivo"],
+        etapaFenologica: item["etapaFenologica"],
+        observaciones: item["observaciones"],
+        litros: item["litros"],
+        enfermedad: EnfermedadList.fromJSON(item).enfermedades,
+        plaga: PlagaList.fromJSON(item).plagas,
+        producto: ProductoList.fromJSON(item).productos);
+  }
+
+  Map<String, dynamic> toJson() {
+    List<Map> productos = this.producto != null
+        ? this.producto.map((i) => i.toJson()).toList()
+        : null;
+    List<Map> enfermedad = this.enfermedad != null
+        ? this.enfermedad.map((i) => i.toJson()).toList()
+        : null;
+    List<Map> plaga =
+        this.plaga != null ? this.plaga.map((i) => i.toJson()).toList() : null;
+
+    return {
+      "id": this.id,
+      "lugar": this.lugar,
+      "productor": this.productor,
+      "coordX": this.coordX,
+      "coordY": this.coordY,
+      "ubicacion": this.ubicacion,
+      "predio": this.predio,
+      "cultivo": this.cultivo,
+      "etapaFenologica": this.etapaFenologica,
+      "observaciones": this.observaciones,
+      "litros": this.litros,
+      "enfermedades": enfermedad,
+      "plagas": plaga,
+      "productos": productos,
+    };
+  }
+}
+
+class ReportDataList {
+  List<ReportData> reportes;
+
+  ReportDataList({this.reportes});
+
+  List<ReportData> toList(ReportDataList lista) {
+    return lista.reportes;
+  }
+
+  factory ReportDataList.fromJSON(Map<String, dynamic> parsedJson) {
+    var list = parsedJson['reportes'] as List;
+    List<ReportData> lista = list.map((i) => ReportData.fromJSON(i)).toList();
+    return ReportDataList(reportes: lista);
   }
 }

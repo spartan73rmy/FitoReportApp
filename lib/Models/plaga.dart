@@ -7,6 +7,13 @@ class Plaga {
   factory Plaga.fromJSON(Map<String, dynamic> item) {
     return Plaga(id: item['id'], nombre: item['nombre']);
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": this.id,
+      "nombre": this.nombre,
+    };
+  }
 }
 
 class PlagaList {

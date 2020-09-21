@@ -14,8 +14,6 @@ class _ListTempReportCardState extends State<ListTempReportCard> {
 
   _ListTempReportCardState(this.data);
 
-  // Widget get reciepCard {}
-
   @override
   Widget build(BuildContext context) {
     return Container(

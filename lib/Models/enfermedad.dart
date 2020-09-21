@@ -7,6 +7,13 @@ class Enfermedad {
   factory Enfermedad.fromJSON(Map<String, dynamic> item) {
     return Enfermedad(id: item['id'], nombre: item["nombre"]);
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": this.id,
+      "nombre": this.nombre,
+    };
+  }
 }
 
 class EnfermedadList {

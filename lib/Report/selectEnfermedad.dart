@@ -35,7 +35,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
     return Scaffold(
         appBar: AppBar(title: Text('Plagas'), actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.skip_next),
+            icon: Icon(Icons.navigate_next),
             onPressed: () {
               saveData();
               Navigator.pushReplacement(

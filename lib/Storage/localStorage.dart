@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:LikeApp/Models/reportData.dart';
 import 'package:path_provider/path_provider.dart';
 
 class LocalStorage {
-  String fileName = "myJSONFile.json";
+  String fileName = "reportData.json";
   bool fileExists = false;
 
   Future<String> get _localPath async {
@@ -41,16 +42,60 @@ class LocalStorage {
     }
   }
 
-  Future<dynamic> readCounter() async {
+  Future<File> createJsonFile(var data) async {
+    final file = await _localFile;
+    file.createSync();
+    fileExists = true;
+
+    // Write the file.
+    return file.writeAsString(data);
+  }
+
+  void writeJsonToFile(var jsonData) async {
+    final file = await _localFile;
+
+    if (file.existsSync()) {
+      print("File exists");
+      file.writeAsStringSync(jsonData);
+    } else {
+      print("File does not exist!");
+      createJsonFile(jsonData);
+    }
+  }
+
+  Future<void> addReport(ReportData reporte) async {
+    final file = await _localFile;
+    List<ReportData> lista;
+
+    if (file.existsSync()) {
+      print("File Exist- add element");
+      lista = ReportDataList.fromJSON(json.decode(file.readAsStringSync()))
+          .reportes;
+      lista.add(reporte);
+      lista.add(reporte);
+    } else {
+      print("Create new File");
+      lista = new List<ReportData>();
+      lista.add(reporte);
+      lista.add(reporte);
+    }
+
+    String jsonData =
+        jsonEncode({"reportes": lista}); // this will automatically call toJson
+    print(jsonData);
+    writeJsonToFile(jsonData);
+  }
+
+  Future<List<ReportData>> readReports() async {
     try {
       final file = await _localFile;
-      // Read the file.
       String contents = await file.readAsString();
-
-      return json.decode(contents);
+      var reportes = ReportDataList.fromJSON(json.decode(contents)).reportes;
+      return reportes;
     } catch (e) {
-      // If encountering an error, return 0.
-      return e;
+      print(e);
+      print("File corrupt");
+      return new List<ReportData>();
     }
   }
 }

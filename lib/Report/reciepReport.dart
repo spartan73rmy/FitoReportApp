@@ -1,6 +1,10 @@
+import 'package:LikeApp/Models/enfermedad.dart';
+import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/Models/producto.dart';
+import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'createDialog.dart';
 import 'reciepReportBody.dart';
 
@@ -16,14 +20,7 @@ class ReciepReport extends StatefulWidget {
 
 class _ReciepReportState extends State<ReciepReport> {
   ReportData data;
-  List<Producto> products = <Producto>[
-    new Producto(
-        nombre: "Cal",
-        cantidad: 100,
-        ingredienteActivo: "Calcio",
-        concentracion: "50",
-        intervaloSeguridad: "10")
-  ];
+  List<Producto> products;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +29,11 @@ class _ReciepReportState extends State<ReciepReport> {
       appBar: AppBar(title: Text('Productos'), actions: <Widget>[
         IconButton(
           icon: Icon(Icons.save),
-          onPressed: () {
-            saveData();
+          onPressed: () async {
+            print("Im here");
+            await saveData();
+            print("Save data");
+            await saveToLocal();
             Navigator.pop(context);
             Navigator.pop(context);
           },
@@ -54,6 +54,7 @@ class _ReciepReportState extends State<ReciepReport> {
   @override
   @override
   void initState() {
+    products = new List<Producto>();
     data = widget.data;
     super.initState();
   }
@@ -65,19 +66,49 @@ class _ReciepReportState extends State<ReciepReport> {
     });
   }
 
-  void saveData() {
+  void saveData() async {
+    Position position =
+        await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    print(position.latitude);
+    print(position.longitude);
     setState(() {
       data.producto = products;
+      data.coordX = position.latitude;
+      data.coordY = position.longitude;
+      print(data.coordX);
     });
+  }
 
-    // for (var i in data.plaga) {
-    //   print(i.nombre);
-    // }
-    // for (var i in data.enfermedad) {
-    //   print(i.nombre);
-    // }
-    // for (var i in data.producto) {
-    //   print(i.nombre);
-    // }
+  void saveToLocal() async {
+    LocalStorage localS = LocalStorage();
+    List<Enfermedad> enfer = new List<Enfermedad>();
+    enfer.add(Enfermedad(id: 1, nombre: "Enfermedad"));
+    List<Plaga> plag = new List<Plaga>();
+    plag.add(Plaga(id: 1, nombre: "Enfermedad"));
+    List<Producto> prod = new List<Producto>();
+    prod.add(Producto(
+        nombre: "Enfermedad",
+        cantidad: 12,
+        ingredienteActivo: "Ingrediente Activo",
+        concentracion: "12%",
+        intervaloSeguridad: "12 Dias"));
+
+    await localS.addReport(new ReportData(
+        id: 0,
+        lugar: "Lugar",
+        productor: "Porductor",
+        coordX: data.coordX,
+        coordY: data.coordY,
+        ubicacion: "Ubicacion",
+        predio: "Predio",
+        cultivo: "cultivo",
+        etapaFenologica: "EtapaF",
+        observaciones: "Muchas observaciones al respecto",
+        litros: 100,
+        enfermedad: enfer,
+        plaga: plag,
+        producto: prod));
+
+    // localS.addReport(data);
   }
 }
