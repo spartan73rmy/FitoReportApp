@@ -55,11 +55,16 @@ class LocalStorage {
     final file = await _localFile;
 
     if (file.existsSync()) {
-      print("File exists");
       file.writeAsStringSync(jsonData);
     } else {
-      print("File does not exist!");
       createJsonFile(jsonData);
+    }
+  }
+
+  Future<void> clearFile() async {
+    final file = await _localFile;
+    if (file.existsSync()) {
+      writeJsonToFile("");
     }
   }
 
@@ -72,11 +77,9 @@ class LocalStorage {
       lista = ReportDataList.fromJSON(json.decode(file.readAsStringSync()))
           .reportes;
       lista.add(reporte);
-      lista.add(reporte);
     } else {
       print("Create new File");
       lista = new List<ReportData>();
-      lista.add(reporte);
       lista.add(reporte);
     }
 
@@ -95,6 +98,7 @@ class LocalStorage {
     } catch (e) {
       print(e);
       print("File corrupt");
+      await clearFile();
       return new List<ReportData>();
     }
   }

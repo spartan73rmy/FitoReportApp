@@ -30,9 +30,8 @@ class _ReciepReportState extends State<ReciepReport> {
         IconButton(
           icon: Icon(Icons.save),
           onPressed: () async {
-            print("Im here");
+            await getPermission();
             await saveData();
-            print("Save data");
             await saveToLocal();
             Navigator.pop(context);
             Navigator.pop(context);
@@ -52,7 +51,6 @@ class _ReciepReportState extends State<ReciepReport> {
   }
 
   @override
-  @override
   void initState() {
     products = new List<Producto>();
     data = widget.data;
@@ -66,49 +64,64 @@ class _ReciepReportState extends State<ReciepReport> {
     });
   }
 
-  void saveData() async {
-    Position position =
-        await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    print(position.latitude);
-    print(position.longitude);
+  Future<void> getPermission() async {
+    print("GPS...");
+    bool isEnabled = await isLocationServiceEnabled();
+    if (isEnabled) {
+      LocationPermission permission = await checkPermission();
+      if (permission != LocationPermission.always &&
+          permission != LocationPermission.whileInUse) {
+        permission = await requestPermission();
+      } else {
+        final Position position =
+            await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        print("Latitude:${position.latitude}");
+        print(position.longitude);
+        setState(() {
+          data.coordX = position.latitude;
+          data.coordY = position.longitude;
+        });
+      }
+    }
+  }
+
+  Future<void> saveData() async {
     setState(() {
       data.producto = products;
-      data.coordX = position.latitude;
-      data.coordY = position.longitude;
-      print(data.coordX);
     });
   }
 
-  void saveToLocal() async {
+  Future<void> saveToLocal() async {
     LocalStorage localS = LocalStorage();
-    List<Enfermedad> enfer = new List<Enfermedad>();
-    enfer.add(Enfermedad(id: 1, nombre: "Enfermedad"));
-    List<Plaga> plag = new List<Plaga>();
-    plag.add(Plaga(id: 1, nombre: "Enfermedad"));
-    List<Producto> prod = new List<Producto>();
-    prod.add(Producto(
-        nombre: "Enfermedad",
-        cantidad: 12,
-        ingredienteActivo: "Ingrediente Activo",
-        concentracion: "12%",
-        intervaloSeguridad: "12 Dias"));
+    // List<Enfermedad> enfer = new List<Enfermedad>();
+    // enfer.add(Enfermedad(id: 1, nombre: "Enfermedad"));
+    // List<Plaga> plag = new List<Plaga>();
+    // plag.add(Plaga(id: 1, nombre: "Enfermedad"));
+    // List<Producto> prod = new List<Producto>();
+    // prod.add(Producto(
+    //     nombre: "Enfermedad",
+    //     cantidad: 12,
+    //     ingredienteActivo: "Ingrediente Activo",
+    //     concentracion: "12%",
+    //     intervaloSeguridad: "12 Dias"));
 
-    await localS.addReport(new ReportData(
-        id: 0,
-        lugar: "Lugar",
-        productor: "Porductor",
-        coordX: data.coordX,
-        coordY: data.coordY,
-        ubicacion: "Ubicacion",
-        predio: "Predio",
-        cultivo: "cultivo",
-        etapaFenologica: "EtapaF",
-        observaciones: "Muchas observaciones al respecto",
-        litros: 100,
-        enfermedad: enfer,
-        plaga: plag,
-        producto: prod));
+    // await localS.addReport(new ReportData(
+    //     id: 0,
+    //     lugar: "Lugar",
+    //     productor: "Porductor",
+    //     coordX: data.coordX,
+    //     coordY: data.coordY,
+    //     ubicacion: "Ubicacion",
+    //     predio: "Predio",
+    //     cultivo: "cultivo",
+    //     etapaFenologica: "EtapaF",
+    //     observaciones: "Muchas observaciones al respecto",
+    //     litros: 100,
+    //     enfermedad: enfer,
+    //     plaga: plag,
+    //     producto: prod));
 
     // localS.addReport(data);
+    localS.clearFile();
   }
 }
