@@ -1,3 +1,4 @@
+import 'package:LikeApp/Home/homePage.dart';
 import 'package:LikeApp/Models/enfermedad.dart';
 import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/reportData.dart';
@@ -33,8 +34,10 @@ class _ReciepReportState extends State<ReciepReport> {
             await getPermission();
             await saveData();
             await saveToLocal();
-            Navigator.pop(context);
-            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage("FitoReport")),
+            );
           },
         )
       ]),
@@ -75,8 +78,6 @@ class _ReciepReportState extends State<ReciepReport> {
       } else {
         final Position position =
             await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        print("Latitude:${position.latitude}");
-        print(position.longitude);
         setState(() {
           data.coordX = position.latitude;
           data.coordY = position.longitude;
@@ -93,35 +94,34 @@ class _ReciepReportState extends State<ReciepReport> {
 
   Future<void> saveToLocal() async {
     LocalStorage localS = LocalStorage();
-    // List<Enfermedad> enfer = new List<Enfermedad>();
-    // enfer.add(Enfermedad(id: 1, nombre: "Enfermedad"));
-    // List<Plaga> plag = new List<Plaga>();
-    // plag.add(Plaga(id: 1, nombre: "Enfermedad"));
-    // List<Producto> prod = new List<Producto>();
-    // prod.add(Producto(
-    //     nombre: "Enfermedad",
-    //     cantidad: 12,
-    //     ingredienteActivo: "Ingrediente Activo",
-    //     concentracion: "12%",
-    //     intervaloSeguridad: "12 Dias"));
+    List<Enfermedad> enfer = new List<Enfermedad>();
+    enfer.add(Enfermedad(id: 1, nombre: "Enfermedad"));
+    List<Plaga> plag = new List<Plaga>();
+    plag.add(Plaga(id: 1, nombre: "Enfermedad"));
+    List<Producto> prod = new List<Producto>();
+    prod.add(Producto(
+        nombre: "Enfermedad",
+        cantidad: 12,
+        ingredienteActivo: "Ingrediente Activo",
+        concentracion: "12%",
+        intervaloSeguridad: "12 Dias"));
 
-    // await localS.addReport(new ReportData(
-    //     id: 0,
-    //     lugar: "Lugar",
-    //     productor: "Porductor",
-    //     coordX: data.coordX,
-    //     coordY: data.coordY,
-    //     ubicacion: "Ubicacion",
-    //     predio: "Predio",
-    //     cultivo: "cultivo",
-    //     etapaFenologica: "EtapaF",
-    //     observaciones: "Muchas observaciones al respecto",
-    //     litros: 100,
-    //     enfermedad: enfer,
-    //     plaga: plag,
-    //     producto: prod));
+    await localS.addReport(new ReportData(
+        id: 0,
+        lugar: "Periban de ramos",
+        productor: "Jose Alberto Espinoza Morelos 3",
+        coordX: data.coordX,
+        coordY: data.coordY,
+        ubicacion: "Periban de ramos",
+        predio: "El pedregal III",
+        cultivo: "Aguacate",
+        etapaFenologica: "EtapaF",
+        observaciones: "Muchas observaciones al respecto",
+        litros: 100,
+        enfermedad: enfer,
+        plaga: plag,
+        producto: prod));
 
     // localS.addReport(data);
-    localS.clearFile();
   }
 }

@@ -1,11 +1,11 @@
-import 'package:LikeApp/Report/reciepReportCard.dart';
-import 'package:LikeApp/Models/producto.dart';
+import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
+import 'package:LikeApp/Models/reportData.dart';
+import 'package:LikeApp/Storage/localStorage.dart';
+import 'package:LikeApp/TempReports/listTempReportCard.dart';
 import 'package:flutter/material.dart';
 
 class ListTempReportBody extends StatefulWidget {
-  final List<Producto> allProducts;
-
-  ListTempReportBody(this.allProducts, {Key key}) : super(key: key);
+  ListTempReportBody();
 
   @override
   _ListTempReportBodyState createState() => _ListTempReportBodyState();
@@ -13,15 +13,38 @@ class ListTempReportBody extends StatefulWidget {
 
 class _ListTempReportBodyState extends State<ListTempReportBody> {
   @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
+  Future<List<ReportData>> getData() async {
+    LocalStorage localStorage = new LocalStorage();
+    var tempReports = await localStorage.readReports();
+    return tempReports;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-          child: ListView.builder(
-              itemCount: widget.allProducts.length,
-              padding: const EdgeInsets.only(top: 10.0),
-              itemBuilder: (context, index) {
-                return ReciepReportCard(widget.allProducts[index]);
-              })),
-    );
+    return FutureBuilder(
+        future: getData(),
+        builder: (context, AsyncSnapshot snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return LoadingScreen();
+            default:
+              if (snapshot.hasError)
+                return new Text('Error: ${snapshot.error}');
+              else {
+                return new ListView.builder(
+                    itemCount: snapshot.data.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTempReportCard(snapshot.data[index]);
+                    });
+              }
+          }
+        });
   }
 }

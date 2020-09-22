@@ -64,7 +64,8 @@ class LocalStorage {
   Future<void> clearFile() async {
     final file = await _localFile;
     if (file.existsSync()) {
-      writeJsonToFile("");
+      String jsonData = jsonEncode({"reportes": []});
+      writeJsonToFile(jsonData);
     }
   }
 
@@ -85,7 +86,6 @@ class LocalStorage {
 
     String jsonData =
         jsonEncode({"reportes": lista}); // this will automatically call toJson
-    print(jsonData);
     writeJsonToFile(jsonData);
   }
 

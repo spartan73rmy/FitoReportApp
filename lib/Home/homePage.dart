@@ -1,4 +1,3 @@
-import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/TempReports/listTempReport.dart';
 import 'package:flutter/material.dart';
 import '../Report/addReport.dart';
@@ -27,7 +26,7 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      body: ListTempReport(new ReportData()),
+      body: ListTempReport(),
       persistentFooterButtons: <Widget>[
         FloatingActionButton.extended(
           icon: Icon(Icons.add),
@@ -42,7 +41,6 @@ class HomePage extends StatelessWidget {
           label: Text("Agregar Reporte"),
         )
       ],
-      // floatingActionButton:
     );
   }
 }
