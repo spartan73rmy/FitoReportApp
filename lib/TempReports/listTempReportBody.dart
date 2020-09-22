@@ -31,6 +31,7 @@ class _ListTempReportBodyState extends State<ListTempReportBody> {
         builder: (context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
+              return Container();
             case ConnectionState.waiting:
               return LoadingScreen();
             default:
