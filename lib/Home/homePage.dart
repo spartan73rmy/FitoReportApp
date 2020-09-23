@@ -94,6 +94,7 @@ class _HomePageState extends State<HomePage> {
       if (res.error != true) {
         print("All reports uploaded");
         await localStorage.clearFile();
+        Navigator.of(context).popUntil((route) => route.isFirst);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage(widget.title)),

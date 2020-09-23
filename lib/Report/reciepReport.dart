@@ -34,6 +34,7 @@ class _ReciepReportState extends State<ReciepReport> {
             await getPermission();
             await saveData();
             await saveToLocal();
+            Navigator.of(context).popUntil((route) => route.isFirst);
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => HomePage("FitoReport")),
