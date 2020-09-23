@@ -1,6 +1,7 @@
 import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Models/apiResponse.dart';
+import 'package:LikeApp/Models/dataSearch.dart';
 import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Services/reportService.dart';
@@ -27,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   SharedPreferences _sharedPreferences;
   APIResponse<bool> res;
+  List<DataSearch> busqueda;
 
   @override
   void initState() {
@@ -48,8 +50,9 @@ class _HomePageState extends State<HomePage> {
           ),
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {
-              showSearch(context: context, delegate: DataSearch());
+            onPressed: () async {
+              await getDataSearch();
+              showSearch(context: context, delegate: Search(busqueda));
             },
           )
         ],
@@ -75,6 +78,20 @@ class _HomePageState extends State<HomePage> {
         )
       ],
     );
+  }
+
+  Future<void> getDataSearch() async {
+    _showLoading();
+    _sharedPreferences = await _prefs;
+    String authToken = Auth.getToken(_sharedPreferences);
+    var resp = await service.getDataSearch(authToken);
+    busqueda = resp.data;
+
+    if (res.error) {
+      alertDiag(context, "Error", res.errorMessage);
+    }
+
+    _hideLoading();
   }
 
   Future<void> saveData() async {

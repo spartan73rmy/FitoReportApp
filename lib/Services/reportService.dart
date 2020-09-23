@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:LikeApp/Models/apiResponse.dart';
 import 'package:LikeApp/Models/HttpModel.dart';
+import 'package:LikeApp/Models/dataSearch.dart';
 import 'package:LikeApp/Models/reportData.dart';
 import 'package:http/http.dart' as http;
 
@@ -33,5 +33,30 @@ class ReportService extends HttpModel {
             error: true,
             errorMessage: "Ocurrio un error al conectar a internet \n" +
                 error.toString()));
+  }
+
+  Future<APIResponse<List<DataSearch>>> getDataSearch(authToken) {
+    return http
+        .get(
+          HttpModel.getUrl() + url,
+          headers: {'Authorization': "Bearer " + authToken},
+        )
+        .timeout(Duration(seconds: 15))
+        .then((data) {
+          if (data.statusCode == 200) {
+            final jsonData = json.decode(data.body);
+            final dataSearchList = DataSearchList.fromJSON(jsonData);
+            return APIResponse<List<DataSearch>>(data: dataSearchList.busqueda);
+          }
+          return APIResponse<List<DataSearch>>(
+              data: new List<DataSearch>(),
+              error: true,
+              errorMessage: "La sesion ha caducado, reinicie sesion");
+        })
+        .catchError((error) => APIResponse<List<DataSearch>>(
+            data: new List<DataSearch>(),
+            error: true,
+            errorMessage:
+                "Ocurrio un error al conectar a internet " + error.toString()));
   }
 }
