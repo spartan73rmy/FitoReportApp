@@ -106,6 +106,8 @@ class _ReciepReportState extends State<ReciepReport> {
         concentracion: "12%",
         intervaloSeguridad: "12 Dias"));
 
+    await localS.clearFile();
+
     await localS.addReport(new ReportData(
         id: 0,
         lugar: "Periban de ramos",
@@ -121,7 +123,5 @@ class _ReciepReportState extends State<ReciepReport> {
         enfermedad: enfer,
         plaga: plag,
         producto: prod));
-
-    // localS.addReport(data);
   }
 }

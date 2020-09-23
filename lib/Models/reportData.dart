@@ -64,17 +64,17 @@ class ReportData {
         this.plaga != null ? this.plaga.map((i) => i.toJson()).toList() : null;
 
     return {
-      "id": this.id,
-      "lugar": this.lugar,
-      "productor": this.productor,
-      "coordX": this.coordX,
-      "coordY": this.coordY,
-      "ubicacion": this.ubicacion,
-      "predio": this.predio,
-      "cultivo": this.cultivo,
-      "etapaFenologica": this.etapaFenologica,
-      "observaciones": this.observaciones,
-      "litros": this.litros,
+      "id": id,
+      "lugar": lugar,
+      "productor": productor,
+      "coordX": coordX,
+      "coordY": coordY,
+      "ubicacion": ubicacion,
+      "predio": predio,
+      "cultivo": cultivo,
+      "etapaFenologica": etapaFenologica,
+      "observaciones": observaciones,
+      "litros": litros,
       "enfermedades": enfermedad,
       "plagas": plaga,
       "productos": productos,
@@ -89,6 +89,16 @@ class ReportDataList {
 
   List<ReportData> toList(ReportDataList lista) {
     return lista.reportes;
+  }
+
+  Map<String, dynamic> toJson() {
+    List<Map> reportes = this.reportes != null
+        ? this.reportes.map((i) => i.toJson()).toList()
+        : null;
+
+    return {
+      "reportes": reportes,
+    };
   }
 
   factory ReportDataList.fromJSON(Map<String, dynamic> parsedJson) {

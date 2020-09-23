@@ -1,3 +1,4 @@
+import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/emailField.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/CommonWidgets/loginButton.dart';
@@ -65,20 +66,6 @@ class _LoginState extends State<Login> {
     });
   }
 
-  alert(title, text) {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Text(title),
-              content: Text(text),
-              actions: [
-                FlatButton(
-                    onPressed: () => {Navigator.pop(context)},
-                    child: Text("Cerrar"))
-              ],
-            ));
-  }
-
   _authenticateUser() async {
     _showLoading();
     if (_isValid()) {
@@ -98,7 +85,7 @@ class _LoginState extends State<Login> {
         );
       }
       if (res.error) {
-        alert("Error", res.errorMessage);
+        alertDiag(context, "Error", res.errorMessage);
       }
     } else {
       _hideLoading();

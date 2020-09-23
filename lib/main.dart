@@ -3,6 +3,7 @@ import 'package:LikeApp/Login/Login.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Services/enfermedadService.dart';
 import 'package:LikeApp/Services/plagaService.dart';
+import 'package:LikeApp/Services/reportService.dart';
 import 'package:LikeApp/Services/userService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
 
 void instanceGetIt() {
   GetIt.I.registerLazySingleton(() => UserService());
+  GetIt.I.registerLazySingleton(() => ReportService());
   GetIt.I.registerLazySingleton(() => PlagaService());
   GetIt.I.registerLazySingleton(() => EnfermedadService());
   GetIt.I.registerLazySingleton(() => Auth());

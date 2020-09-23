@@ -10,31 +10,35 @@ class UserService extends HttpModel {
 
   Future<APIResponse<dynamic>> authenticateUser(String email, String password) {
     var uri = HttpModel.getUrl() + url;
-    return http.post(
-      uri,
-      body: json.encode({
-        'nombreUsuario': email.toString().trim(),
-        'password': password.toString()
-      }),
-      headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-      },
-    ).then((data) {
-      if (data.statusCode == 200) {
-        final jsonData = json.decode(data.body);
-        // print(jsonData);
-        return APIResponse<dynamic>(data: jsonData);
-      }
-      return APIResponse<bool>(
-          data: false,
-          error: true,
-          errorMessage:
-              "No se encuentra el usuario y/o contraseña incorrecta,revisa tus datos");
-    }).catchError((error) => APIResponse<bool>(
-        data: false,
-        error: true,
-        errorMessage:
-            "Ocurrio un error al conectar a internet" + error.toString()));
+    return http
+        .post(
+          uri,
+          body: json.encode({
+            'nombreUsuario': email.toString().trim(),
+            'password': password.toString()
+          }),
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+          },
+        )
+        .timeout(Duration(seconds: 15))
+        .then((data) {
+          if (data.statusCode == 200) {
+            final jsonData = json.decode(data.body);
+            // print(jsonData);
+            return APIResponse<dynamic>(data: jsonData);
+          }
+          return APIResponse<bool>(
+              data: false,
+              error: true,
+              errorMessage:
+                  "No se encuentra el usuario y/o contraseña incorrecta,revisa tus datos");
+        })
+        .catchError((error) => APIResponse<bool>(
+            data: false,
+            error: true,
+            errorMessage:
+                "Ocurrio un error al conectar a internet" + error.toString()));
   }
 
   static showSnackBar(GlobalKey<ScaffoldState> scaffoldKey, String message) {
