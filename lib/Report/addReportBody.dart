@@ -231,8 +231,7 @@ class _StepperBodyState extends State<StepperBody> {
         ),
         FloatingActionButton.extended(
           icon: Icon(Icons.add),
-          backgroundColor: Color(Colors.green.value),
-          foregroundColor: Color(Colors.black.value),
+          backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
             _saveData();
 

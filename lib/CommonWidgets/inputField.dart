@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-class EmailField extends StatelessWidget {
-  final TextEditingController emailController;
-  final String emailError;
-  EmailField({this.emailController, this.emailError});
+class InputField extends StatelessWidget {
+  final TextEditingController textController;
+  final TextInputType input;
+  final String error;
+  final String label;
+  InputField(this.label, this.textController, this.error, this.input);
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +16,12 @@ class EmailField extends StatelessWidget {
                 primaryColor: Theme.of(context).primaryColor,
                 textSelectionColor: Theme.of(context).primaryColor),
             child: new TextField(
-                keyboardType: TextInputType.emailAddress,
-                controller: emailController,
+                keyboardType: input,
+                controller: textController,
                 decoration: new InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(vertical: 4.0),
-                  errorText: emailError,
-                  labelText: 'Usuario',
+                  errorText: error,
+                  labelText: "$label",
                 ))));
   }
 }

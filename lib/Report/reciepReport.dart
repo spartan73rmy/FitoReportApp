@@ -32,7 +32,7 @@ class _ReciepReportState extends State<ReciepReport> {
         IconButton(
           icon: Icon(Icons.save),
           onPressed: () async {
-            await getPermission();
+            await getGeoLocation();
             await saveData();
             await saveToLocal();
             Navigator.of(context).popUntil((route) => route.isFirst);
@@ -69,7 +69,7 @@ class _ReciepReportState extends State<ReciepReport> {
     });
   }
 
-  Future<void> getPermission() async {
+  Future<void> getGeoLocation() async {
     print("GPS...");
     bool isEnabled = await isLocationServiceEnabled();
     if (isEnabled) {

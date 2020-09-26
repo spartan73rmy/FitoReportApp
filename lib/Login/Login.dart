@@ -1,10 +1,11 @@
 import 'package:LikeApp/CommonWidgets/alert.dart';
-import 'package:LikeApp/CommonWidgets/emailField.dart';
+import 'package:LikeApp/CommonWidgets/inputField.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/CommonWidgets/loginButton.dart';
 import 'package:LikeApp/CommonWidgets/passField.dart';
 import 'package:LikeApp/Home/homePage.dart';
 import 'package:LikeApp/Models/apiResponse.dart';
+import 'package:LikeApp/RegisterUser/register.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -121,15 +122,15 @@ class _LoginState extends State<Login> {
         padding: const EdgeInsets.only(top: 100.0, left: 16.0, right: 16.0),
         children: <Widget>[
           new Icon(Icons.weekend),
-          new EmailField(
-              emailController: _userNameController, emailError: _emailError),
+          new InputField("Usuario", _userNameController, _emailError,
+              TextInputType.emailAddress),
           new PasswordField(
             passwordController: _passwordController,
             obscureText: _obscureText,
             passwordError: _passwordError,
             togglePassword: _togglePassword,
           ),
-          new LoginButton(onPressed: _authenticateUser)
+          new LoginButton(text: "Log In", onPressed: _authenticateUser),
         ],
       ),
     );
@@ -144,6 +145,18 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        key: _scaffoldKey, body: _isLoading ? LoadingScreen() : _loginScreen());
+        appBar: AppBar(actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.account_box),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Register()),
+              );
+            },
+          )
+        ]),
+        key: _scaffoldKey,
+        body: _isLoading ? LoadingScreen() : _loginScreen());
   }
 }

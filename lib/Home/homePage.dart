@@ -74,8 +74,7 @@ class _HomePageState extends State<HomePage> {
       persistentFooterButtons: <Widget>[
         FloatingActionButton.extended(
           icon: Icon(Icons.add),
-          backgroundColor: Color(Colors.green.value),
-          foregroundColor: Color(Colors.black.value),
+          backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
             Navigator.push(
               context,

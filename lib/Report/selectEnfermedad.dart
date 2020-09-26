@@ -81,7 +81,6 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
     _hideLoading();
   }
 
-  // #docregion _buildRow
   Widget _buildRow(Enfermedad plaga) {
     final alreadySaved = _saved.contains(plaga);
     return ListTile(
@@ -104,7 +103,6 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
       },
     );
   }
-  // #enddocregion _buildRow
 
   _showLoading() {
     setState(() {
