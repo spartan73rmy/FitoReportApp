@@ -51,11 +51,9 @@ class Search extends SearchDelegate<String> {
         ? new List<DataSearch>()
         : busqueda
             .where((p) =>
-                p.productor.toLowerCase().contains(query.toLowerCase()) ??
-                p.lugar.toLowerCase().contains(query.toLowerCase()) ??
-                p.predio.toLowerCase().contains(query.toLowerCase()) ??
-                p.ubicacion.toLowerCase().contains(query.toLowerCase()) ??
-                false)
+                p.productor.toLowerCase().contains(query.toLowerCase()) ||
+                p.lugar.toLowerCase().contains(query.toLowerCase()) ||
+                p.predio.toLowerCase().contains(query.toLowerCase()))
             .toList();
 
     return ListView.builder(
@@ -68,12 +66,9 @@ class Search extends SearchDelegate<String> {
         leading: Icon(Icons.location_city),
         title: RichText(
           text: TextSpan(
-            text: suggetionsList[index].productor.substring(0, query.length),
+            text: suggetionsList[index].productor,
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             children: [
-              TextSpan(
-                  text: suggetionsList[index].productor.substring(query.length),
-                  style: TextStyle(color: Colors.grey)),
               TextSpan(
                   text: "\nPredio: ${suggetionsList[index].predio}",
                   style: TextStyle(color: Colors.grey)),
