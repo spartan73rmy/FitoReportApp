@@ -25,7 +25,7 @@ class Auth {
     return date;
   }
 
-  static logoutUser(BuildContext context, SharedPreferences prefs) {
+  static logoutUser(SharedPreferences prefs) {
     prefs.setString(Auth.authTokenKey, null);
     prefs.setString(Auth.refToken, null);
     prefs.setString(Auth.expDate, null);

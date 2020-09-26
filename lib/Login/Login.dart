@@ -50,7 +50,7 @@ class _LoginState extends State<Login> {
         MaterialPageRoute(builder: (context) => HomePage(widget.title)),
       );
     } else {
-      Auth.logoutUser(context, sharedPreferences);
+      Auth.logoutUser(sharedPreferences);
     }
   }
 
@@ -120,6 +120,7 @@ class _LoginState extends State<Login> {
       child: new ListView(
         padding: const EdgeInsets.only(top: 100.0, left: 16.0, right: 16.0),
         children: <Widget>[
+          new Icon(Icons.weekend),
           new EmailField(
               emailController: _userNameController, emailError: _emailError),
           new PasswordField(
