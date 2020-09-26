@@ -110,13 +110,9 @@ class _HomePageState extends State<HomePage> {
       });
 
       if (res.error != true) {
-        print("All reports uploaded");
+        alertDiag(context, "Finalizado",
+            "Los reportes fueron sincronizados con la nube ");
         await localStorage.clearFile();
-        Navigator.of(context).popUntil((route) => route.isFirst);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage(widget.title)),
-        );
       }
     }
 

@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SelectEnfermedad extends StatefulWidget {
   final ReportData data;
   SelectEnfermedad({this.data});
-
   @override
   _SelectEnfermedadState createState() => _SelectEnfermedadState();
 }
@@ -20,8 +19,6 @@ class SelectEnfermedad extends StatefulWidget {
 class _SelectEnfermedadState extends State<SelectEnfermedad> {
   ReportData data;
   bool _isLoading = true;
-  double padValue = 0;
-  bool isVisible = true;
 
   EnfermedadService get service => GetIt.I<EnfermedadService>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -33,12 +30,12 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Plagas'), actions: <Widget>[
+        appBar: AppBar(title: Text('Enfermedades'), actions: <Widget>[
           IconButton(
             icon: Icon(Icons.navigate_next),
             onPressed: () {
               saveData();
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => ReciepReport(data: data)),
@@ -93,7 +90,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
         style: TextStyle(fontSize: 18.0),
       ),
       trailing: Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
+        alreadySaved ? Icons.check_box : Icons.check_box_outline_blank,
         color: alreadySaved ? Colors.red : null,
       ),
       onTap: () {

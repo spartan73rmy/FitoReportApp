@@ -12,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SelectPlaga extends StatefulWidget {
   final ReportData data;
   SelectPlaga({this.data});
-
   @override
   _SelectPlagaState createState() => _SelectPlagaState();
 }
@@ -20,8 +19,6 @@ class SelectPlaga extends StatefulWidget {
 class _SelectPlagaState extends State<SelectPlaga> {
   ReportData data;
   bool _isLoading = true;
-  double padValue = 0;
-  bool isVisible = true;
 
   PlagaService get service => GetIt.I<PlagaService>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -39,7 +36,7 @@ class _SelectPlagaState extends State<SelectPlaga> {
             icon: Icon(Icons.navigate_next),
             onPressed: () {
               saveData();
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => SelectEnfermedad(data: data)),
@@ -91,7 +88,7 @@ class _SelectPlagaState extends State<SelectPlaga> {
     final alreadySaved = _saved.contains(plaga);
     return ListTile(
       trailing: Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
+        alreadySaved ? Icons.check_box : Icons.check_box_outline_blank,
         color: alreadySaved ? Colors.red : null,
       ),
       title: Text(

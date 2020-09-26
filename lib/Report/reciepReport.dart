@@ -12,7 +12,7 @@ import 'reciepReportBody.dart';
 
 class ReciepReport extends StatefulWidget {
   final ReportData data;
-  ReciepReport({this.data});
+  ReciepReport({this.data, Key key}) : super(key: key);
 
   @override
   _ReciepReportState createState() {
