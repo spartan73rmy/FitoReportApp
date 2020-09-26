@@ -3,6 +3,7 @@ import 'package:LikeApp/Models/enfermedad.dart';
 import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/Models/producto.dart';
+import 'package:LikeApp/Storage/files.dart';
 import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -94,7 +95,7 @@ class _ReciepReportState extends State<ReciepReport> {
   }
 
   Future<void> saveToLocal() async {
-    LocalStorage localS = LocalStorage();
+    LocalStorage localS = LocalStorage(FileName().report);
     List<Enfermedad> enfer = new List<Enfermedad>();
     enfer.add(Enfermedad(id: 1, nombre: "Enfermedad"));
     List<Plaga> plag = new List<Plaga>();

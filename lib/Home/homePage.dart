@@ -5,6 +5,7 @@ import 'package:LikeApp/Models/dataSearch.dart';
 import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Services/reportService.dart';
+import 'package:LikeApp/Storage/files.dart';
 import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:LikeApp/TempReports/listTempReport.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +100,7 @@ class _HomePageState extends State<HomePage> {
     _sharedPreferences = await _prefs;
     String authToken = Auth.getToken(_sharedPreferences);
 
-    LocalStorage localStorage = new LocalStorage();
+    LocalStorage localStorage = new LocalStorage(FileName().report);
     List<ReportData> tempReports = await localStorage.readReports();
 
     if (tempReports.length > 0) {

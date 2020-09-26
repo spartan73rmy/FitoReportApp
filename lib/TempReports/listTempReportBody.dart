@@ -1,5 +1,6 @@
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Models/reportData.dart';
+import 'package:LikeApp/Storage/files.dart';
 import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:LikeApp/TempReports/listTempReportCard.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ class _ListTempReportBodyState extends State<ListTempReportBody> {
   }
 
   Future<List<ReportData>> getData() async {
-    LocalStorage localStorage = new LocalStorage();
+    LocalStorage localStorage = new LocalStorage(FileName().report);
     var tempReports = await localStorage.readReports();
     return tempReports;
   }

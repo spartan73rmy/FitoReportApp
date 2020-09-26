@@ -4,7 +4,9 @@ import 'package:LikeApp/Models/reportData.dart';
 import 'package:path_provider/path_provider.dart';
 
 class LocalStorage {
-  String fileName = "reportData.json";
+  LocalStorage(this.fileName);
+
+  String fileName;
   bool fileExists = false;
 
   Future<String> get _localPath async {
