@@ -81,8 +81,8 @@ class _ReciepReportState extends State<ReciepReport> {
         final Position position =
             await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         setState(() {
-          data.coordX = position.latitude;
-          data.coordY = position.longitude;
+          data.latitude = position.latitude;
+          data.longitud = position.longitude;
         });
       }
     }
@@ -112,8 +112,8 @@ class _ReciepReportState extends State<ReciepReport> {
         id: 0,
         lugar: "Periban de ramos",
         productor: "Jose Alberto Espinoza Morelos 3",
-        coordX: data.coordX,
-        coordY: data.coordY,
+        latitude: data.latitude,
+        longitud: data.longitud,
         ubicacion: "Periban de ramos",
         predio: "El pedregal III",
         cultivo: "Aguacate",
