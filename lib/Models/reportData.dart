@@ -6,8 +6,8 @@ class ReportData {
   int id;
   String lugar;
   String productor;
-  double coordX;
-  double coordY;
+  double latitude;
+  double longitud;
   String ubicacion;
   String predio;
   String cultivo;
@@ -23,8 +23,8 @@ class ReportData {
       {this.id,
       this.lugar,
       this.productor,
-      this.coordX,
-      this.coordY,
+      this.latitude,
+      this.longitud,
       this.ubicacion,
       this.predio,
       this.cultivo,
@@ -40,12 +40,12 @@ class ReportData {
         id: item["id"],
         lugar: item["lugar"],
         productor: item["productor"],
-        coordX: item["coordX"],
-        coordY: item["coordY"],
+        latitude: item["latitude"],
+        longitud: item["longitud"],
         ubicacion: item["ubicacion"],
         predio: item["predio"],
         cultivo: item["cultivo"],
-        etapaFenologica: item["etapaFenologica"],
+        etapaFenologica: item["etapaFenologica  "],
         observaciones: item["observaciones"],
         litros: item["litros"],
         enfermedad: EnfermedadList.fromJSON(item).enfermedades,
@@ -67,8 +67,8 @@ class ReportData {
       "id": id,
       "lugar": lugar,
       "productor": productor,
-      "coordX": coordX,
-      "coordY": coordY,
+      "latitude": latitude,
+      "longitud": longitud,
       "ubicacion": ubicacion,
       "predio": predio,
       "cultivo": cultivo,
