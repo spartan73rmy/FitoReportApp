@@ -8,13 +8,13 @@ class LoadingScreen extends StatelessWidget {
 
   Widget _loadingScreen() {
     return new Container(
-        margin: const EdgeInsets.only(top: 100.0),
+        margin: const EdgeInsets.only(top: 150.0),
         child: new Center(
             child: new Column(
           children: <Widget>[
-            new CircularProgressIndicator(strokeWidth: 4.0),
+            CircularProgressIndicator(strokeWidth: 4.0),
             new Container(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
               child: new Text(
                 'Espere',
                 style:
