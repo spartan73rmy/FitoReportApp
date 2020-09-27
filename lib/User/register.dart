@@ -136,10 +136,10 @@ class _RegisterState extends State<Register> {
       setState(() {
         _passwordError = "Introduce una contraseña";
       });
-    } // else if (_passwordController.text.length < 6) {
-    //   valid = false;
-    //   _passwordError = "Password is invalid!";
-    // }
+    } else if (_passwordController.text.length < 6) {
+      valid = false;
+      _passwordError = "Minimo 6 caracteres";
+    }
     if (_emailController.text.isEmpty) {
       valid = false;
       setState(() {
