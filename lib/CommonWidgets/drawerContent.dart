@@ -1,34 +1,67 @@
+import 'package:LikeApp/User/listUsers.dart';
 import 'package:flutter/material.dart';
 
-ListView drawerContent(BuildContext context) {
-  return ListView(
-    // Important: Remove any padding from the ListView.
-    padding: EdgeInsets.zero,
-    children: <Widget>[
-      DrawerHeader(
-        child: Icon(Icons.apps),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.blue,
+class DrawerContent extends StatefulWidget {
+  final bool isAdmin;
+  DrawerContent({this.isAdmin, key}) : super(key: key);
+
+  @override
+  _DrawerContentState createState() => _DrawerContentState();
+}
+
+class _DrawerContentState extends State<DrawerContent> {
+  @override
+  Widget build(BuildContext context) {
+    return drawerContent(context);
+  }
+
+  Drawer drawerContent(BuildContext context) {
+    return Drawer(
+        child: ListView(
+      padding: EdgeInsets.zero,
+      children: <Widget>[
+        DrawerHeader(
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+          ),
+          child: Text(
+            'Hola\nJose Alberto Espinoza Morelos',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+            ),
+          ),
         ),
-      ),
-      ListTile(
-        leading: Icon(Icons.work),
-        title: Text('Enviar reporte'),
-        subtitle: Text.rich(
-          TextSpan(
-              text: "Reportes guardados localmente",
-              style:
-                  TextStyle(color: Color(Colors.black45.value), fontSize: 15)),
+        ListTile(
+          enabled: widget.isAdmin,
+          leading: Icon(Icons.work),
+          title: Text('Usuarios'),
+          subtitle: Text.rich(
+            TextSpan(
+                text: "Aprobar usuarios nuevos",
+                style:
+                    TextStyle(color: Color(Colors.black.value), fontSize: 15)),
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ListUsers()),
+            );
+          },
         ),
-        onTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => AddReport()),
-          // );
-          Navigator.pop(context);
-        },
-      ),
-    ],
-  );
+        ListTile(
+          leading: Icon(Icons.account_circle),
+          title: Text('Perfil'),
+        ),
+        ListTile(
+          leading: Icon(Icons.settings),
+          title: Text('Configuracion'),
+        ),
+        ListTile(
+          leading: Icon(Icons.close),
+          title: Text('Cerrar Sesion'),
+        ),
+      ],
+    ));
+  }
 }

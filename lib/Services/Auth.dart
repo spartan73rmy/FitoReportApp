@@ -13,9 +13,13 @@ class Auth {
     return prefs.getString(authTokenKey);
   }
 
+  static bool isAdmin(SharedPreferences prefs) {
+    return (prefs.getInt(roleKey) ?? 0) == 1; //See value
+  }
+
   static bool isLogged(SharedPreferences prefs) {
     print(getExpDate(prefs).compareTo(DateTime.now()) >= 0);
-    return getExpDate(prefs).compareTo(DateTime.now()) >= 0; //See value
+    return getExpDate(prefs).compareTo(DateTime.now()) >= 0;
   }
 
   static DateTime getExpDate(SharedPreferences prefs) {

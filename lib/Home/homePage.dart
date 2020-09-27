@@ -1,4 +1,5 @@
 import 'package:LikeApp/CommonWidgets/alert.dart';
+import 'package:LikeApp/CommonWidgets/drawerContent.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Login/login.dart';
 import 'package:LikeApp/Models/apiResponse.dart';
@@ -25,6 +26,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _isLoading = false;
+  bool _isAdmin = false;
 
   ReportService get service => GetIt.I<ReportService>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -36,11 +38,15 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     res = new APIResponse<bool>();
     super.initState();
+    isAdmin();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: DrawerContent(
+        isAdmin: _isAdmin,
+      ),
       appBar: AppBar(
         title: Text(this.widget.title),
         actions: <Widget>[
@@ -97,6 +103,14 @@ class _HomePageState extends State<HomePage> {
       MaterialPageRoute(builder: (context) => Login("FitoReport")),
     );
     _hideLoading();
+  }
+
+  Future<void> isAdmin() async {
+    _sharedPreferences = await _prefs;
+
+    setState(() {
+      _isAdmin = Auth.isAdmin(_sharedPreferences);
+    });
   }
 
   Future<void> getDataSearch() async {

@@ -2,13 +2,12 @@ import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/inputField.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/CommonWidgets/passField.dart';
-import 'package:LikeApp/Login/login.dart';
 import 'package:LikeApp/Models/APIResponse.dart';
 import 'package:LikeApp/Models/user.dart';
+import 'package:LikeApp/Models/userType.dart';
 import 'package:LikeApp/Services/userService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Register extends StatefulWidget {
   Register({Key key}) : super(key: key);
@@ -33,6 +32,7 @@ class _RegisterState extends State<Register> {
       _nombreError,
       _aPaternoError,
       _aMaternoError;
+  String _selectedPermission;
 
   UserService get userService => GetIt.I<UserService>();
 
@@ -60,7 +60,8 @@ class _RegisterState extends State<Register> {
   Widget registerScreen() {
     return new Container(
       child: new ListView(
-        padding: const EdgeInsets.only(top: 1, left: 16.0, right: 16.0),
+        padding:
+            const EdgeInsets.only(top: 2, left: 16.0, right: 16.0, bottom: 30),
         children: <Widget>[
           new InputField("Nombre", _nombreController, _nombreError,
               TextInputType.emailAddress),
@@ -78,17 +79,38 @@ class _RegisterState extends State<Register> {
             passwordError: _passwordError,
             togglePassword: _togglePassword,
           ),
+          DropdownButton(
+            hint: _selectedPermission == null
+                ? Text('Selecciona una opcion')
+                : Text(
+                    _selectedPermission,
+                    style: TextStyle(color: Colors.black),
+                  ),
+            isExpanded: true,
+            iconSize: 30.0,
+            style: TextStyle(color: Colors.blue),
+            items: [UserType.admin, UserType.user].map(
+              (val) {
+                return DropdownMenuItem<String>(
+                  value: val,
+                  child: Text(val),
+                );
+              },
+            ).toList(),
+            onChanged: (val) {
+              setState(
+                () {
+                  _selectedPermission = val;
+                },
+              );
+            },
+          ),
           FloatingActionButton.extended(
             icon: Icon(Icons.add),
             backgroundColor: Theme.of(context).primaryColor,
             onPressed: () async {
               if (_isValid()) {
                 await saveData();
-                // Navigator.of(context).popUntil((route) => route.isFirst);
-                // Navigator.pushReplacement(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => Login("FitoReport")),
-                // );
               }
             },
             label: Text("Registrar"),
@@ -100,7 +122,9 @@ class _RegisterState extends State<Register> {
 
   _isValid() {
     bool valid = true;
-
+    if (_selectedPermission == null) {
+      valid = false;
+    }
     if (_userNameController.text.isEmpty) {
       valid = false;
       setState(() {
@@ -151,7 +175,7 @@ class _RegisterState extends State<Register> {
 
   Future<void> saveData() async {
     _showLoading();
-
+    print(_selectedPermission);
     User user = new User(
         email: _emailController.text,
         userName: _userNameController.text,
@@ -159,7 +183,9 @@ class _RegisterState extends State<Register> {
         aMaterno: _aMaternoController.text,
         aPaterno: _aPaternoController.text,
         nombre: _nombreController.text,
-        type: 1);
+        type: (_selectedPermission == UserType.admin)
+            ? UserType.adminT
+            : UserType.userT);
 
     var resp = await userService.createUser(user);
 

@@ -83,7 +83,6 @@ class _SelectPlagaState extends State<SelectPlaga> {
     _hideLoading();
   }
 
-  // #docregion _buildRow
   Widget _buildRow(Plaga plaga) {
     final alreadySaved = _saved.contains(plaga);
     return ListTile(
@@ -106,7 +105,6 @@ class _SelectPlagaState extends State<SelectPlaga> {
       },
     );
   }
-  // #enddocregion _buildRow
 
   _showLoading() {
     setState(() {

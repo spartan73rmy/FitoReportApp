@@ -6,6 +6,7 @@ class User {
   String aPaterno;
   String aMaterno;
   int type;
+  bool aproved;
 
   User(
       {this.email,
@@ -14,7 +15,8 @@ class User {
       this.aMaterno,
       this.aPaterno,
       this.nombre,
-      this.type});
+      this.type,
+      this.aproved});
 
   factory User.fromJSON(Map<String, dynamic> item) {
     return User(
@@ -24,7 +26,8 @@ class User {
         aMaterno: item['apellidoMaterno'],
         aPaterno: item['apellidoPaterno'],
         nombre: item['nombre'],
-        type: int.parse(item['tipoUsuario']) ?? 0);
+        type: item['tipoUsuario'],
+        aproved: item['confirmado']);
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +39,23 @@ class User {
       "apellidoPaterno": this.aPaterno,
       "apellidoMaterno": this.aMaterno,
       "tipoUsuario": this.type,
+      "confirmado": this.aproved
     };
+  }
+}
+
+class UserList {
+  List<User> usuarios;
+
+  UserList({this.usuarios});
+
+  List<User> toList(UserList lista) {
+    return lista.usuarios;
+  }
+
+  factory UserList.fromJSON(Map<String, dynamic> parsedJson) {
+    var list = parsedJson['usuarios'] as List;
+    List<User> usuarios = list.map((i) => User.fromJSON(i)).toList();
+    return UserList(usuarios: usuarios);
   }
 }
