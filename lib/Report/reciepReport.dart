@@ -48,7 +48,12 @@ class _ReciepReportState extends State<ReciepReport> {
         child: Icon(Icons.add),
         onPressed: () {
           createDialog(context).then((value) {
-            addProduct(value);
+            bool isValidProduct = value.nombre != null &&
+                value.cantidad != null &&
+                value.concentracion != null &&
+                value.ingredienteActivo != null &&
+                value.intervaloSeguridad != null;
+            if (isValidProduct) addProduct(value);
           });
         },
       ),
@@ -65,7 +70,6 @@ class _ReciepReportState extends State<ReciepReport> {
   addProduct(Producto product) {
     setState(() {
       products.add(product);
-      print(product.cantidad);
     });
   }
 
@@ -96,6 +100,12 @@ class _ReciepReportState extends State<ReciepReport> {
 
   Future<void> saveToLocal() async {
     LocalStorage localS = LocalStorage(FileName().report);
+    localS.addReport(this.data);
+  }
+
+  saveTempExample() async {
+    LocalStorage localS = LocalStorage(FileName().report);
+
     List<Enfermedad> enfer = new List<Enfermedad>();
     enfer.add(Enfermedad(id: 1, nombre: "Enfermedad"));
     List<Plaga> plag = new List<Plaga>();
