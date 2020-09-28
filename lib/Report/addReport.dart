@@ -8,6 +8,11 @@ class AddReport extends StatefulWidget {
 
 class _AddReportState extends State<AddReport> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

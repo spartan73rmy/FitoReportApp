@@ -1,3 +1,4 @@
+import 'package:LikeApp/CommonWidgets/alertInput.dart';
 import 'package:LikeApp/Home/homePage.dart';
 import 'package:LikeApp/Models/enfermedad.dart';
 import 'package:LikeApp/Models/plaga.dart';
@@ -7,7 +8,7 @@ import 'package:LikeApp/Storage/files.dart';
 import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'createDialog.dart';
+import 'addProductDialog.dart';
 import 'reciepReportBody.dart';
 
 class ReciepReport extends StatefulWidget {
@@ -23,12 +24,27 @@ class ReciepReport extends StatefulWidget {
 class _ReciepReportState extends State<ReciepReport> {
   ReportData data;
   List<Producto> products;
+  bool typing = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: UniqueKey(),
       appBar: AppBar(title: Text('Productos'), actions: <Widget>[
+        FlatButton(
+          onPressed: () {
+            alertInputDiag(context, "Litros", "Cantidad", "Introduce un numero")
+                .then((result) {
+              int l = int.tryParse(result);
+              if (l != null && l >= 0) {
+                setState(() {
+                  data.litros = l;
+                });
+              }
+            });
+          },
+          child: Center(child: Text("Litros: ${data.litros ?? 0}")),
+        ),
         IconButton(
           icon: Icon(Icons.save),
           onPressed: () async {
@@ -47,7 +63,7 @@ class _ReciepReportState extends State<ReciepReport> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          createDialog(context).then((value) {
+          addProductDialog(context).then((value) {
             bool isValidProduct = value.nombre != null &&
                 value.cantidad != null &&
                 value.concentracion != null &&
@@ -64,6 +80,7 @@ class _ReciepReportState extends State<ReciepReport> {
   void initState() {
     products = new List<Producto>();
     data = widget.data;
+    data.litros = 0;
     super.initState();
   }
 
@@ -100,6 +117,7 @@ class _ReciepReportState extends State<ReciepReport> {
 
   Future<void> saveToLocal() async {
     LocalStorage localS = LocalStorage(FileName().report);
+    localS.clearFile();
     localS.addReport(this.data);
   }
 

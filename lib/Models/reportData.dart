@@ -45,7 +45,7 @@ class ReportData {
         ubicacion: item["ubicacion"],
         predio: item["predio"],
         cultivo: item["cultivo"],
-        etapaFenologica: item["etapaFenologica  "],
+        etapaFenologica: item["etapaFenologica"],
         observaciones: item["observaciones"],
         litros: item["litros"],
         enfermedad: EnfermedadList.fromJSON(item).enfermedades,

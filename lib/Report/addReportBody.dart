@@ -21,7 +21,7 @@ class _StepperBodyState extends State<StepperBody> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   static ReportData data = new ReportData();
   String _etapaFenologica;
-  List<String> etapaFenologica;
+  List<String> listEtapaFenologica;
 
   EtapaFService get service => GetIt.I<EtapaFService>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -112,11 +112,43 @@ class _StepperBodyState extends State<StepperBody> {
                     ),
                   )),
               Step(
-                  title: const Text('Nombre del predio'),
+                  title: const Text('Ubicacion'),
                   isActive: true,
                   state: StepState.indexed,
                   content: Form(
                     key: formKeys[2],
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          focusNode: _focusNode,
+                          keyboardType: TextInputType.text,
+                          autocorrect: false,
+                          onSaved: (String value) {
+                            data.ubicacion = value;
+                          },
+                          maxLines: 1,
+                          validator: (String value) {
+                            if (value.isEmpty || value.length < 1) {
+                              return 'Introduce la ubicacion';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                              labelText: 'Ubicacion',
+                              hintText: 'Ubicacion',
+                              icon: const Icon(Icons.person),
+                              labelStyle: TextStyle(
+                                  decorationStyle: TextDecorationStyle.solid)),
+                        ),
+                      ],
+                    ),
+                  )),
+              Step(
+                  title: const Text('Nombre del predio'),
+                  isActive: true,
+                  state: StepState.indexed,
+                  content: Form(
+                    key: formKeys[3],
                     child: Column(
                       children: <Widget>[
                         TextFormField(
@@ -149,7 +181,7 @@ class _StepperBodyState extends State<StepperBody> {
                   isActive: true,
                   state: StepState.indexed,
                   content: Form(
-                    key: formKeys[3],
+                    key: formKeys[4],
                     child: Column(
                       children: <Widget>[
                         TextFormField(
@@ -182,7 +214,7 @@ class _StepperBodyState extends State<StepperBody> {
                   isActive: true,
                   state: StepState.indexed,
                   content: Form(
-                    key: formKeys[4],
+                    key: formKeys[5],
                     child: Column(
                       children: <Widget>[
                         TextFormField(
@@ -215,7 +247,7 @@ class _StepperBodyState extends State<StepperBody> {
             onStepContinue: () {
               setState(() {
                 if (formKeys[currStep].currentState.validate()) {
-                  if (currStep < 4) {
+                  if (currStep < 5) {
                     currStep += 1;
                   } else {
                     currStep = 0;
@@ -254,7 +286,7 @@ class _StepperBodyState extends State<StepperBody> {
             isExpanded: true,
             iconSize: 30.0,
             style: TextStyle(color: Colors.blue),
-            items: etapaFenologica.map(
+            items: listEtapaFenologica.map(
               (val) {
                 return DropdownMenuItem<String>(
                   value: val,
@@ -266,6 +298,8 @@ class _StepperBodyState extends State<StepperBody> {
               setState(
                 () {
                   _etapaFenologica = val;
+                  data.etapaFenologica = _etapaFenologica;
+                  print(data.etapaFenologica);
                 },
               );
             },
@@ -302,8 +336,6 @@ class _StepperBodyState extends State<StepperBody> {
 
   void _saveData() {
     final form = _formKey.currentState;
-    data.etapaFenologica = _etapaFenologica;
-
     form.save();
     for (var item in formKeys) {
       item.currentState.save();
@@ -318,7 +350,7 @@ class _StepperBodyState extends State<StepperBody> {
     var resp = await service.getListEtapas(authToken);
 
     setState(() {
-      etapaFenologica = resp.data.map((e) => e.nombre).toList();
+      listEtapaFenologica = resp.data.map((e) => e.nombre).toList();
       res = resp;
     });
     _hideLoading();
@@ -338,12 +370,10 @@ class _StepperBodyState extends State<StepperBody> {
 
   @override
   void initState() {
+    data.id = 0;
     _fetchEtapas();
     super.initState();
     _focusNode = FocusNode();
-    etapaFenologica = new List();
-    etapaFenologica.add("EtapaPrueba");
-
     _focusNode.addListener(() {
       setState(() {});
       print('Has focus: $_focusNode.hasFocus');
@@ -358,6 +388,7 @@ class _StepperBodyState extends State<StepperBody> {
 }
 
 List<GlobalKey<FormState>> formKeys = [
+  GlobalKey<FormState>(),
   GlobalKey<FormState>(),
   GlobalKey<FormState>(),
   GlobalKey<FormState>(),

@@ -66,6 +66,7 @@ class LocalStorage {
   Future<void> clearFile() async {
     final file = await _localFile;
     if (file.existsSync()) {
+      print("File exist to clear");
       String jsonData = jsonEncode({"reportes": []});
       writeJsonToFile(jsonData);
     }

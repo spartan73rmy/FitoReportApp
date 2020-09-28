@@ -1,7 +1,7 @@
 import 'package:LikeApp/Models/producto.dart';
 import 'package:flutter/material.dart';
 
-Future<Producto> createDialog(BuildContext context) {
+Future<Producto> addProductDialog(BuildContext context) {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Producto newProduct = new Producto();
   List<TextEditingController> _controller = [
