@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth {
@@ -32,7 +31,8 @@ class Auth {
   static logoutUser(SharedPreferences prefs) {
     prefs.setString(Auth.authTokenKey, null);
     prefs.setString(Auth.refToken, null);
-    prefs.setString(Auth.expDate, null);
+    prefs.setString(Auth.expDate,
+        DateTime.fromMicrosecondsSinceEpoch(0, isUtc: true).toString());
     prefs.setString(Auth.userIdKey, null);
     prefs.setString(Auth.nameKey, null);
     prefs.setString(Auth.roleKey, null);

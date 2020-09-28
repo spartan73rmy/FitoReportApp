@@ -6,6 +6,7 @@ import 'package:LikeApp/CommonWidgets/passField.dart';
 import 'package:LikeApp/Home/homePage.dart';
 import 'package:LikeApp/Models/apiResponse.dart';
 import 'package:LikeApp/Services/auth.dart';
+import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/User/register.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -32,6 +33,7 @@ class _LoginState extends State<Login> {
   String _emailError, _passwordError;
 
   UserService get userService => GetIt.I<UserService>();
+  Ping get ping => GetIt.I<Ping>();
 
   @override
   void initState() {
@@ -69,28 +71,37 @@ class _LoginState extends State<Login> {
 
   _authenticateUser() async {
     _showLoading();
-    if (_isValid()) {
-      var res = await userService.authenticateUser(
-          _userNameController.text, _passwordController.text);
-      _hideLoading();
-      // response = res;
 
-      if (res.data != null && !res.error) {
-        sharedPreferences = await _prefs;
+    var isOnline = await ping.ping();
+    sharedPreferences = await _prefs;
 
-        Auth.insertDetails(sharedPreferences, res.data);
+    if (isOnline) {
+      if (_isValid()) {
+        var res = await userService.authenticateUser(
+            _userNameController.text, _passwordController.text);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage(widget.title)),
-        );
-      }
-      if (res.error) {
-        alertDiag(context, "Error", res.errorMessage);
+        if (res.data != null && !res.error) {
+          await Auth.insertDetails(sharedPreferences, res.data);
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage(widget.title)),
+          );
+        }
+
+        if (res.error) {
+          alertDiag(context, "Error", res.errorMessage);
+        }
+        _hideLoading();
       }
     } else {
-      _hideLoading();
+      await Auth.logoutUser(sharedPreferences);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage(widget.title)),
+      );
     }
+    _hideLoading();
   }
 
   _isValid() {

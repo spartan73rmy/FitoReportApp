@@ -1,6 +1,7 @@
 import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/drawerContent.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
+import 'package:LikeApp/Login/login.dart';
 import 'package:LikeApp/Models/apiResponse.dart';
 import 'package:LikeApp/Models/dataSearch.dart';
 import 'package:LikeApp/Models/reportData.dart';
@@ -25,8 +26,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _isLoading = false;
-  bool _isAdmin = false;
+  bool _isLoading;
+  bool _isAdmin;
 
   ReportService get service => GetIt.I<ReportService>();
   Ping get ping => GetIt.I<Ping>();
@@ -40,6 +41,7 @@ class _HomePageState extends State<HomePage> {
     res = new APIResponse<bool>();
     super.initState();
     isAdmin();
+    _isLoading = false;
   }
 
   @override
@@ -61,7 +63,9 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.search),
             onPressed: () async {
               await getDataSearch();
-              showSearch(context: context, delegate: Search(busqueda));
+              if (busqueda.length > 0) {
+                showSearch(context: context, delegate: Search(busqueda));
+              }
             },
           )
         ],
@@ -88,23 +92,25 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> isAdmin() async {
-    _sharedPreferences = await _prefs;
-
-    setState(() {
-      _isAdmin = Auth.isAdmin(_sharedPreferences);
-    });
-  }
-
   Future<void> getDataSearch() async {
     _showLoading();
     _sharedPreferences = await _prefs;
+    bool isNotLogged = !Auth.isLogged(_sharedPreferences);
     String authToken = Auth.getToken(_sharedPreferences);
-    var resp = await service.getDataSearch(authToken);
-    busqueda = resp.data;
+    var isOnline = await ping.ping();
 
-    if (res.error) {
-      alertDiag(context, "Error", res.errorMessage);
+    if (isOnline) {
+      if (isNotLogged) toLogIn();
+      var resp = await service.getDataSearch(authToken);
+      busqueda = resp.data;
+
+      if (res.error) {
+        alertDiag(context, "Error", res.errorMessage);
+      }
+      _hideLoading();
+    } else {
+      alertDiag(
+          context, "Error", "Favor de conectarse a internet e iniciar sesion");
     }
 
     _hideLoading();
@@ -112,9 +118,13 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> saveData() async {
     var _isOnline = await ping.ping() ?? false;
+    _sharedPreferences = await _prefs;
+    bool isNotLogged = !Auth.isLogged(_sharedPreferences);
+
     if (_isOnline) {
+      if (isNotLogged) toLogIn();
+
       _showLoading();
-      _sharedPreferences = await _prefs;
       String authToken = Auth.getToken(_sharedPreferences);
 
       LocalStorage localStorage = new LocalStorage(FileName().report);
@@ -137,8 +147,25 @@ class _HomePageState extends State<HomePage> {
 
       _hideLoading();
     } else {
-      alertDiag(context, "Error", "Favor de conectarse a Internet");
+      alertDiag(
+          context, "Error", "Favor de conectarse a Internet e iniciar sesion");
     }
+  }
+
+  Future<void> isAdmin() async {
+    _sharedPreferences = await _prefs;
+
+    setState(() {
+      _isAdmin = Auth.isAdmin(_sharedPreferences);
+    });
+  }
+
+  toLogIn() {
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Login("FitoReport")),
+    );
   }
 
   _showLoading() {

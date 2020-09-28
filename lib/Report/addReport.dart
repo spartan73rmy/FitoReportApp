@@ -1,4 +1,5 @@
 import 'package:LikeApp/CommonWidgets/alert.dart';
+import 'package:LikeApp/Login/login.dart';
 import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Storage/files.dart';
 import 'package:LikeApp/Storage/localStorage.dart';
@@ -49,7 +50,7 @@ class _AddReportState extends State<AddReport> {
         if (_isOnline && res.error ?? false) {
           return Center(child: Text(res.errorMessage));
         }
-        print("Retorna container");
+
         return Container(
             child: Form(
           autovalidate: true,
@@ -362,12 +363,14 @@ class _AddReportState extends State<AddReport> {
   }
 
   _fetchEtapas() async {
+    _sharedPreferences = await _prefs;
     _isOnline = await ping.ping() ?? false;
+    bool isNotLogged = !Auth.isLogged(_sharedPreferences);
     LocalStorage localS = LocalStorage(FileName().etapa);
-    if (_isOnline) {
-      _showLoading();
 
-      _sharedPreferences = await _prefs;
+    if (_isOnline) {
+      if (isNotLogged) toLogIn();
+      _showLoading();
       String authToken = Auth.getToken(_sharedPreferences);
       var resp = await service.getListEtapas(authToken);
 
@@ -395,10 +398,19 @@ class _AddReportState extends State<AddReport> {
             "No hay datos para cargar, favor de conectarse a internet");
       }
       setState(() {
-        listEtapaFenologica = resp.map((e) => e.nombre).toList();
+        listEtapaFenologica = resp.map((e) => e.nombre ?? "").toList();
+        res = APIResponse<List<EtapaFenologica>>(data: resp, error: false);
       });
       _hideLoading();
     }
+  }
+
+  toLogIn() {
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => Login("FitoReport")),
+    );
   }
 
   _showLoading() {
