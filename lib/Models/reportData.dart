@@ -94,7 +94,7 @@ class ReportDataList {
   Map<String, dynamic> toJson() {
     List<Map> reportes = this.reportes != null
         ? this.reportes.map((i) => i.toJson()).toList()
-        : null;
+        : new List<ReportData>();
 
     return {
       "reportes": reportes,

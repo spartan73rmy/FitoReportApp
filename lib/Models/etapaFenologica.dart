@@ -24,6 +24,12 @@ class EtapaFList {
     return lista.etapas;
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      "etapas": this.etapas,
+    };
+  }
+
   factory EtapaFList.fromJSON(Map<String, dynamic> parsedJson) {
     var list = parsedJson['etapas'] as List;
     List<EtapaFenologica> etapas =

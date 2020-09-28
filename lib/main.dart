@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:LikeApp/Login/Login.dart';
 import 'package:LikeApp/Services/auth.dart';
+import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Services/enfermedadService.dart';
 import 'package:LikeApp/Services/etapaFService.dart';
 import 'package:LikeApp/Services/plagaService.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
 
 void instanceGetIt() {
   GetIt.I.registerLazySingleton(() => UserService());
+  GetIt.I.registerLazySingleton(() => Ping());
   GetIt.I.registerLazySingleton(() => ReportService());
   GetIt.I.registerLazySingleton(() => PlagaService());
   GetIt.I.registerLazySingleton(() => EtapaFService());

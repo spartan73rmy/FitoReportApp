@@ -1,10 +1,14 @@
+import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
-import 'package:LikeApp/Models/APIResponse.dart';
+import 'package:LikeApp/Models/apiResponse.dart';
 import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/Report/selectEnfermedad.dart';
 import 'package:LikeApp/Services/auth.dart';
+import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Services/plagaService.dart';
+import 'package:LikeApp/Storage/files.dart';
+import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,8 +22,10 @@ class SelectPlaga extends StatefulWidget {
 
 class _SelectPlagaState extends State<SelectPlaga> {
   ReportData data;
-  bool _isLoading = true;
+  bool isLoading = true;
+  bool _isOnline = true;
 
+  Ping get ping => GetIt.I<Ping>();
   PlagaService get service => GetIt.I<PlagaService>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   SharedPreferences _sharedPreferences;
@@ -45,14 +51,14 @@ class _SelectPlagaState extends State<SelectPlaga> {
           )
         ]),
         body: Builder(builder: (context) {
-          if (_isLoading) {
+          if (isLoading) {
             return LoadingScreen();
           }
 
-          if (res.error ?? false) {
+          if (_isOnline && res.error ?? false) {
             return Center(child: Text(res.errorMessage));
           }
-
+          print("Container");
           return Container(
               child: ListView.builder(
                   itemCount: res.data.length,
@@ -71,16 +77,39 @@ class _SelectPlagaState extends State<SelectPlaga> {
   }
 
   _fetchPlaga() async {
-    _showLoading();
+    _isOnline = await ping.ping() ?? false;
+    LocalStorage localS = LocalStorage(FileName().plaga);
+    if (_isOnline) {
+      _showLoading();
 
-    _sharedPreferences = await _prefs;
-    String authToken = Auth.getToken(_sharedPreferences);
-    var resp = await service.getListPlaga(authToken);
+      _sharedPreferences = await _prefs;
+      String authToken = Auth.getToken(_sharedPreferences);
+      var resp = await service.getListPlaga(authToken);
 
-    setState(() {
-      res = resp;
-    });
-    _hideLoading();
+      setState(() {
+        res = resp;
+      });
+      if (resp.error) {
+        await alertDiag(context, "Error", res.errorMessage);
+      } else {
+        //En cada peticion con internet se actualizan los datos localmente
+        await localS.refreshPlagas(resp.data);
+      }
+      _hideLoading();
+    } else {
+      _showLoading();
+      List<Plaga> resp = await localS.readPlagas();
+      if (resp.length == 0) {
+        await alertDiag(context, "Error",
+            "No hay datos para cargar, favor de conectarse a internet");
+      }
+
+      setState(() {
+        res = APIResponse<List<Plaga>>(
+            data: resp, error: false, errorMessage: null);
+      });
+      _hideLoading();
+    }
   }
 
   Widget _buildRow(Plaga plaga) {
@@ -108,13 +137,13 @@ class _SelectPlagaState extends State<SelectPlaga> {
 
   _showLoading() {
     setState(() {
-      _isLoading = true;
+      isLoading = true;
     });
   }
 
   _hideLoading() {
     setState(() {
-      _isLoading = false;
+      isLoading = false;
     });
   }
 

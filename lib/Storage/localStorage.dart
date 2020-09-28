@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:LikeApp/Models/enfermedad.dart';
+import 'package:LikeApp/Models/etapaFenologica.dart';
+import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/reportData.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -63,13 +66,52 @@ class LocalStorage {
     }
   }
 
-  Future<void> clearFile() async {
-    final file = await _localFile;
-    if (file.existsSync()) {
-      print("File exist to clear");
-      String jsonData = jsonEncode({"reportes": []});
-      writeJsonToFile(jsonData);
-    }
+  Future<void> clearReportFile() async {
+    String jsonData =
+        jsonEncode(ReportDataList(reportes: new List<ReportData>()));
+    writeJsonToFile(jsonData);
+  }
+
+  Future<void> clearEtapasFile() async {
+    String jsonData = jsonEncode(
+        new EtapaFList(etapas: new List<EtapaFenologica>()).toJson());
+    writeJsonToFile(jsonData);
+  }
+
+  Future<void> clearPlagasFile() async {
+    String jsonData =
+        jsonEncode(new PlagaList(plagas: new List<Plaga>()).toJson());
+    writeJsonToFile(jsonData);
+  }
+
+  Future<void> clearEnfermedadesFile() async {
+    String jsonData = jsonEncode(
+        new EnfermedadList(enfermedades: new List<Enfermedad>()).toJson());
+    writeJsonToFile(jsonData);
+  }
+
+  Future<void> refreshEtapas(List<EtapaFenologica> lista) async {
+    await clearEtapasFile();
+    EtapaFList etapas = new EtapaFList(etapas: lista);
+
+    String jsonData = jsonEncode(etapas.toJson());
+    writeJsonToFile(jsonData);
+  }
+
+  Future<void> refreshPlagas(List<Plaga> lista) async {
+    await clearPlagasFile();
+    PlagaList plagas = new PlagaList(plagas: lista);
+
+    String jsonData = jsonEncode(plagas.toJson());
+    writeJsonToFile(jsonData);
+  }
+
+  Future<void> refreshEnfermedades(List<Enfermedad> lista) async {
+    await clearEnfermedadesFile();
+    EnfermedadList enfermedades = new EnfermedadList(enfermedades: lista);
+
+    String jsonData = jsonEncode(enfermedades.toJson());
+    writeJsonToFile(jsonData);
   }
 
   Future<void> addReport(ReportData reporte) async {
@@ -96,13 +138,55 @@ class LocalStorage {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
-      var reportes = ReportDataList.fromJSON(json.decode(contents)).reportes;
-      return reportes;
+      var lista = ReportDataList.fromJSON(json.decode(contents)).reportes;
+      return lista;
     } catch (e) {
       print(e);
       print("File corrupt");
-      await clearFile();
+      await clearReportFile();
       return new List<ReportData>();
+    }
+  }
+
+  Future<List<EtapaFenologica>> readEtapas() async {
+    try {
+      final file = await _localFile;
+      String contents = await file.readAsString();
+      var lista = EtapaFList.fromJSON(json.decode(contents)).etapas;
+      return lista;
+    } catch (e) {
+      print(e);
+      print("File corrupt");
+      await clearReportFile();
+      return new List<EtapaFenologica>();
+    }
+  }
+
+  Future<List<Plaga>> readPlagas() async {
+    try {
+      final file = await _localFile;
+      String contents = await file.readAsString();
+      var lista = PlagaList.fromJSON(json.decode(contents)).plagas;
+      return lista;
+    } catch (e) {
+      print(e);
+      print("File corrupt");
+      await clearReportFile();
+      return new List<Plaga>();
+    }
+  }
+
+  Future<List<Enfermedad>> readEnfermedades() async {
+    try {
+      final file = await _localFile;
+      String contents = await file.readAsString();
+      var lista = EnfermedadList.fromJSON(json.decode(contents)).enfermedades;
+      return lista;
+    } catch (e) {
+      print(e);
+      print("File corrupt");
+      await clearReportFile();
+      return new List<Enfermedad>();
     }
   }
 }

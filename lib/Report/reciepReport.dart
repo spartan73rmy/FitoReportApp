@@ -117,7 +117,7 @@ class _ReciepReportState extends State<ReciepReport> {
 
   Future<void> saveToLocal() async {
     LocalStorage localS = LocalStorage(FileName().report);
-    localS.clearFile();
+    localS.clearReportFile();
     localS.addReport(this.data);
   }
 

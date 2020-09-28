@@ -5,6 +5,7 @@ import 'package:LikeApp/Models/apiResponse.dart';
 import 'package:LikeApp/Models/dataSearch.dart';
 import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/Services/auth.dart';
+import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Services/reportService.dart';
 import 'package:LikeApp/Storage/files.dart';
 import 'package:LikeApp/Storage/localStorage.dart';
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   bool _isAdmin = false;
 
   ReportService get service => GetIt.I<ReportService>();
+  Ping get ping => GetIt.I<Ping>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   SharedPreferences _sharedPreferences;
   APIResponse<bool> res;
@@ -109,31 +111,34 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> saveData() async {
-    _showLoading();
-    _sharedPreferences = await _prefs;
-    String authToken = Auth.getToken(_sharedPreferences);
+    var _isOnline = await ping.ping() ?? false;
+    if (_isOnline) {
+      _showLoading();
+      _sharedPreferences = await _prefs;
+      String authToken = Auth.getToken(_sharedPreferences);
 
-    LocalStorage localStorage = new LocalStorage(FileName().report);
-    List<ReportData> tempReports = await localStorage.readReports();
+      LocalStorage localStorage = new LocalStorage(FileName().report);
+      List<ReportData> tempReports = await localStorage.readReports();
 
-    if (tempReports.length > 0) {
-      var resp = await service.createReport(tempReports, authToken);
-      setState(() {
-        res = resp;
-      });
+      if (tempReports.length > 0) {
+        var resp = await service.createReport(tempReports, authToken);
+        setState(() {
+          res = resp;
+        });
 
-      if (res.error != true) {
-        alertDiag(context, "Finalizado",
-            "Los reportes fueron sincronizados con la nube ");
-        await localStorage.clearFile();
+        if (res.error != true) {
+          alertDiag(context, "Finalizado",
+              "Los reportes fueron sincronizados con la nube ");
+          await localStorage.clearReportFile();
+        }
       }
-    }
 
-    if (res.error) {
-      alertDiag(context, "Error", res.errorMessage);
-    }
+      if (res.error) alertDiag(context, "Error", res.errorMessage);
 
-    _hideLoading();
+      _hideLoading();
+    } else {
+      alertDiag(context, "Error", "Favor de conectarse a Internet");
+    }
   }
 
   _showLoading() {

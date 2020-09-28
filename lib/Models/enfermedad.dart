@@ -21,6 +21,10 @@ class EnfermedadList {
 
   EnfermedadList({this.enfermedades});
 
+  Map<String, dynamic> toJson() {
+    return {"enfermedades": this.enfermedades};
+  }
+
   factory EnfermedadList.fromJSON(Map<String, dynamic> parsedJson) {
     var list = parsedJson['enfermedades'] as List;
     List<Enfermedad> enfermedades =

@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:LikeApp/Models/APIResponse.dart';
 import 'package:LikeApp/Models/HttpModel.dart';
+import 'package:LikeApp/Models/apiResponse.dart';
 import 'package:LikeApp/Models/plaga.dart';
 import 'package:http/http.dart' as http;
 
