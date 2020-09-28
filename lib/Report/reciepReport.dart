@@ -100,7 +100,7 @@ class _ReciepReportState extends State<ReciepReport> {
         permission = await requestPermission();
       } else {
         final Position position =
-            await getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+            await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
         setState(() {
           data.latitude = position.latitude;
           data.longitud = position.longitude;

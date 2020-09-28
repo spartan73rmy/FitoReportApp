@@ -50,7 +50,7 @@ class _StepperBodyState extends State<StepperBody> {
             physics: ClampingScrollPhysics(),
             steps: [
               Step(
-                  title: const Text('Nombre'),
+                  title: const Text('Nombre Completo'),
                   isActive: true,
                   state: StepState.indexed,
                   content: Form(

@@ -1,7 +1,6 @@
 import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/drawerContent.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
-import 'package:LikeApp/Login/login.dart';
 import 'package:LikeApp/Models/apiResponse.dart';
 import 'package:LikeApp/Models/dataSearch.dart';
 import 'package:LikeApp/Models/reportData.dart';
@@ -51,12 +50,6 @@ class _HomePageState extends State<HomePage> {
         title: Text(this.widget.title),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () async {
-              await logOut();
-            },
-          ),
-          IconButton(
             icon: Icon(Icons.cloud_upload),
             onPressed: () async {
               await saveData();
@@ -91,18 +84,6 @@ class _HomePageState extends State<HomePage> {
         )
       ],
     );
-  }
-
-  Future<void> logOut() async {
-    _showLoading();
-    _sharedPreferences = await _prefs;
-    await Auth.logoutUser(_sharedPreferences);
-    Navigator.of(context).popUntil((route) => route.isFirst);
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => Login("FitoReport")),
-    );
-    _hideLoading();
   }
 
   Future<void> isAdmin() async {
