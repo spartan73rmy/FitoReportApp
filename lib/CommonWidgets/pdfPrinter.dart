@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:LikeApp/CommonWidgets/pdfPreview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PDFPrinterShare extends StatelessWidget {
@@ -50,13 +51,13 @@ class PDFPrinterShare extends StatelessWidget {
       </html>
       """;
 
-      // Directory appDocDir = await getApplicationDocumentsDirectory();
-      // var targetPath = appDocDir.path;
-      // var targetFileName = "example-pdf";
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      var targetPath = appDocDir.path;
+      var targetFileName = "example-pdf";
 
-      // var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
-      //     htmlContent, targetPath, targetFileName);
-      // generatedPdfFilePath = generatedPdfFile.path;
+      var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
+          htmlContent, targetPath, targetFileName);
+      generatedPdfFilePath = generatedPdfFile.path;
     }
   }
 
@@ -64,7 +65,7 @@ class PDFPrinterShare extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("PDF Flutter"),
+        title: Text("PDF"),
       ),
 
       body: Container(
@@ -74,7 +75,7 @@ class PDFPrinterShare extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "PDF TUTORIAL",
+              "PDF",
               style: TextStyle(fontSize: 34),
             )
           ],
