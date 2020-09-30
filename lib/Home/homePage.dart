@@ -62,10 +62,9 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () async {
-              await getDataSearch();
-              if (busqueda.length > 0) {
+              bool search = await getDataSearch();
+              if (search)
                 showSearch(context: context, delegate: Search(busqueda));
-              }
             },
           )
         ],
@@ -92,7 +91,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> getDataSearch() async {
+  Future<bool> getDataSearch() async {
     _showLoading();
     _sharedPreferences = await _prefs;
     bool isNotLogged = !Auth.isLogged(_sharedPreferences);
@@ -102,18 +101,25 @@ class _HomePageState extends State<HomePage> {
     if (isOnline) {
       if (isNotLogged) toLogIn();
       var resp = await service.getDataSearch(authToken);
-      busqueda = resp.data;
 
       if (res.error) {
         alertDiag(context, "Error", res.errorMessage);
+        _hideLoading();
+        return false;
       }
+
+      setState(() {
+        busqueda = resp.data;
+      });
+
       _hideLoading();
+      return true;
     } else {
       alertDiag(
           context, "Error", "Favor de conectarse a internet e iniciar sesion");
+      _hideLoading();
+      return false;
     }
-
-    _hideLoading();
   }
 
   Future<void> saveData() async {
