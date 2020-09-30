@@ -23,7 +23,7 @@ class Ping extends HttpModel {
             return false;
           })
           .catchError((error) => false);
-    } catch (e) {
+    } on SocketException catch (_) {
       return false;
     }
   }
