@@ -4,50 +4,63 @@ import 'package:LikeApp/CommonWidgets/pdfPreview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 
 class PDFPrinterShare extends StatelessWidget {
-  final pdf = pw.Document();
-
-  writeOnPdf() {
-    pdf.addPage(pw.MultiPage(
-      pageFormat: PdfPageFormat.a4,
-      margin: pw.EdgeInsets.all(32),
-      build: (pw.Context context) {
-        return <pw.Widget>[
-          pw.Header(level: 0, child: pw.Text("Easy Approach Document")),
-          pw.Paragraph(
-              text:
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Malesuada fames ac turpis egestas sed tempus urna. Quisque sagittis purus sit amet. A arcu cursus vitae congue mauris rhoncus aenean vel elit. Ipsum dolor sit amet consectetur adipiscing elit pellentesque. Viverra justo nec ultrices dui sapien eget mi proin sed."),
-          pw.Paragraph(
-              text:
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Malesuada fames ac turpis egestas sed tempus urna. Quisque sagittis purus sit amet. A arcu cursus vitae congue mauris rhoncus aenean vel elit. Ipsum dolor sit amet consectetur adipiscing elit pellentesque. Viverra justo nec ultrices dui sapien eget mi proin sed."),
-          pw.Header(level: 1, child: pw.Text("Second Heading")),
-          pw.Paragraph(
-              text:
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Malesuada fames ac turpis egestas sed tempus urna. Quisque sagittis purus sit amet. A arcu cursus vitae congue mauris rhoncus aenean vel elit. Ipsum dolor sit amet consectetur adipiscing elit pellentesque. Viverra justo nec ultrices dui sapien eget mi proin sed."),
-          pw.Paragraph(
-              text:
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Malesuada fames ac turpis egestas sed tempus urna. Quisque sagittis purus sit amet. A arcu cursus vitae congue mauris rhoncus aenean vel elit. Ipsum dolor sit amet consectetur adipiscing elit pellentesque. Viverra justo nec ultrices dui sapien eget mi proin sed."),
-          pw.Paragraph(
-              text:
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Malesuada fames ac turpis egestas sed tempus urna. Quisque sagittis purus sit amet. A arcu cursus vitae congue mauris rhoncus aenean vel elit. Ipsum dolor sit amet consectetur adipiscing elit pellentesque. Viverra justo nec ultrices dui sapien eget mi proin sed."),
-        ];
-      },
-    ));
-  }
-
   Future savePdf() async {
-    Directory documentDirectory = await getApplicationDocumentsDirectory();
+    String generatedPdfFilePath;
 
-    String documentPath = documentDirectory.path;
+    Future<void> generateExampleDocument() async {
+      var htmlContent = """
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+          table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+          }
+          th, td, p {
+            padding: 5px;
+            text-align: left;
+          }
+          </style>
+        </head>
+        <body>
+          <h2>PDF Generated with flutter_html_to_pdf plugin</h2>
 
-    File file = File("$documentPath/reporte.pdf");
+          <table style="width:100%">
+            <caption>Sample HTML Table</caption>
+            <tr>
+              <th>Month</th>
+              <th>Savings</th>
+            </tr>
+            <tr>
+              <td>January</td>
+              <td>100</td>
+            </tr>
+            <tr>
+              <td>February</td>
+              <td>50</td>
+            </tr>
+          </table>
 
-    file.writeAsBytesSync(pdf.save());
+          <p>Image loaded from web</p>
+          <img src="https://i.imgur.com/wxaJsXF.png" alt="web-img">
+        </body>
+      </html>
+      """;
+
+      // Directory appDocDir = await getApplicationDocumentsDirectory();
+      // var targetPath = appDocDir.path;
+      // var targetFileName = "example-pdf";
+
+      // var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
+      //     htmlContent, targetPath, targetFileName);
+      // generatedPdfFilePath = generatedPdfFile.path;
+    }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -70,7 +83,6 @@ class PDFPrinterShare extends StatelessWidget {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          writeOnPdf();
           await savePdf();
 
           Directory documentDirectory =
