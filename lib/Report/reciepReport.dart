@@ -98,6 +98,12 @@ class _ReciepReportState extends State<ReciepReport> {
       if (permission != LocationPermission.always &&
           permission != LocationPermission.whileInUse) {
         permission = await requestPermission();
+        final Position position =
+            await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+        setState(() {
+          data.latitude = position.latitude;
+          data.longitud = position.longitude;
+        });
       } else {
         final Position position =
             await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
@@ -117,7 +123,6 @@ class _ReciepReportState extends State<ReciepReport> {
 
   Future<void> saveToLocal() async {
     LocalStorage localS = LocalStorage(FileName().report);
-    localS.clearReportFile();
     localS.addReport(this.data);
   }
 
@@ -140,8 +145,8 @@ class _ReciepReportState extends State<ReciepReport> {
         id: 0,
         lugar: "Periban de ramos",
         productor: "Jose Alberto Espinoza Morelos 3",
-        latitude: data.latitude,
-        longitud: data.longitud,
+        latitude: data.latitude ?? 0.0,
+        longitud: data.longitud ?? 0.0,
         ubicacion: "Periban de ramos",
         predio: "El pedregal III",
         cultivo: "Aguacate",

@@ -89,6 +89,7 @@ class _SelectPlagaState extends State<SelectPlaga> {
       setState(() {
         res = resp;
       });
+
       if (resp.error) {
         await alertDiag(context, "Error", res.errorMessage);
       } else {
@@ -106,7 +107,7 @@ class _SelectPlagaState extends State<SelectPlaga> {
 
       setState(() {
         res = APIResponse<List<Plaga>>(
-            data: resp, error: false, errorMessage: null);
+            data: resp, error: false, errorMessage: "");
       });
       _hideLoading();
     }

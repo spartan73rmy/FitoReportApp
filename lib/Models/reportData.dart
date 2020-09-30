@@ -94,7 +94,7 @@ class ReportDataList {
   Map<String, dynamic> toJson() {
     List<Map> reportes = this.reportes != null
         ? this.reportes.map((i) => i.toJson()).toList()
-        : new List<ReportData>();
+        : [];
 
     return {
       "reportes": reportes,
@@ -102,7 +102,7 @@ class ReportDataList {
   }
 
   factory ReportDataList.fromJSON(Map<String, dynamic> parsedJson) {
-    var list = parsedJson['reportes'] as List;
+    var list = parsedJson["reportes"] as List;
     List<ReportData> lista = list.map((i) => ReportData.fromJSON(i)).toList();
     return ReportDataList(reportes: lista);
   }

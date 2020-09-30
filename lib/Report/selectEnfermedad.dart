@@ -76,7 +76,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
 
   _fetchEnfermedades() async {
     _isOnline = await ping.ping() ?? false;
-    LocalStorage localS = LocalStorage(FileName().plaga);
+    LocalStorage localS = LocalStorage(FileName().enfermedad);
     if (_isOnline) {
       _showLoading();
 
@@ -111,11 +111,11 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
     }
   }
 
-  Widget _buildRow(Enfermedad plaga) {
-    final alreadySaved = _saved.contains(plaga);
+  Widget _buildRow(Enfermedad enfermedad) {
+    final alreadySaved = _saved.contains(enfermedad);
     return ListTile(
       title: Text(
-        plaga.nombre,
+        enfermedad.nombre,
         style: TextStyle(fontSize: 18.0),
       ),
       trailing: Icon(
@@ -125,9 +125,9 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
       onTap: () {
         setState(() {
           if (alreadySaved) {
-            _saved.remove(plaga);
+            _saved.remove(enfermedad);
           } else {
-            _saved.add(plaga);
+            _saved.add(enfermedad);
           }
         });
       },
