@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
 import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Login/login.dart';
@@ -9,9 +12,11 @@ import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Services/reportService.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,6 +37,8 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   String directory;
   bool _isLoading = false;
   ReportData report;
+
+  String qrPath;
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +139,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
     _showLoading();
     bool isValid = await getReport();
     if (isValid) {
+      await setQR();
       String path = await savePdf(report);
       setState(() {
         directory = path;
@@ -149,6 +157,30 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   _hideLoading() {
     setState(() {
       _isLoading = false;
+    });
+  }
+
+  setQR() async {
+    ByteData byteData = await QrPainter(
+        data: 'https://fitoreport.com/api/reporte/jhfd23nm34m2m',
+        errorCorrectionLevel: QrErrorCorrectLevel.H,
+        version: QrVersions.auto,
+        gapless: false,
+        color: Colors.brown,
+        // embeddedImage: ,
+        embeddedImageStyle: QrEmbeddedImageStyle(
+          size: Size(20, 20),
+        )).toImageData(200, format: ImageByteFormat.png);
+
+    Uint8List pngBytes = byteData.buffer.asUint8List();
+
+    final tempDir = await getTemporaryDirectory();
+    final path = "${tempDir.path}/qr.png";
+    final file = await new File(path).create();
+    await file.writeAsBytes(pngBytes);
+
+    setState(() {
+      qrPath = path;
     });
   }
 
@@ -221,15 +253,15 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
       style="float: right"
       width="100"
       height="100"
-      src="https://seeklogo.com/images/U/umsnh-logo-0624831352-seeklogo.com.png"
-      alt="web-img"
+      src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Umsnh.jpg"
+      alt="Universidad"
     />
     <img
       style="float: left"
       width="150"
       height="100"
       src="https://i.pinimg.com/originals/a3/4d/c8/a34dc889367a917145d5c08c1d3cb4d4.jpg"
-      alt="web-img"
+      alt="Planeta"
     />
 
     <h1>AGROQUIMICOS "GUERRERO"</h1>
@@ -295,9 +327,9 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
     <p><b>354 110 2486</b></p>
         <img
       style="float: right"
-      width="50"
-      height="50"
-      src="https://borealtech.com/wp-content/uploads/2018/10/codigo-qr-1024x1024.jpg"
+      width="150"
+      height="150"
+      src="file://$qrPath"
       alt="QR"
     />
   </body>

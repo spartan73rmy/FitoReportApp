@@ -45,7 +45,6 @@ class ReportService extends HttpModel {
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);
-            print("Status 200 --->$jsonData");
             final report = ReportData.fromJSON(jsonData);
             return APIResponse<ReportData>(data: report);
           }
