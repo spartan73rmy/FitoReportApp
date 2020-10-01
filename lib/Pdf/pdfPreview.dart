@@ -10,7 +10,7 @@ class PdfPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return PDFViewerScaffold(
       appBar: AppBar(
-        title: Text("Reporte PDF"),
+        title: Text("PDF"),
       ),
       // primary: false,
       path: path,
