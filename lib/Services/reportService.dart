@@ -35,6 +35,32 @@ class ReportService extends HttpModel {
                 error.toString()));
   }
 
+  Future<APIResponse<ReportData>> getReport(authToken, int idReport) {
+    return http
+        .get(
+          HttpModel.getUrl() + url + "/$idReport",
+          headers: {'Authorization': "Bearer " + authToken},
+        )
+        .timeout(Duration(seconds: 15))
+        .then((data) {
+          if (data.statusCode == 200) {
+            final jsonData = json.decode(data.body);
+            print("Status 200 --->$jsonData");
+            final report = ReportData.fromJSON(jsonData);
+            return APIResponse<ReportData>(data: report);
+          }
+          return APIResponse<ReportData>(
+              data: new ReportData(),
+              error: true,
+              errorMessage: "La sesion ha caducado, reinicie sesion");
+        })
+        .catchError((error) => APIResponse<ReportData>(
+            data: new ReportData(),
+            error: true,
+            errorMessage:
+                "Ocurrio un error al conectar a internet " + error.toString()));
+  }
+
   Future<APIResponse<List<DataSearch>>> getDataSearch(authToken) {
     return http
         .get(

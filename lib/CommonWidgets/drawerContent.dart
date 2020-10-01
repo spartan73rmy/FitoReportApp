@@ -1,5 +1,6 @@
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Login/login.dart';
+import 'package:LikeApp/Pdf/pdfPrinter.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/User/listUsers.dart';
 import 'package:flutter/material.dart';
@@ -80,6 +81,22 @@ class _DrawerContentState extends State<DrawerContent> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ListUsers()),
+            );
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.work),
+          title: Text('PDF'),
+          subtitle: Text.rich(
+            TextSpan(
+                text: "Render",
+                style:
+                    TextStyle(color: Color(Colors.black.value), fontSize: 15)),
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PDFPrinterShare()),
             );
           },
         ),

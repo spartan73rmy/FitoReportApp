@@ -1,11 +1,12 @@
-import 'package:LikeApp/CommonWidgets/alert.dart';
+import 'package:LikeApp/Home/homePage.dart';
 import 'package:LikeApp/Models/dataSearch.dart';
+import 'package:LikeApp/Pdf/pdfPrinter.dart';
 import 'package:flutter/material.dart';
 
 class Search extends SearchDelegate<String> {
   Search(this.busqueda);
-
   final List<DataSearch> busqueda;
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -30,11 +31,7 @@ class Search extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Card(
-        color: Colors.white,
-        child: Center(
-          child: Text("$query"), //TODO add new route to show/share report
-        ));
+    return PDFPrinterShare();
   }
 
   Widget show(BuildContext context, DataSearch item) {
@@ -59,9 +56,13 @@ class Search extends SearchDelegate<String> {
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
         onTap: () {
-          // showResults(context);
-          alertDiag(context, "${suggetionsList[index].productor}",
-              "${suggetionsList[index].ubicacion}");
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    PDFPrinterShare(idReport: suggetionsList[index].idReport)),
+          );
         },
         leading: Icon(Icons.location_city),
         title: RichText(

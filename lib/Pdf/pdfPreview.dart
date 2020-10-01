@@ -9,6 +9,10 @@ class PdfPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PDFViewerScaffold(
+      appBar: AppBar(
+        title: Text("Reporte PDF"),
+      ),
+      // primary: false,
       path: path,
     );
   }
