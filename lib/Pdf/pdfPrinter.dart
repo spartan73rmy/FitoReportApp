@@ -37,7 +37,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   String directory;
   bool _isLoading = false;
   ReportData report;
-
+  String url = "http://192.168.43.141:8080/details/";
   String qrPath;
 
   @override
@@ -162,15 +162,15 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
 
   setQR() async {
     ByteData byteData = await QrPainter(
-        data: 'https://fitoreport.com/api/reporte/jhfd23nm34m2m',
+        data: "$url${widget.idReport}",
         errorCorrectionLevel: QrErrorCorrectLevel.H,
         version: QrVersions.auto,
         gapless: false,
-        color: Colors.brown,
+        color: Colors.black,
         // embeddedImage: ,
         embeddedImageStyle: QrEmbeddedImageStyle(
           size: Size(20, 20),
-        )).toImageData(200, format: ImageByteFormat.png);
+        )).toImageData(400, format: ImageByteFormat.png);
 
     Uint8List pngBytes = byteData.buffer.asUint8List();
 
@@ -249,7 +249,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   </head>
 
   <body>
-    <img
+      <img
       style="float: right"
       width="100"
       height="100"
@@ -263,7 +263,6 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
       src="https://i.pinimg.com/originals/a3/4d/c8/a34dc889367a917145d5c08c1d3cb4d4.jpg"
       alt="Planeta"
     />
-
     <h1>AGROQUIMICOS "GUERRERO"</h1>
     <h3>ING. ELVIN MISAEL GALVAN GUERRERO</h3>
     <h5>
@@ -321,6 +320,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
         $productos
     </table>
         <br />
+            <a href="$url${widget.idReport}" style="float: right">Clic para ver reporte</a>
     <h3>ELVIN MISAEL GALVAN GUERRERO</h3>
     <h4>Ingeniero Agronomo Fruticultor</h4>
     <p><b>No. De CEDULA:</b></p>

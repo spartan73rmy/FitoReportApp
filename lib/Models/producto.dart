@@ -1,5 +1,6 @@
 class Producto {
-  int cantidad = 0;
+  double cantidad = 0.0;
+  String unidad = "";
   String nombre = '';
   String ingredienteActivo = '';
   String concentracion = '';
@@ -8,6 +9,7 @@ class Producto {
   Producto(
       {this.nombre,
       this.cantidad,
+      this.unidad,
       this.ingredienteActivo,
       this.concentracion,
       this.intervaloSeguridad});
@@ -15,6 +17,7 @@ class Producto {
   factory Producto.fromJSON(Map<String, dynamic> item) {
     return Producto(
       cantidad: item["cantidad"],
+      unidad: item["unidad"],
       nombre: item["nombre"],
       ingredienteActivo: item["ingredienteActivo"],
       concentracion: item["concentracion"],
@@ -28,6 +31,7 @@ class Producto {
       "ingredienteActivo": this.ingredienteActivo,
       "concentracion": this.concentracion,
       "intervaloSeguridad": this.intervaloSeguridad,
+      "unidad": this.unidad
     };
   }
 }

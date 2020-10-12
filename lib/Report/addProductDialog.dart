@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 Future<Producto> addProductDialog(BuildContext context) {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Producto newProduct = new Producto();
+  List<String> unidades = ["Kg", "L", "g", "ml"];
+  String unidad;
+
   List<TextEditingController> _controller = [
     new TextEditingController(),
     new TextEditingController(),
@@ -38,10 +41,10 @@ Future<Producto> addProductDialog(BuildContext context) {
                   autocorrect: false,
                   maxLines: 1,
                   onSaved: (String value) {
-                    newProduct.cantidad = int.tryParse(value) ?? 0;
+                    newProduct.cantidad = double.tryParse(value) ?? 0;
                   },
                   validator: (value) {
-                    var num = int.tryParse(value);
+                    var num = double.tryParse(value);
                     if (num == null || value.isEmpty) {
                       return "Introduce la cantidad";
                     }
@@ -53,6 +56,29 @@ Future<Producto> addProductDialog(BuildContext context) {
                       icon: const Icon(Icons.opacity),
                       labelStyle: TextStyle(
                           decorationStyle: TextDecorationStyle.solid)),
+                ),
+                DropdownButton(
+                  hint: unidad == null
+                      ? Text('Selecciona una opcion')
+                      : Text(
+                          unidad,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                  isExpanded: true,
+                  elevation: 2,
+                  iconSize: 30.0,
+                  style: TextStyle(color: Colors.blue),
+                  items: unidades.map(
+                    (val) {
+                      return DropdownMenuItem<String>(
+                        value: val,
+                        child: Text(val),
+                      );
+                    },
+                  ).toList(),
+                  onChanged: (val) {
+                    unidad = val;
+                  },
                 ),
                 TextFormField(
                   controller: _controller[1],
@@ -158,6 +184,7 @@ Future<Producto> addProductDialog(BuildContext context) {
               if (form.validate()) {
                 // Text forms was validated.
                 form.save();
+                newProduct.unidad = unidad;
                 Navigator.pop(context, newProduct);
               }
             },
