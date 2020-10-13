@@ -294,7 +294,7 @@ class _AddReportState extends State<AddReport> {
             ),
             DropdownButton(
               hint: _etapaFenologica == null
-                  ? Text('Selecciona una opcion')
+                  ? Text('Selecciona la etapa fenologica')
                   : Text(
                       _etapaFenologica,
                       style: TextStyle(color: Colors.black),

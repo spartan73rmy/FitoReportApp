@@ -12,14 +12,14 @@ class AddProductDialog extends StatefulWidget {
 
 class _AddProductDialogState extends State<AddProductDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Producto p = new Producto();
+  Producto producto = new Producto();
   List<String> unidades = ["Kg", "L", "g", "mL"];
   bool isEdit;
-  List<TextEditingController> c;
+  List<TextEditingController> textController;
   @override
   void initState() {
     super.initState();
-    c = [
+    textController = [
       new TextEditingController(),
       new TextEditingController(),
       new TextEditingController(),
@@ -30,13 +30,13 @@ class _AddProductDialogState extends State<AddProductDialog> {
     isEdit = widget.producto != null;
 
     if (isEdit) {
-      p = widget.producto;
-      c[0].text = "${p.cantidad}";
+      producto = widget.producto;
+      textController[0].text = "${producto.cantidad}";
       // c[1].text = "${p.unidad}";
-      c[1].text = "${p.nombre}";
-      c[2].text = "${p.ingredienteActivo}";
-      c[3].text = "${p.concentracion}";
-      c[4].text = "${p.intervaloSeguridad}";
+      textController[1].text = "${producto.nombre}";
+      textController[2].text = "${producto.ingredienteActivo}";
+      textController[3].text = "${producto.concentracion}";
+      textController[4].text = "${producto.intervaloSeguridad}";
     }
   }
 
@@ -63,12 +63,12 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 children: [
                   Expanded(
                       child: TextFormField(
-                    controller: c[0],
+                    controller: textController[0],
                     keyboardType: TextInputType.number,
                     autocorrect: false,
                     maxLines: 1,
                     onSaved: (String value) {
-                      p.cantidad = double.tryParse(value) ?? 0;
+                      producto.cantidad = double.tryParse(value) ?? 0;
                     },
                     validator: (value) {
                       var num = double.tryParse(value);
@@ -86,10 +86,10 @@ class _AddProductDialogState extends State<AddProductDialog> {
                   )),
                   Expanded(
                       child: DropdownButton(
-                    hint: p.unidad == null
+                    hint: producto.unidad == null
                         ? Text('Unidad')
                         : Text(
-                            p.unidad,
+                            producto.unidad,
                             style: TextStyle(color: Colors.black),
                           ),
                     isExpanded: true,
@@ -106,19 +106,19 @@ class _AddProductDialogState extends State<AddProductDialog> {
                     ).toList(),
                     onChanged: (val) {
                       setState(() {
-                        p.unidad = val;
+                        producto.unidad = val;
                       });
                     },
                   )),
                 ],
               ),
               TextFormField(
-                controller: c[1],
+                controller: textController[1],
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 maxLines: 1,
                 onSaved: (String value) {
-                  p.nombre = value;
+                  producto.nombre = value;
                 },
                 validator: (value) {
                   if (value.isEmpty) {
@@ -135,12 +135,12 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         TextStyle(decorationStyle: TextDecorationStyle.solid)),
               ),
               TextFormField(
-                controller: c[2],
+                controller: textController[2],
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 maxLines: 1,
                 onSaved: (String value) {
-                  p.ingredienteActivo = value;
+                  producto.ingredienteActivo = value;
                 },
                 validator: (value) {
                   if (value.isEmpty) {
@@ -157,12 +157,13 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         TextStyle(decorationStyle: TextDecorationStyle.solid)),
               ),
               TextFormField(
-                controller: c[3],
+                controller: textController[3],
                 keyboardType: TextInputType.number,
                 autocorrect: false,
                 maxLines: 1,
                 onSaved: (String value) {
-                  p.concentracion = (int.tryParse(value) ?? 0).toString();
+                  producto.concentracion =
+                      (int.tryParse(value) ?? 0).toString();
                 },
                 validator: (value) {
                   var num = int.tryParse(value);
@@ -180,12 +181,13 @@ class _AddProductDialogState extends State<AddProductDialog> {
                         TextStyle(decorationStyle: TextDecorationStyle.solid)),
               ),
               TextFormField(
-                controller: c[4],
+                controller: textController[4],
                 keyboardType: TextInputType.number,
                 autocorrect: false,
                 maxLines: 1,
                 onSaved: (String value) {
-                  p.intervaloSeguridad = (int.tryParse(value) ?? 0).toString();
+                  producto.intervaloSeguridad =
+                      (int.tryParse(value) ?? 0).toString();
                 },
                 validator: (value) {
                   var num = int.tryParse(value);
@@ -214,8 +216,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
             if (form.validate()) {
               // Text forms was validated.
               form.save();
-              //Return ner Product to add to list
-              Navigator.pop(context, p);
+              //Return new Product to add to list
+              Navigator.pop(context, producto);
             }
           },
         )

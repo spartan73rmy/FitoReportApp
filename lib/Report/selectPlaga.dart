@@ -1,4 +1,6 @@
+import 'package:LikeApp/CommonWidgets/plagaDialog.dart';
 import 'package:LikeApp/CommonWidgets/alert.dart';
+import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Models/apiResponse.dart';
 import 'package:LikeApp/Models/plaga.dart';
@@ -23,23 +25,35 @@ class SelectPlaga extends StatefulWidget {
 class _SelectPlagaState extends State<SelectPlaga> {
   ReportData data;
   bool isLoading = true;
-  bool _isOnline = true;
+  bool isOnline = true;
 
   Ping get ping => GetIt.I<Ping>();
   PlagaService get service => GetIt.I<PlagaService>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   SharedPreferences _sharedPreferences;
   APIResponse<List<Plaga>> res;
-
-  final _saved = List<Plaga>();
+  final selected = List<Plaga>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: UniqueKey(),
         appBar: AppBar(title: Text('Plagas'), actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.navigate_next),
+          FlatButton(
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+              // Replace with a Row for horizontal icon + text
+              children: <Widget>[
+                Center(
+                  child:
+                      Text("Siguiente", style: TextStyle(color: Colors.white)),
+                ),
+                Icon(
+                  Icons.navigate_next,
+                  color: Colors.white,
+                ),
+              ],
+            ),
             onPressed: () {
               saveData();
               Navigator.push(
@@ -55,31 +69,76 @@ class _SelectPlagaState extends State<SelectPlaga> {
             return LoadingScreen();
           }
 
-          if (_isOnline && res.error ?? false) {
+          if (isOnline && res.error ?? false) {
             return Center(child: Text(res.errorMessage));
           }
-          print("Container");
           return Container(
               child: ListView.builder(
                   itemCount: res.data.length,
                   padding: EdgeInsets.all(16.0),
                   itemBuilder: (context, i) {
-                    return _buildRow(res.data[i]);
+                    return Dismissible(
+                        key: ValueKey(res.data[i].id),
+                        direction: DismissDirection.startToEnd,
+                        onDismissed: (direction) {},
+                        confirmDismiss: (direction) async {
+                          final result = await showDialog(
+                                  context: context,
+                                  builder: (_) => DeleteDialog()) ??
+                              false;
+                          //If delete is confirmed delete from list and selected list if exist
+                          if (result) {
+                            //TOOD delete from DB
+                            setState(() {
+                              Plaga toDelete = res.data[i];
+                              if (selected.contains(toDelete))
+                                selected.remove(toDelete);
+                              res.data.removeAt(i);
+                            });
+                          }
+                          return result;
+                        },
+                        background: Container(
+                          color: Colors.blue,
+                          padding: EdgeInsets.only(left: 16),
+                          child: Align(
+                            child: Icon(Icons.delete, color: Colors.white),
+                            alignment: Alignment.centerLeft,
+                          ),
+                        ),
+                        child: buildRow(res.data[i]));
                   }));
-        }));
+        }),
+        persistentFooterButtons: [
+          FloatingActionButton.extended(
+            icon: Icon(Icons.add),
+            label: Text("Agregar Plaga"),
+            onPressed: () {
+              //If is valid add to list else return
+              addEditPlagaDialog(context).then((value) {
+                if (value == null) return;
+                bool isValid = value.nombre != null;
+                if (isValid)
+                  setState(() {
+                    res.data.add(value);
+                  });
+              });
+            },
+          ),
+        ]);
   }
 
   @override
   void initState() {
-    _fetchPlaga();
+    fetchPlaga();
     data = widget.data;
     super.initState();
   }
 
-  _fetchPlaga() async {
-    _isOnline = await ping.ping() ?? false;
+  fetchPlaga() async {
+    isOnline = await ping.ping() ?? false;
     LocalStorage localS = LocalStorage(FileName().plaga);
-    if (_isOnline) {
+    if (isOnline) {
       _showLoading();
 
       _sharedPreferences = await _prefs;
@@ -113,12 +172,12 @@ class _SelectPlagaState extends State<SelectPlaga> {
     }
   }
 
-  Widget _buildRow(Plaga plaga) {
-    final alreadySaved = _saved.contains(plaga);
+  Widget buildRow(Plaga plaga) {
+    final alreadySaved = selected.contains(plaga);
     return ListTile(
       trailing: Icon(
         alreadySaved ? Icons.check_box : Icons.check_box_outline_blank,
-        color: alreadySaved ? Colors.red : null,
+        color: alreadySaved ? Colors.blue : null,
       ),
       title: Text(
         plaga.nombre,
@@ -127,13 +186,19 @@ class _SelectPlagaState extends State<SelectPlaga> {
       onTap: () {
         setState(() {
           if (alreadySaved) {
-            _saved.remove(plaga);
+            selected.remove(plaga);
           } else {
-            _saved.add(plaga);
+            selected.add(plaga);
           }
         });
       },
     );
+  }
+
+  void saveData() {
+    setState(() {
+      data.plaga = selected;
+    });
   }
 
   _showLoading() {
@@ -145,12 +210,6 @@ class _SelectPlagaState extends State<SelectPlaga> {
   _hideLoading() {
     setState(() {
       isLoading = false;
-    });
-  }
-
-  void saveData() {
-    setState(() {
-      data.plaga = _saved;
     });
   }
 }

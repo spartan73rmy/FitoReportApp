@@ -195,7 +195,6 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   Future<String> savePdf(ReportData r) async {
     String uni = await imageToBase64("assets/icon/uni.png");
     String cuidaPlaneta = await imageToBase64("assets/icon/cuida.jpg");
-    print(uni);
     String plagas = "";
     String enfermedades = "";
     String productos = "";

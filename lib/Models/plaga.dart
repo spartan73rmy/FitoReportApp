@@ -10,8 +10,8 @@ class Plaga {
 
   Map<String, dynamic> toJson() {
     return {
-      "id": this.id,
-      "nombre": this.nombre,
+      "id": this.id ?? -1,
+      "nombre": this.nombre ?? "",
     };
   }
 }

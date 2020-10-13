@@ -1,4 +1,6 @@
 import 'package:LikeApp/CommonWidgets/alert.dart';
+import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
+import 'package:LikeApp/CommonWidgets/enfermedadDialog.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Models/APIResponse.dart';
 import 'package:LikeApp/Models/enfermedad.dart';
@@ -31,40 +33,97 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
   SharedPreferences _sharedPreferences;
   APIResponse<List<Enfermedad>> res;
 
-  final _saved = List<Enfermedad>();
+  final selected = List<Enfermedad>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Enfermedades'), actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.navigate_next),
-            onPressed: () {
-              saveData();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ReciepReport(data: data)),
-              );
-            },
-          )
-        ]),
-        body: Builder(builder: (context) {
-          if (_isLoading) {
-            return LoadingScreen();
-          }
+      appBar: AppBar(title: Text('Enfermedades'), actions: <Widget>[
+        FlatButton(
+          padding: EdgeInsets.all(10.0),
+          child: Row(
+            // Replace with a Row for horizontal icon + text
+            children: <Widget>[
+              Center(
+                child: Text("Siguiente", style: TextStyle(color: Colors.white)),
+              ),
+              Icon(
+                Icons.navigate_next,
+                color: Colors.white,
+              ),
+            ],
+          ),
+          onPressed: () {
+            saveData();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ReciepReport(data: data)),
+            );
+          },
+        )
+      ]),
+      body: Builder(builder: (context) {
+        if (_isLoading) {
+          return LoadingScreen();
+        }
 
-          if (_isOnline && res.error ?? false) {
-            return Center(child: Text(res.errorMessage));
-          }
+        if (_isOnline && res.error ?? false) {
+          return Center(child: Text(res.errorMessage));
+        }
 
-          return ListView.builder(
-              itemCount: res.data.length,
-              padding: EdgeInsets.all(16.0),
-              itemBuilder: /*1*/ (context, i) {
-                return _buildRow(res.data[i]);
-              });
-        }));
+        return ListView.builder(
+            itemCount: res.data.length,
+            padding: EdgeInsets.all(16.0),
+            itemBuilder: /*1*/ (context, i) {
+              return Dismissible(
+                  key: ValueKey(res.data[i].id),
+                  direction: DismissDirection.startToEnd,
+                  onDismissed: (direction) {},
+                  confirmDismiss: (direction) async {
+                    final result = await showDialog(
+                            context: context, builder: (_) => DeleteDialog()) ??
+                        false;
+                    //If delete is confirmed delete from list and selected list if exist
+                    if (result) {
+                      //TOOD delete from DB
+                      setState(() {
+                        Enfermedad toDelete = res.data[i];
+                        if (selected.contains(toDelete))
+                          selected.remove(toDelete);
+                        res.data.removeAt(i);
+                      });
+                    }
+                    return result;
+                  },
+                  background: Container(
+                    color: Colors.blue,
+                    padding: EdgeInsets.only(left: 16),
+                    child: Align(
+                      child: Icon(Icons.delete, color: Colors.white),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                  child: _buildRow(res.data[i]));
+            });
+      }),
+      persistentFooterButtons: [
+        FloatingActionButton.extended(
+          icon: Icon(Icons.add),
+          label: Text("Agregar Enfermedad"),
+          onPressed: () {
+            //If is valid add to list else return
+            addEditEnfermedadDialog(context).then((value) {
+              if (value == null) return;
+              bool isValid = value.nombre != null;
+              if (isValid)
+                setState(() {
+                  res.data.add(value);
+                });
+            });
+          },
+        ),
+      ],
+    );
   }
 
   @override
@@ -112,7 +171,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
   }
 
   Widget _buildRow(Enfermedad enfermedad) {
-    final alreadySaved = _saved.contains(enfermedad);
+    final alreadySaved = selected.contains(enfermedad);
     return ListTile(
       title: Text(
         enfermedad.nombre,
@@ -120,14 +179,14 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
       ),
       trailing: Icon(
         alreadySaved ? Icons.check_box : Icons.check_box_outline_blank,
-        color: alreadySaved ? Colors.red : null,
+        color: alreadySaved ? Colors.blue : null,
       ),
       onTap: () {
         setState(() {
           if (alreadySaved) {
-            _saved.remove(enfermedad);
+            selected.remove(enfermedad);
           } else {
-            _saved.add(enfermedad);
+            selected.add(enfermedad);
           }
         });
       },
@@ -148,7 +207,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
 
   void saveData() {
     setState(() {
-      data.enfermedad = _saved;
+      data.enfermedad = selected;
     });
   }
 }

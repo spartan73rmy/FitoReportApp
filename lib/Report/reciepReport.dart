@@ -8,7 +8,7 @@ import 'package:LikeApp/Storage/files.dart';
 import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'addProductDialog.dart';
+import '../CommonWidgets/productDialog.dart';
 import 'reciepReportBody.dart';
 
 class ReciepReport extends StatefulWidget {

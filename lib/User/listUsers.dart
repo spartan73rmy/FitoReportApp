@@ -4,7 +4,7 @@ import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Services/userService.dart';
 import 'package:LikeApp/User/aproveUser.dart';
 import 'package:LikeApp/User/register.dart';
-import 'package:LikeApp/User/userDelete.dart';
+import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -89,7 +89,8 @@ class _ListUsersState extends State<ListUsers> {
                   onDismissed: (direction) {},
                   confirmDismiss: (direction) async {
                     final result = await showDialog(
-                        context: context, builder: (_) => UserDelete());
+                            context: context, builder: (_) => DeleteDialog()) ??
+                        false;
 
                     if (result) {
                       _sharedPreferences = await _prefs;
@@ -111,7 +112,6 @@ class _ListUsersState extends State<ListUsers> {
 
                       return deleteResult.data ?? false;
                     }
-                    print(result);
                     return result;
                   },
                   background: Container(
