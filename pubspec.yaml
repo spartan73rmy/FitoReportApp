@@ -38,6 +38,5 @@ flutter_icons:
 flutter:
   uses-material-design: true
   assets:
-    - assets/icon/
     - assets/icon/uni.png
     - assets/icon/cuida.jpg

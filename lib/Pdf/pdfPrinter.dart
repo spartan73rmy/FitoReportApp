@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -39,6 +40,12 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   ReportData report;
   String url = "http://192.168.43.141:8080/details/";
   String qrPath;
+
+  @override
+  void initState() {
+    super.initState();
+    loadReport();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,12 +136,6 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    loadReport();
-  }
-
   void loadReport() async {
     _showLoading();
     bool isValid = await getReport();
@@ -184,7 +185,17 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
     });
   }
 
+  imageToBase64(String pathImage) async {
+    if (pathImage.isEmpty) return;
+    ByteData bytes = await rootBundle.load(pathImage);
+    var buffer = bytes.buffer;
+    return base64.encode(Uint8List.view(buffer));
+  }
+
   Future<String> savePdf(ReportData r) async {
+    String uni = await imageToBase64("assets/icon/uni.png");
+    String cuidaPlaneta = await imageToBase64("assets/icon/cuida.jpg");
+    print(uni);
     String plagas = "";
     String enfermedades = "";
     String productos = "";
@@ -199,21 +210,6 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
           "<tr><td>${p.cantidad}</td><td>${p.nombre}</td><td>${p.ingredienteActivo}</td><td>${p.concentracion}</td><td>${p.intervaloSeguridad}</td></tr>";
     });
 
-//TODO cargar de assets
-    //   <img
-    //   style="float: right"
-    //   width="100"
-    //   height="100"
-    //   src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Umsnh.jpg"
-    //   alt="Universidad"
-    // />
-    // <img
-    //   style="float: left"
-    //   width="150"
-    //   height="100"
-    //   src="https://i.pinimg.com/originals/a3/4d/c8/a34dc889367a917145d5c08c1d3cb4d4.jpg"
-    //   alt="Planeta"
-    // />
     var htmlContent = """
     <!DOCTYPE html>
 <html>
@@ -264,6 +260,20 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   </head>
 
   <body>
+        <img
+      style="float: right"
+      width="100"
+      height="100"
+      src="data:image/png;base64,$uni"
+      alt="Universidad"
+    />
+    <img
+      style="float: left"
+      width="150"
+      height="100"
+      src="data:image/jpeg;base64,$cuidaPlaneta"
+      alt="Planeta"
+    />
     <h1>AGROQUIMICOS "GUERRERO"</h1>
     <h3>ING. ELVIN MISAEL GALVAN GUERRERO</h3>
     <h5>

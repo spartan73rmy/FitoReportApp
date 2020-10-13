@@ -48,6 +48,12 @@ class ReportService extends HttpModel {
             final report = ReportData.fromJSON(jsonData);
             return APIResponse<ReportData>(data: report);
           }
+          if (data.statusCode == 401) {
+            return APIResponse<ReportData>(
+                data: new ReportData(),
+                error: true,
+                errorMessage: "No tiene permiso para acceder");
+          }
           return APIResponse<ReportData>(
               data: new ReportData(),
               error: true,
