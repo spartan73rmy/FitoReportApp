@@ -26,29 +26,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _isLoading;
-  bool _isAdmin;
+  bool isLoading;
+  bool isAdmin;
 
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   ReportService get service => GetIt.I<ReportService>();
   Ping get ping => GetIt.I<Ping>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   SharedPreferences _sharedPreferences;
   APIResponse<bool> res;
   List<DataSearch> busqueda;
-
+  bool isOnline;
   @override
   void initState() {
     res = new APIResponse<bool>();
+    isLoading = false;
+    isOnline = false;
+
     super.initState();
-    isAdmin();
-    _isLoading = false;
+    isAdm();
+    isConnected();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       drawer: DrawerContent(
-        isAdmin: _isAdmin,
+        isAdmin: isAdmin,
       ),
       appBar: AppBar(
         title: Text(this.widget.title),
@@ -70,7 +75,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Builder(builder: (context) {
-        if (_isLoading) {
+        if (isLoading) {
           return LoadingScreen();
         }
         return ListTempReport();
@@ -92,11 +97,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<bool> getDataSearch() async {
-    _showLoading();
+    showLoading();
     _sharedPreferences = await _prefs;
     bool isNotLogged = !Auth.isLogged(_sharedPreferences);
     String authToken = Auth.getToken(_sharedPreferences);
-    var isOnline = await ping.ping();
+    isOnline = await ping.ping();
 
     if (isOnline) {
       if (isNotLogged) toLogIn();
@@ -104,7 +109,7 @@ class _HomePageState extends State<HomePage> {
 
       if (res.error) {
         alertDiag(context, "Error", res.errorMessage);
-        _hideLoading();
+        hideLoading();
         return false;
       }
 
@@ -112,25 +117,25 @@ class _HomePageState extends State<HomePage> {
         busqueda = resp.data;
       });
 
-      _hideLoading();
+      hideLoading();
       return true;
     } else {
       alertDiag(
           context, "Error", "Favor de conectarse a internet e iniciar sesion");
-      _hideLoading();
+      hideLoading();
       return false;
     }
   }
 
   Future<void> saveData() async {
-    var _isOnline = await ping.ping() ?? false;
+    isOnline = await ping.ping() ?? false;
     _sharedPreferences = await _prefs;
     bool isNotLogged = !Auth.isLogged(_sharedPreferences);
 
-    if (_isOnline) {
+    if (isOnline) {
       if (isNotLogged) toLogIn();
 
-      _showLoading();
+      showLoading();
       String authToken = Auth.getToken(_sharedPreferences);
 
       LocalStorage localStorage = new LocalStorage(FileName().report);
@@ -151,18 +156,18 @@ class _HomePageState extends State<HomePage> {
 
       if (res.error) alertDiag(context, "Error", res.errorMessage);
 
-      _hideLoading();
+      hideLoading();
     } else {
       alertDiag(
           context, "Error", "Favor de conectarse a Internet e iniciar sesion");
     }
   }
 
-  Future<void> isAdmin() async {
+  Future<void> isAdm() async {
     _sharedPreferences = await _prefs;
 
     setState(() {
-      _isAdmin = Auth.isAdmin(_sharedPreferences);
+      isAdmin = Auth.isAdmin(_sharedPreferences);
     });
   }
 
@@ -174,15 +179,30 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _showLoading() {
+  isConnected() async {
+    bool l = await ping.ping();
     setState(() {
-      _isLoading = true;
+      isOnline = l;
+    });
+    isOnline
+        ? showSnackBar("Conectado a internet")
+        : showSnackBar("Modo sin conexion");
+  }
+
+  void showSnackBar(String value) {
+    scaffoldKey.currentState
+        .showSnackBar(new SnackBar(content: new Text(value)));
+  }
+
+  showLoading() {
+    setState(() {
+      isLoading = true;
     });
   }
 
-  _hideLoading() {
+  hideLoading() {
     setState(() {
-      _isLoading = false;
+      isLoading = false;
     });
   }
 }
