@@ -63,9 +63,11 @@ class _ReciepReportState extends State<ReciepReport> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          addProductDialog(context).then((value) {
+          addEditProductDialog(context).then((value) {
+            if (value == null) return;
             bool isValidProduct = value.nombre != null &&
                 value.cantidad != null &&
+                value.unidad != null &&
                 value.concentracion != null &&
                 value.ingredienteActivo != null &&
                 value.intervaloSeguridad != null;

@@ -1,196 +1,236 @@
 import 'package:LikeApp/Models/producto.dart';
 import 'package:flutter/material.dart';
 
-Future<Producto> addProductDialog(BuildContext context) {
+class AddProductDialog extends StatefulWidget {
+  Producto producto;
+
+  AddProductDialog({this.producto});
+
+  @override
+  _AddProductDialogState createState() => _AddProductDialogState();
+}
+
+class _AddProductDialogState extends State<AddProductDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Producto newProduct = new Producto();
-  List<String> unidades = ["Kg", "L", "g", "ml"];
-  String unidad;
+  Producto p = new Producto();
+  List<String> unidades = ["Kg", "L", "g", "mL"];
+  bool isEdit;
+  List<TextEditingController> c;
+  @override
+  void initState() {
+    super.initState();
+    c = [
+      new TextEditingController(),
+      new TextEditingController(),
+      new TextEditingController(),
+      new TextEditingController(),
+      new TextEditingController(),
+    ];
 
-  List<TextEditingController> _controller = [
-    new TextEditingController(),
-    new TextEditingController(),
-    new TextEditingController(),
-    new TextEditingController(),
-    new TextEditingController(),
-  ];
+    isEdit = widget.producto != null;
 
-  return showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        contentPadding: EdgeInsets.only(left: 25, right: 25),
-        title: Center(child: Text("Agregar Producto")),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20.0))),
-        content: Container(
-          height: 320,
-          width: 300,
-          child: SingleChildScrollView(
-              child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  controller: _controller[0],
-                  keyboardType: TextInputType.number,
-                  autocorrect: false,
-                  maxLines: 1,
-                  onSaved: (String value) {
-                    newProduct.cantidad = double.tryParse(value) ?? 0;
-                  },
-                  validator: (value) {
-                    var num = double.tryParse(value);
-                    if (num == null || value.isEmpty) {
-                      return "Introduce la cantidad";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                      labelText: 'Cantidad',
-                      hintText: 'Cantidad',
-                      icon: const Icon(Icons.opacity),
-                      labelStyle: TextStyle(
-                          decorationStyle: TextDecorationStyle.solid)),
-                ),
-                DropdownButton(
-                  hint: unidad == null
-                      ? Text('Selecciona una opcion')
-                      : Text(
-                          unidad,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                  isExpanded: true,
-                  elevation: 2,
-                  iconSize: 30.0,
-                  style: TextStyle(color: Colors.blue),
-                  items: unidades.map(
-                    (val) {
-                      return DropdownMenuItem<String>(
-                        value: val,
-                        child: Text(val),
-                      );
+    if (isEdit) {
+      p = widget.producto;
+      c[0].text = "${p.cantidad}";
+      // c[1].text = "${p.unidad}";
+      c[1].text = "${p.nombre}";
+      c[2].text = "${p.ingredienteActivo}";
+      c[3].text = "${p.concentracion}";
+      c[4].text = "${p.intervaloSeguridad}";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      contentPadding: EdgeInsets.only(left: 25, right: 25),
+      title: Center(child: Text("Agregar Producto")),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+      content: Container(
+        height: 360,
+        width: 300,
+        child: SingleChildScrollView(
+            child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                      child: TextFormField(
+                    controller: c[0],
+                    keyboardType: TextInputType.number,
+                    autocorrect: false,
+                    maxLines: 1,
+                    onSaved: (String value) {
+                      p.cantidad = double.tryParse(value) ?? 0;
                     },
-                  ).toList(),
-                  onChanged: (val) {
-                    unidad = val;
-                  },
-                ),
-                TextFormField(
-                  controller: _controller[1],
-                  keyboardType: TextInputType.text,
-                  autocorrect: false,
-                  maxLines: 1,
-                  onSaved: (String value) {
-                    newProduct.nombre = value;
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Introduce el nombre";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                      labelText: 'Producto',
-                      hintText: 'Producto',
-                      //filled: true,
-                      icon: const Icon(Icons.filter_hdr),
-                      labelStyle: TextStyle(
-                          decorationStyle: TextDecorationStyle.solid)),
-                ),
-                TextFormField(
-                  controller: _controller[2],
-                  keyboardType: TextInputType.text,
-                  autocorrect: false,
-                  maxLines: 1,
-                  onSaved: (String value) {
-                    newProduct.ingredienteActivo = value;
-                  },
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return "Introduce el ingrediente activo";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                      labelText: 'Ingrediente Activo',
-                      hintText: 'Ingrediente Activo',
-                      //filled: true,
-                      icon: const Icon(Icons.build),
-                      labelStyle: TextStyle(
-                          decorationStyle: TextDecorationStyle.solid)),
-                ),
-                TextFormField(
-                  controller: _controller[3],
-                  keyboardType: TextInputType.number,
-                  autocorrect: false,
-                  maxLines: 1,
-                  onSaved: (String value) {
-                    newProduct.concentracion =
-                        (int.tryParse(value) ?? 0).toString();
-                  },
-                  validator: (value) {
-                    var num = int.tryParse(value);
-                    if (num == null || value.isEmpty) {
-                      return "Solo introduce la cantidad sin %";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                      labelText: 'Concentracion (%)',
-                      hintText: 'Concentracion',
-                      //filled: true,
-                      icon: const Icon(Icons.colorize),
-                      labelStyle: TextStyle(
-                          decorationStyle: TextDecorationStyle.solid)),
-                ),
-                TextFormField(
-                  controller: _controller[4],
-                  keyboardType: TextInputType.number,
-                  autocorrect: false,
-                  maxLines: 1,
-                  onSaved: (String value) {
-                    newProduct.intervaloSeguridad =
-                        (int.tryParse(value) ?? 0).toString();
-                  },
-                  validator: (value) {
-                    var num = int.tryParse(value);
-                    if (num == null || value.isEmpty) {
-                      return "Introduce la cantidad de dias";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                      labelText: 'Intervalo (Dias)',
-                      hintText: 'Intervalo de seguridad',
-                      //filled: true,
-                      icon: const Icon(Icons.av_timer),
-                      labelStyle: TextStyle(
-                          decorationStyle: TextDecorationStyle.solid)),
-                ),
-              ],
-            ),
-          )),
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text("Agregar"),
-            onPressed: () {
-              final form = _formKey.currentState;
-              if (form.validate()) {
-                // Text forms was validated.
-                form.save();
-                newProduct.unidad = unidad;
-                Navigator.pop(context, newProduct);
-              }
-            },
-          )
-        ],
-      );
-    },
-  );
+                    validator: (value) {
+                      var num = double.tryParse(value);
+                      if (num == null || value.isEmpty) {
+                        return "Introduce la cantidad";
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        labelText: 'Cantidad',
+                        hintText: 'Cantidad',
+                        icon: const Icon(Icons.opacity),
+                        labelStyle: TextStyle(
+                            decorationStyle: TextDecorationStyle.solid)),
+                  )),
+                  Expanded(
+                      child: DropdownButton(
+                    hint: p.unidad == null
+                        ? Text('Unidad')
+                        : Text(
+                            p.unidad,
+                            style: TextStyle(color: Colors.black),
+                          ),
+                    isExpanded: true,
+                    elevation: 2,
+                    iconSize: 30.0,
+                    style: TextStyle(color: Colors.blue),
+                    items: unidades.map(
+                      (val) {
+                        return DropdownMenuItem<String>(
+                          value: val,
+                          child: Text(val),
+                        );
+                      },
+                    ).toList(),
+                    onChanged: (val) {
+                      setState(() {
+                        p.unidad = val;
+                      });
+                    },
+                  )),
+                ],
+              ),
+              TextFormField(
+                controller: c[1],
+                keyboardType: TextInputType.text,
+                autocorrect: false,
+                maxLines: 1,
+                onSaved: (String value) {
+                  p.nombre = value;
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "Introduce el nombre";
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                    labelText: 'Producto',
+                    hintText: 'Producto',
+                    //filled: true,
+                    icon: const Icon(Icons.filter_hdr),
+                    labelStyle:
+                        TextStyle(decorationStyle: TextDecorationStyle.solid)),
+              ),
+              TextFormField(
+                controller: c[2],
+                keyboardType: TextInputType.text,
+                autocorrect: false,
+                maxLines: 1,
+                onSaved: (String value) {
+                  p.ingredienteActivo = value;
+                },
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "Introduce el ingrediente activo";
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                    labelText: 'Ingrediente Activo',
+                    hintText: 'Ingrediente Activo',
+                    //filled: true,
+                    icon: const Icon(Icons.build),
+                    labelStyle:
+                        TextStyle(decorationStyle: TextDecorationStyle.solid)),
+              ),
+              TextFormField(
+                controller: c[3],
+                keyboardType: TextInputType.number,
+                autocorrect: false,
+                maxLines: 1,
+                onSaved: (String value) {
+                  p.concentracion = (int.tryParse(value) ?? 0).toString();
+                },
+                validator: (value) {
+                  var num = int.tryParse(value);
+                  if (num == null || value.isEmpty) {
+                    return "Solo introduce la cantidad sin %";
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                    labelText: 'Concentracion (%)',
+                    hintText: 'Concentracion',
+                    //filled: true,
+                    icon: const Icon(Icons.colorize),
+                    labelStyle:
+                        TextStyle(decorationStyle: TextDecorationStyle.solid)),
+              ),
+              TextFormField(
+                controller: c[4],
+                keyboardType: TextInputType.number,
+                autocorrect: false,
+                maxLines: 1,
+                onSaved: (String value) {
+                  p.intervaloSeguridad = (int.tryParse(value) ?? 0).toString();
+                },
+                validator: (value) {
+                  var num = int.tryParse(value);
+                  if (num == null || value.isEmpty) {
+                    return "Introduce la cantidad de dias";
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                    labelText: 'Intervalo (Dias)',
+                    hintText: 'Intervalo de seguridad',
+                    //filled: true,
+                    icon: const Icon(Icons.av_timer),
+                    labelStyle:
+                        TextStyle(decorationStyle: TextDecorationStyle.solid)),
+              ),
+            ],
+          ),
+        )),
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: isEdit ? Text("Editar") : Text("Agregar"),
+          onPressed: () {
+            final form = _formKey.currentState;
+            if (form.validate()) {
+              // Text forms was validated.
+              form.save();
+              //Return ner Product to add to list
+              Navigator.pop(context, p);
+            }
+          },
+        )
+      ],
+    );
+  }
+}
+
+Future<Producto> addEditProductDialog(BuildContext context,
+    {Producto producto}) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return AddProductDialog(
+          producto: producto,
+        );
+      });
 }

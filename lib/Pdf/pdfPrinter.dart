@@ -199,6 +199,21 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
           "<tr><td>${p.cantidad}</td><td>${p.nombre}</td><td>${p.ingredienteActivo}</td><td>${p.concentracion}</td><td>${p.intervaloSeguridad}</td></tr>";
     });
 
+//TODO cargar de assets
+    //   <img
+    //   style="float: right"
+    //   width="100"
+    //   height="100"
+    //   src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Umsnh.jpg"
+    //   alt="Universidad"
+    // />
+    // <img
+    //   style="float: left"
+    //   width="150"
+    //   height="100"
+    //   src="https://i.pinimg.com/originals/a3/4d/c8/a34dc889367a917145d5c08c1d3cb4d4.jpg"
+    //   alt="Planeta"
+    // />
     var htmlContent = """
     <!DOCTYPE html>
 <html>
@@ -249,20 +264,6 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   </head>
 
   <body>
-      <img
-      style="float: right"
-      width="100"
-      height="100"
-      src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Umsnh.jpg"
-      alt="Universidad"
-    />
-    <img
-      style="float: left"
-      width="150"
-      height="100"
-      src="https://i.pinimg.com/originals/a3/4d/c8/a34dc889367a917145d5c08c1d3cb4d4.jpg"
-      alt="Planeta"
-    />
     <h1>AGROQUIMICOS "GUERRERO"</h1>
     <h3>ING. ELVIN MISAEL GALVAN GUERRERO</h3>
     <h5>

@@ -1,3 +1,4 @@
+import 'package:LikeApp/Models/userType.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth {
@@ -13,7 +14,7 @@ class Auth {
   }
 
   static bool isAdmin(SharedPreferences prefs) {
-    return (prefs.getInt(roleKey) ?? 0) == 1; //See value
+    return (prefs.getInt(roleKey) ?? -1) == UserType.adminT; //See value
   }
 
   static bool isLogged(SharedPreferences prefs) {

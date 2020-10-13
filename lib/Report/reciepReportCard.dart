@@ -1,17 +1,17 @@
 import 'package:LikeApp/Models/producto.dart';
+import 'package:LikeApp/Report/addProductDialog.dart';
 import 'package:flutter/material.dart';
 
 class ReciepReportCard extends StatefulWidget {
   final Producto data;
-  ReciepReportCard(this.data, {Key key}) : super(key: key);
+  final int id;
+  ReciepReportCard(this.data, this.id, {Key key}) : super(key: key);
 
   @override
   _ReciepReportCardState createState() => _ReciepReportCardState();
 }
 
 class _ReciepReportCardState extends State<ReciepReportCard> {
-  // Widget get reciepCard {}
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,13 +43,13 @@ class _ReciepReportCardState extends State<ReciepReportCard> {
                   color: Color(Colors.black45.value)),
               children: <TextSpan>[
                 TextSpan(
-                  text: '${widget.data.cantidad}',
+                  text: '${widget.data.cantidad} ${widget.data.unidad}',
                   style: TextStyle(
                       fontWeight: FontWeight.normal,
                       color: Color(Colors.black.value)),
                 ),
                 TextSpan(
-                  text: '     Concentracion: ',
+                  text: '       Concentracion: ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Color(Colors.black45.value)),
@@ -93,11 +93,16 @@ class _ReciepReportCardState extends State<ReciepReportCard> {
           child: new ButtonBar(children: <Widget>[
             new FlatButton(
               child: const Text('Editar'),
-              onPressed: () {/* ... */},
+              onPressed: () {
+                addEditProductDialog(context).then((value) {
+                  if (value == null) return;
+                  // if (isValidProduct) addProduct(value);
+                });
+              },
             ),
             new FlatButton(
               child: const Text('Eliminar'),
-              onPressed: () {/* ... */},
+              onPressed: () {},
             )
           ]))
     ])));
