@@ -5,12 +5,12 @@ import 'package:LikeApp/Models/enfermedad.dart';
 import 'package:http/http.dart' as http;
 
 class EnfermedadService extends HttpModel {
-  String url = "Enfermedad";
+  String url = "Enfermedad/";
 
   Future<APIResponse<List<Enfermedad>>> getListEnfermedad(authToken) {
     return http
         .get(
-          HttpModel.getUrl() + url,
+          HttpModel.getUrl() + url + "GetEnfermedades",
           headers: {'Authorization': "Bearer " + authToken},
         )
         .timeout(Duration(seconds: 15))

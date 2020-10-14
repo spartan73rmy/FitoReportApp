@@ -5,12 +5,12 @@ import 'package:LikeApp/Models/etapaFenologica.dart';
 import 'package:http/http.dart' as http;
 
 class EtapaFService extends HttpModel {
-  String url = "EtapaFenologica";
+  String url = "EtapaFenologica/";
 
   Future<APIResponse<List<EtapaFenologica>>> getListEtapas(authToken) {
     return http
         .get(
-          HttpModel.getUrl() + url,
+          HttpModel.getUrl() + url + "GetAllEtapas",
           headers: {'Authorization': "Bearer " + authToken},
         )
         .timeout(Duration(seconds: 15))

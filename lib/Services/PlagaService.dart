@@ -5,12 +5,12 @@ import 'package:LikeApp/Models/plaga.dart';
 import 'package:http/http.dart' as http;
 
 class PlagaService extends HttpModel {
-  String url = "Plaga";
+  String url = "Plaga/";
 
   Future<APIResponse<List<Plaga>>> getListPlaga(authToken) {
     return http
         .get(
-          HttpModel.getUrl() + url,
+          HttpModel.getUrl() + url + "GetPlagas",
           headers: {'Authorization': "Bearer " + authToken},
         )
         .timeout(Duration(seconds: 15))

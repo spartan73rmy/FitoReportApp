@@ -24,7 +24,7 @@ class _AddReportState extends State<AddReport> {
   static var _focusNode = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   static ReportData data = new ReportData();
-  String _etapaFenologica;
+  String etapaFenologica;
   List<String> listEtapaFenologica;
 
   EtapaFService get service => GetIt.I<EtapaFService>();
@@ -33,8 +33,8 @@ class _AddReportState extends State<AddReport> {
   SharedPreferences _sharedPreferences;
   APIResponse<List<EtapaFenologica>> res;
 
-  bool _isLoading;
-  bool _isOnline;
+  bool isLoading;
+  bool isOnline;
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +43,11 @@ class _AddReportState extends State<AddReport> {
         title: Text('Reporte'),
       ),
       body: Builder(builder: (context) {
-        if (_isLoading) {
+        if (isLoading) {
           return LoadingScreen();
         }
 
-        if (_isOnline && res.error ?? false) {
+        if (isOnline && res.error ?? false) {
           return Center(child: Text(res.errorMessage));
         }
 
@@ -269,10 +269,10 @@ class _AddReportState extends State<AddReport> {
                       currStep = 0;
                     }
                   } else {
-                    if (currStep > 1) {
+                    if (currStep > 0) {
                       Scaffold.of(context).showSnackBar(SnackBar(
                           content:
-                              Text('Llena correctamente el paso $currStep')));
+                              Text("Llena correctamente los pasos faltantes")));
                     }
                   }
                 });
@@ -293,10 +293,10 @@ class _AddReportState extends State<AddReport> {
               },
             ),
             DropdownButton(
-              hint: _etapaFenologica == null
+              hint: etapaFenologica == null
                   ? Text('Selecciona la etapa fenologica')
                   : Text(
-                      _etapaFenologica,
+                      etapaFenologica,
                       style: TextStyle(color: Colors.black),
                     ),
               isExpanded: true,
@@ -314,8 +314,8 @@ class _AddReportState extends State<AddReport> {
               onChanged: (val) {
                 setState(
                   () {
-                    _etapaFenologica = val;
-                    data.etapaFenologica = _etapaFenologica;
+                    etapaFenologica = val;
+                    data.etapaFenologica = etapaFenologica;
                     print(data.etapaFenologica);
                   },
                 );
@@ -330,8 +330,8 @@ class _AddReportState extends State<AddReport> {
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
             var valid = isValid();
-            print("es valido: $valid");
-            if (isValid()) {
+            // print("es valido: $valid");
+            if (valid) {
               _saveData();
 
               Navigator.push(
@@ -350,7 +350,7 @@ class _AddReportState extends State<AddReport> {
   bool isValid() {
     for (var item in formKeys) if (!item.currentState.validate()) return false;
 
-    if (_etapaFenologica == null) return false;
+    if (etapaFenologica == null) return false;
     return true;
   }
 
@@ -364,11 +364,11 @@ class _AddReportState extends State<AddReport> {
 
   _fetchEtapas() async {
     _sharedPreferences = await _prefs;
-    _isOnline = await ping.ping() ?? false;
+    isOnline = await ping.ping() ?? false;
     bool isNotLogged = !Auth.isLogged(_sharedPreferences);
     LocalStorage localS = LocalStorage(FileName().etapa);
 
-    if (_isOnline) {
+    if (isOnline) {
       if (isNotLogged) toLogIn();
       _showLoading();
       String authToken = Auth.getToken(_sharedPreferences);
@@ -415,13 +415,13 @@ class _AddReportState extends State<AddReport> {
 
   _showLoading() {
     setState(() {
-      _isLoading = true;
+      isLoading = true;
     });
   }
 
   _hideLoading() {
     setState(() {
-      _isLoading = false;
+      isLoading = false;
     });
   }
 
@@ -435,8 +435,8 @@ class _AddReportState extends State<AddReport> {
       print('Has focus: $_focusNode.hasFocus');
     });
     data.id = 0;
-    _isLoading = true;
-    _isOnline = true;
+    isLoading = true;
+    isOnline = true;
     _fetchEtapas();
   }
 
