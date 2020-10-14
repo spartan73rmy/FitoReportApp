@@ -32,9 +32,7 @@ class UserService extends HttpModel {
           if (data.statusCode == 403) {
             final jsonData = json.decode(data.body);
             return APIResponse<bool>(
-                data: false,
-                error: true,
-                errorMessage: jsonData["error"]); //TODO probar exceptions
+                data: false, error: true, errorMessage: jsonData["error"]);
           }
           return APIResponse<bool>(
               data: false,

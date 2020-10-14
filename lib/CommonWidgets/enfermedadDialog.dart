@@ -2,7 +2,7 @@ import 'package:LikeApp/Models/enfermedad.dart';
 import 'package:flutter/material.dart';
 
 class AddEditEnfermedadDialog extends StatefulWidget {
-  Enfermedad enfermedad;
+  final Enfermedad enfermedad;
 
   AddEditEnfermedadDialog({this.enfermedad});
 

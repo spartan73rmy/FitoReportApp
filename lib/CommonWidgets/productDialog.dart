@@ -2,7 +2,7 @@ import 'package:LikeApp/Models/producto.dart';
 import 'package:flutter/material.dart';
 
 class AddProductDialog extends StatefulWidget {
-  Producto producto;
+  final Producto producto;
 
   AddProductDialog({this.producto});
 
