@@ -31,4 +31,33 @@ class PlagaService extends HttpModel {
             errorMessage:
                 "Ocurrio un error al conectar a internet " + error.toString()));
   }
+
+  Future<APIResponse<bool>> deletePlaga(int idPlaga, authToken) {
+    return http
+        .delete(HttpModel.getUrl() + url + "Delete/$idPlaga", headers: {
+          'Authorization': "Bearer " + authToken,
+          'Content-Type': 'application/json'
+        })
+        .timeout(Duration(seconds: 15))
+        .then((data) {
+          if (data.statusCode == 200) {
+            return APIResponse<bool>(data: true);
+          }
+          if (data.statusCode == 404) {
+            return APIResponse<bool>(
+                data: false,
+                error: true,
+                errorMessage: "No se encuentra el elemento");
+          }
+          return APIResponse<bool>(
+              data: false,
+              error: true,
+              errorMessage: "La sesion ha caducado, reinicie sesion");
+        })
+        .catchError((error) => APIResponse<bool>(
+            data: false,
+            error: true,
+            errorMessage: "Ocurrio un error al conectar a internet \n" +
+                error.toString()));
+  }
 }

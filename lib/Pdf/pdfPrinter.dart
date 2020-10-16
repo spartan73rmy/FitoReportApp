@@ -198,6 +198,9 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
     String plagas = "";
     String enfermedades = "";
     String productos = "";
+    DateTime today = DateTime.now(); //TODO agregar fecha de creacion
+    String fecha =
+        "${today.day.toString().padLeft(2, '0')}/${today.month.toString().padLeft(2, '0')}/${today.year.toString()}";
     r.plaga.forEach((plaga) {
       plagas += "${plaga.nombre.toString()}, ";
     });
@@ -283,7 +286,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
 
     <table style="width: 100%">
       <tr>
-        <td style="border-top: none; text-align: left">Lugar y Fecha: ${r.lugar} ${DateTime.now().toLocal()}</td>
+        <td style="border-top: none; text-align: left">Lugar y Fecha: ${r.lugar} ${fecha}</td>
       </tr>
       <tr>
         <td style="text-align: left">Nombre del produtor: ${r.productor}</td>

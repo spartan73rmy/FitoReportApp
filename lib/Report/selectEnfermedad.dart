@@ -25,7 +25,7 @@ class SelectEnfermedad extends StatefulWidget {
 class _SelectEnfermedadState extends State<SelectEnfermedad> {
   ReportData data;
   bool _isLoading = true;
-  bool _isOnline = true;
+  bool isOnline = true;
 
   Ping get ping => GetIt.I<Ping>();
   EnfermedadService get service => GetIt.I<EnfermedadService>();
@@ -34,6 +34,12 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
   APIResponse<List<Enfermedad>> res;
 
   final selected = List<Enfermedad>();
+  @override
+  void initState() {
+    data = widget.data;
+    _fetchEnfermedades();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +73,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
           return LoadingScreen();
         }
 
-        if (_isOnline && res.error ?? false) {
+        if (isOnline && res.error ?? false) {
           return Center(child: Text(res.errorMessage));
         }
 
@@ -86,12 +92,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
                     //If delete is confirmed delete from list and selected list if exist
                     if (result) {
                       //TOOD delete from DB
-                      setState(() {
-                        Enfermedad toDelete = res.data[i];
-                        if (selected.contains(toDelete))
-                          selected.remove(toDelete);
-                        res.data.removeAt(i);
-                      });
+                      await _deleteEnfermedad(res.data[i]);
                     }
                     return result;
                   },
@@ -126,17 +127,29 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
     );
   }
 
-  @override
-  void initState() {
-    data = widget.data;
-    _fetchEnfermedades();
-    super.initState();
+  _deleteEnfermedad(Enfermedad enfermedad) async {
+    isOnline = await ping.ping() ?? false;
+    bool isNotLocal = enfermedad.id != null;
+
+    if (isNotLocal && isOnline) {
+      _sharedPreferences = await _prefs;
+      String authToken = Auth.getToken(_sharedPreferences);
+      var resp = await service.deleteEnfermedad(enfermedad.id, authToken);
+      if (resp.error)
+        await alertDiag(context, "Error", resp.errorMessage);
+      else if (selected.contains(enfermedad)) selected.remove(enfermedad);
+      if (res.data.contains(enfermedad)) res.data.remove(enfermedad);
+    } else {
+      //Remove from local
+      if (selected.contains(enfermedad)) selected.remove(enfermedad);
+      if (res.data.contains(enfermedad)) res.data.remove(enfermedad);
+    }
   }
 
   _fetchEnfermedades() async {
-    _isOnline = await ping.ping() ?? false;
+    isOnline = await ping.ping() ?? false;
     LocalStorage localS = LocalStorage(FileName().enfermedad);
-    if (_isOnline) {
+    if (isOnline) {
       _showLoading();
 
       _sharedPreferences = await _prefs;
@@ -147,20 +160,19 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
         res = resp;
       });
 
-      if (resp.error) {
+      if (resp.error)
         await alertDiag(context, "Error", res.errorMessage);
-      } else {
-        //En cada peticion con internet se actualizan los datos localmente
+      else
+        //En ada peticion con internet se actualizan los datos localmente
         await localS.refreshEnfermedades(resp.data);
-      }
+
       _hideLoading();
     } else {
       _showLoading();
       List<Enfermedad> resp = await localS.readEnfermedades();
-      if (resp.length == 0) {
+      if (resp.length == 0)
         await alertDiag(context, "Error",
             "No hay datos para cargar, favor de conectarse a internet");
-      }
 
       setState(() {
         res = APIResponse<List<Enfermedad>>(

@@ -35,6 +35,13 @@ class _SelectPlagaState extends State<SelectPlaga> {
   final selected = List<Plaga>();
 
   @override
+  void initState() {
+    fetchPlaga();
+    data = widget.data;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: UniqueKey(),
@@ -88,13 +95,7 @@ class _SelectPlagaState extends State<SelectPlaga> {
                               false;
                           //If delete is confirmed delete from list and selected list if exist
                           if (result) {
-                            //TOOD delete from DB
-                            setState(() {
-                              Plaga toDelete = res.data[i];
-                              if (selected.contains(toDelete))
-                                selected.remove(toDelete);
-                              res.data.removeAt(i);
-                            });
+                            await _deletePlaga(res.data[i]);
                           }
                           return result;
                         },
@@ -128,11 +129,23 @@ class _SelectPlagaState extends State<SelectPlaga> {
         ]);
   }
 
-  @override
-  void initState() {
-    fetchPlaga();
-    data = widget.data;
-    super.initState();
+  _deletePlaga(Plaga plaga) async {
+    isOnline = await ping.ping() ?? false;
+    bool isNotLocal = plaga.id != null;
+
+    if (isNotLocal && isOnline) {
+      _sharedPreferences = await _prefs;
+      String authToken = Auth.getToken(_sharedPreferences);
+      var resp = await service.deletePlaga(plaga.id, authToken);
+      if (resp.error)
+        await alertDiag(context, "Error", resp.errorMessage);
+      else if (selected.contains(plaga)) selected.remove(plaga);
+      if (res.data.contains(plaga)) res.data.remove(plaga);
+    } else {
+      //Remove from local
+      if (selected.contains(plaga)) selected.remove(plaga);
+      if (res.data.contains(plaga)) res.data.remove(plaga);
+    }
   }
 
   fetchPlaga() async {

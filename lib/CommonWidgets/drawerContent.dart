@@ -52,8 +52,7 @@ class _DrawerContentState extends State<DrawerContent> {
       return Drawer(child: LoadingScreen());
     }
     return Drawer(
-        child: ListView(
-      padding: EdgeInsets.zero,
+        child: Column(
       children: <Widget>[
         DrawerHeader(
           decoration: BoxDecoration(
@@ -68,8 +67,12 @@ class _DrawerContentState extends State<DrawerContent> {
           ),
         ),
         ListTile(
+          leading: Icon(Icons.account_circle),
+          title: Text('Perfil'),
+        ),
+        ListTile(
           enabled: widget.isAdmin,
-          leading: Icon(Icons.work),
+          leading: Icon(Icons.supervised_user_circle),
           title: Text('Usuarios'),
           subtitle: Text.rich(
             TextSpan(
@@ -86,10 +89,10 @@ class _DrawerContentState extends State<DrawerContent> {
         ),
         ListTile(
           leading: Icon(Icons.work),
-          title: Text('PDF'),
+          title: Text('Catalogos'),
           subtitle: Text.rich(
             TextSpan(
-                text: "Render",
+                text: "Plagas,Enfermedades, Etapa Fenologica",
                 style:
                     TextStyle(color: Color(Colors.black.value), fontSize: 15)),
           ),
@@ -101,20 +104,26 @@ class _DrawerContentState extends State<DrawerContent> {
           },
         ),
         ListTile(
-          leading: Icon(Icons.account_circle),
-          title: Text('Perfil'),
-        ),
-        ListTile(
           leading: Icon(Icons.settings),
           title: Text('Configuracion'),
+          onTap: () async {},
         ),
         ListTile(
-          leading: Icon(Icons.close),
-          title: Text('Cerrar Sesion'),
-          onTap: () async {
-            await logOut();
-          },
+          leading: Icon(Icons.cloud_download),
+          title: Text('Sincronizar Catalogos'),
+          onTap: () async {},
         ),
+        Expanded(
+            child: Align(
+          alignment: Alignment.bottomCenter,
+          child: ListTile(
+            leading: Icon(Icons.close),
+            title: Text('Cerrar Sesion'),
+            onTap: () async {
+              await logOut();
+            },
+          ),
+        ))
       ],
     ));
   }
