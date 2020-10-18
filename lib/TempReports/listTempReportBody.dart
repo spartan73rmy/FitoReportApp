@@ -1,3 +1,4 @@
+import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/Storage/files.dart';
@@ -13,22 +14,27 @@ class ListTempReportBody extends StatefulWidget {
 }
 
 class _ListTempReportBodyState extends State<ListTempReportBody> {
+  Future<List<ReportData>> data;
   @override
   void initState() {
-    getData();
+    data = getData();
     super.initState();
   }
 
   Future<List<ReportData>> getData() async {
     LocalStorage localStorage = new LocalStorage(FileName().report);
-    var tempReports = await localStorage.readReports();
-    return tempReports;
+    return await localStorage.readReports();
+  }
+
+  Future<List<ReportData>> deleteReport(int index) async {
+    LocalStorage localStorage = new LocalStorage(FileName().report);
+    return await localStorage.deleteReport(index);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getData(),
+        future: data,
         builder: (context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -43,7 +49,31 @@ class _ListTempReportBodyState extends State<ListTempReportBody> {
                     itemCount: snapshot.data.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (BuildContext context, int index) {
-                      return ListTempReportCard(snapshot.data[index]);
+                      return Dismissible(
+                          key: ValueKey(snapshot.data[index].id),
+                          direction: DismissDirection.startToEnd,
+                          onDismissed: (direction) {},
+                          confirmDismiss: (direction) async {
+                            final result = await showDialog(
+                                    context: context,
+                                    builder: (_) => DeleteDialog()) ??
+                                false;
+                            if (result) {
+                              setState(() {
+                                data = deleteReport(index);
+                              });
+                            }
+                            return result;
+                          },
+                          background: Container(
+                            color: Colors.blue,
+                            padding: EdgeInsets.only(left: 16),
+                            child: Align(
+                              child: Icon(Icons.delete, color: Colors.white),
+                              alignment: Alignment.centerLeft,
+                            ),
+                          ),
+                          child: ListTempReportCard(snapshot.data[index]));
                     });
               }
           }

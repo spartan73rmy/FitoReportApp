@@ -36,13 +36,13 @@ class LocalStorage {
     final file = await _localFile;
 
     if (file.existsSync()) {
-      print("File exists");
+      // print("File exists");
       Map<String, String> jsonFileContent =
           json.decode(file.readAsStringSync());
       jsonFileContent.addAll(data);
       file.writeAsStringSync(json.encode(jsonFileContent));
     } else {
-      print("File does not exist!");
+      // print("File does not exist!");
       createFile(data);
     }
   }
@@ -81,7 +81,7 @@ class LocalStorage {
   Future<void> clearPlagasFile() async {
     String jsonData =
         jsonEncode(new PlagaList(plagas: new List<Plaga>()).toJson());
-    print("Clear this $jsonData");
+    // print("Clear this $jsonData");
     writeJsonToFile(jsonData);
   }
 
@@ -102,7 +102,7 @@ class LocalStorage {
   Future<void> refreshPlagas(List<Plaga> lista) async {
     await clearPlagasFile();
     String jsonData = jsonEncode(new PlagaList(plagas: lista).toJson());
-    print("Guarda $jsonData");
+    // print("Guarda $jsonData");
     writeJsonToFile(jsonData);
   }
 
@@ -110,7 +110,14 @@ class LocalStorage {
     await clearEnfermedadesFile();
     String jsonData =
         jsonEncode(new EnfermedadList(enfermedades: lista).toJson());
-    print("Guarda $jsonData");
+    // print("Guarda $jsonData");
+    writeJsonToFile(jsonData);
+  }
+
+  Future<void> refreshReportes(List<ReportData> lista) async {
+    await clearReportFile();
+    String jsonData = jsonEncode(new ReportDataList(reportes: lista).toJson());
+    // print("Guarda $jsonData");
     writeJsonToFile(jsonData);
   }
 
@@ -119,38 +126,41 @@ class LocalStorage {
     List<ReportData> lista;
 
     if (file.existsSync()) {
-      print("File Exist- add element");
       String contents = await file.readAsString();
       lista = ReportDataList.fromJSON(json.decode(contents)).reportes;
       lista.add(reporte);
     } else {
-      print("Create new File");
       lista = new List<ReportData>();
       lista.add(reporte);
-    }
-    for (var item in lista) {
-      print(
-          "------------------------------------------------------------------");
-      print(item.toJson());
     }
 
     String jsonData = jsonEncode(new ReportDataList(reportes: lista)
         .toJson()); // this will automatically call toJson
-    print("Guarda $jsonData");
     writeJsonToFile(jsonData);
+  }
+
+  Future<List<ReportData>> deleteReport(int index) async {
+    try {
+      final file = await _localFile;
+      String contents = await file.readAsString();
+      var lista = ReportDataList.fromJSON(json.decode(contents)).reportes;
+      if (lista.length > index && lista.length > 0 && index >= 0) {
+        lista.removeAt(index);
+        refreshReportes(lista);
+      }
+      return lista;
+    } catch (e) {
+      print("File corrupt -> $e");
+      await clearReportFile();
+      return new List<ReportData>();
+    }
   }
 
   Future<List<ReportData>> readReports() async {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
-      // print("Read $contents");
       var lista = ReportDataList.fromJSON(json.decode(contents)).reportes;
-      for (var item in lista) {
-        print(
-            "------------------------------------------------------------------");
-        print(item.toJson());
-      }
       return lista;
     } catch (e) {
       print("File corrupt -> $e");
@@ -163,7 +173,6 @@ class LocalStorage {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
-      print("Read $contents");
       var lista = EtapaFList.fromJSON(json.decode(contents)).etapas;
       return lista;
     } catch (e) {
@@ -177,7 +186,6 @@ class LocalStorage {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
-      print("Read $contents");
       var lista = PlagaList.fromJSON(json.decode(contents)).plagas;
       return lista;
     } catch (e) {
@@ -191,7 +199,6 @@ class LocalStorage {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
-      print("Read $contents");
       var lista = EnfermedadList.fromJSON(json.decode(contents)).enfermedades;
       return lista;
     } catch (e) {

@@ -12,7 +12,6 @@ class _ListTempReportState extends State<ListTempReport> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: UniqueKey(),
       body: ListTempReportBody(),
     );
   }

@@ -1,4 +1,7 @@
 import 'package:LikeApp/CommonWidgets/alert.dart';
+import 'package:LikeApp/CommonWidgets/alertEditCreate.dart';
+import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
+import 'package:LikeApp/CommonWidgets/etapaDialog.dart';
 import 'package:LikeApp/Login/login.dart';
 import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Storage/files.dart';
@@ -25,14 +28,12 @@ class _AddReportState extends State<AddReport> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   static ReportData data = new ReportData();
   String etapaFenologica;
-  List<String> listEtapaFenologica;
 
   EtapaFService get service => GetIt.I<EtapaFService>();
   Ping get ping => GetIt.I<Ping>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   SharedPreferences _sharedPreferences;
   APIResponse<List<EtapaFenologica>> res;
-
   bool isLoading;
   bool isOnline;
 
@@ -294,20 +295,57 @@ class _AddReportState extends State<AddReport> {
             ),
             DropdownButton(
               hint: etapaFenologica == null
-                  ? Text('Selecciona la etapa fenologica')
-                  : Text(
-                      etapaFenologica,
-                      style: TextStyle(color: Colors.black),
-                    ),
+                  ? Text(
+                      'Selecciona la etapa fenologica',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    )
+                  : Text(etapaFenologica,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal)),
               isExpanded: true,
               elevation: 2,
-              iconSize: 30.0,
-              style: TextStyle(color: Colors.blue),
-              items: listEtapaFenologica.map(
+              iconSize: 40,
+              style: TextStyle(color: Colors.blue, fontSize: 16),
+              items: res.data.map(
                 (val) {
                   return DropdownMenuItem<String>(
-                    value: val,
-                    child: Text(val),
+                    value: val.nombre,
+                    child: Dismissible(
+                        key: ValueKey(val.nombre),
+                        direction: DismissDirection.startToEnd,
+                        onDismissed: (direction) async {},
+                        confirmDismiss: (direction) async {
+                          final result = await showDialog(
+                                  context: context,
+                                  builder: (_) => DeleteDialog()) ??
+                              false;
+                          //If delete is confirmed delete from list and selected list if exist
+                          if (result) {
+                            await deleteEtapa(val);
+                          }
+                          return result;
+                        },
+                        background: Container(
+                          color: Colors.blue,
+                          padding: EdgeInsets.only(left: 16),
+                          child: Align(
+                            child: Icon(Icons.delete, color: Colors.white),
+                            alignment: Alignment.centerLeft,
+                          ),
+                        ),
+                        child: GestureDetector(
+                          onLongPress: () async {
+                            await addEditEtapa(val);
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 600,
+                            child: Text(val.nombre),
+                          ),
+                        )),
                   );
                 },
               ).toList(),
@@ -316,11 +354,10 @@ class _AddReportState extends State<AddReport> {
                   () {
                     etapaFenologica = val;
                     data.etapaFenologica = etapaFenologica;
-                    print(data.etapaFenologica);
                   },
                 );
               },
-            )
+            ),
           ]),
         ));
       }),
@@ -329,11 +366,8 @@ class _AddReportState extends State<AddReport> {
           icon: Icon(Icons.navigate_next),
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
-            var valid = isValid();
-            // print("es valido: $valid");
-            if (valid) {
+            if (isValid()) {
               _saveData();
-
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -355,10 +389,68 @@ class _AddReportState extends State<AddReport> {
   }
 
   void _saveData() {
+    data.etapaFenologica = etapaFenologica;
     final form = _formKey.currentState;
     form.save();
     for (var item in formKeys) {
       item.currentState.save();
+    }
+  }
+
+  addEditEtapa(EtapaFenologica val) async {
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return SelectCreateEdit(
+            tittle: "Crear o Editar",
+            text:
+                "Seleccione si desea crear un elemento nuevo o editar el pulsado",
+          );
+        }).then((create) async => {
+          create ?? true,
+          //If create don't pass etapa as argument
+          if (create)
+            await addEditEtapaFenologicaDialog(context).then((value) {
+              if (value == null || value.nombre == null) return;
+              setState(() {
+                res.data.add(value);
+                etapaFenologica = value.nombre;
+              });
+            })
+          else
+            await addEditEtapaFenologicaDialog(context, etapaFenologica: val)
+                .then((value) {
+              if (value == null || value.nombre == null) return;
+              setState(() {
+                val.nombre = value.nombre;
+                etapaFenologica = val.nombre;
+              });
+            })
+        });
+  }
+
+  deleteEtapa(EtapaFenologica data) async {
+    isOnline = await ping.ping() ?? false;
+    bool isNotLocal = data.id != null;
+
+    if (isNotLocal && isOnline) {
+      _sharedPreferences = await _prefs;
+      String authToken = Auth.getToken(_sharedPreferences);
+      var resp = await service.deleteEtapa(data.id, authToken);
+      if (resp.error)
+        await alertDiag(context, "Error", resp.errorMessage);
+      else if (res.data.contains(data))
+        setState(() {
+          etapaFenologica = null;
+          res.data.remove(data);
+        });
+    } else {
+      //Remove from local
+      if (res.data.contains(data))
+        setState(() {
+          etapaFenologica = null;
+          res.data.remove(data);
+        });
     }
   }
 
@@ -377,7 +469,6 @@ class _AddReportState extends State<AddReport> {
       if (resp.error) {
         await alertDiag(context, "Error", res.errorMessage);
         setState(() {
-          listEtapaFenologica = resp.data.map((e) => e.nombre).toList();
           res = resp;
         });
       } else {
@@ -385,7 +476,6 @@ class _AddReportState extends State<AddReport> {
         await localS.refreshEtapas(resp.data);
 
         setState(() {
-          listEtapaFenologica = resp.data.map((e) => e.nombre).toList();
           res = resp;
         });
       }
@@ -398,7 +488,6 @@ class _AddReportState extends State<AddReport> {
             "No hay datos para cargar, favor de conectarse a internet");
       }
       setState(() {
-        listEtapaFenologica = resp.map((e) => e.nombre ?? "").toList();
         res = APIResponse<List<EtapaFenologica>>(data: resp, error: false);
       });
       _hideLoading();
@@ -428,7 +517,6 @@ class _AddReportState extends State<AddReport> {
   @override
   void initState() {
     super.initState();
-    listEtapaFenologica = new List<String>();
     _focusNode = FocusNode();
     _focusNode.addListener(() {
       setState(() {});

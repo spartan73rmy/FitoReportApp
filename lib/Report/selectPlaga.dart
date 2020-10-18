@@ -95,7 +95,7 @@ class _SelectPlagaState extends State<SelectPlaga> {
                               false;
                           //If delete is confirmed delete from list and selected list if exist
                           if (result) {
-                            await _deletePlaga(res.data[i]);
+                            await deletePlaga(res.data[i]);
                           }
                           return result;
                         },
@@ -129,7 +129,7 @@ class _SelectPlagaState extends State<SelectPlaga> {
         ]);
   }
 
-  _deletePlaga(Plaga plaga) async {
+  deletePlaga(Plaga plaga) async {
     isOnline = await ping.ping() ?? false;
     bool isNotLocal = plaga.id != null;
 

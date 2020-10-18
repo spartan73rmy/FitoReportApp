@@ -9,7 +9,7 @@ class EtapaFenologica {
 
   Map<String, dynamic> toJson() {
     return {
-      "id": this.id,
+      "id": this.id ?? -1,
       "nombre": this.nombre,
     };
   }

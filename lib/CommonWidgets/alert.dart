@@ -5,7 +5,7 @@ alertDiag(BuildContext context, String tittle, String text) {
   Widget okButton = FlatButton(
     child: Text("Aceptar"),
     onPressed: () {
-      Navigator.of(context).pop(); // dismiss dialog
+      Navigator.of(context).pop(true); // dismiss dialog
     },
   );
 

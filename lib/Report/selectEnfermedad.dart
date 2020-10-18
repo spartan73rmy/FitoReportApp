@@ -37,7 +37,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
   @override
   void initState() {
     data = widget.data;
-    _fetchEnfermedades();
+    fetchEnfermedades();
     super.initState();
   }
 
@@ -91,8 +91,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
                         false;
                     //If delete is confirmed delete from list and selected list if exist
                     if (result) {
-                      //TOOD delete from DB
-                      await _deleteEnfermedad(res.data[i]);
+                      await deleteEnfermedad(res.data[i]);
                     }
                     return result;
                   },
@@ -104,7 +103,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
                       alignment: Alignment.centerLeft,
                     ),
                   ),
-                  child: _buildRow(res.data[i]));
+                  child: buildRow(res.data[i]));
             });
       }),
       persistentFooterButtons: [
@@ -127,7 +126,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
     );
   }
 
-  _deleteEnfermedad(Enfermedad enfermedad) async {
+  deleteEnfermedad(Enfermedad enfermedad) async {
     isOnline = await ping.ping() ?? false;
     bool isNotLocal = enfermedad.id != null;
 
@@ -146,7 +145,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
     }
   }
 
-  _fetchEnfermedades() async {
+  fetchEnfermedades() async {
     isOnline = await ping.ping() ?? false;
     LocalStorage localS = LocalStorage(FileName().enfermedad);
     if (isOnline) {
@@ -182,7 +181,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
     }
   }
 
-  Widget _buildRow(Enfermedad enfermedad) {
+  Widget buildRow(Enfermedad enfermedad) {
     final alreadySaved = selected.contains(enfermedad);
     return ListTile(
       title: Text(

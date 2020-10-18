@@ -44,7 +44,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       contentPadding: EdgeInsets.only(left: 25, right: 25),
-      title: Center(child: Text("Agregar Producto")),
+      title: Center(child: Text("Producto")),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       content: Container(

@@ -1,18 +1,20 @@
-import 'package:LikeApp/Models/plaga.dart';
+import 'package:LikeApp/Models/etapaFenologica.dart';
 import 'package:flutter/material.dart';
 
-class AddEditPlagaDialog extends StatefulWidget {
-  final Plaga plaga;
+class AddEditEtapaFenologicaDialog extends StatefulWidget {
+  final EtapaFenologica etapaFenologica;
 
-  AddEditPlagaDialog({this.plaga});
+  AddEditEtapaFenologicaDialog({this.etapaFenologica});
 
   @override
-  _AddEditPlagaDialogState createState() => _AddEditPlagaDialogState();
+  _AddEditEtapaFenologicaDialogState createState() =>
+      _AddEditEtapaFenologicaDialogState();
 }
 
-class _AddEditPlagaDialogState extends State<AddEditPlagaDialog> {
+class _AddEditEtapaFenologicaDialogState
+    extends State<AddEditEtapaFenologicaDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  Plaga p = new Plaga();
+  EtapaFenologica p = new EtapaFenologica();
   bool isEdit;
   List<TextEditingController> c;
   @override
@@ -22,10 +24,10 @@ class _AddEditPlagaDialogState extends State<AddEditPlagaDialog> {
       new TextEditingController(),
     ];
 
-    isEdit = widget.plaga != null;
+    isEdit = widget.etapaFenologica != null;
 
     if (isEdit) {
-      p = widget.plaga;
+      p = widget.etapaFenologica;
       c[0].text = "${p.nombre}";
     }
   }
@@ -34,7 +36,7 @@ class _AddEditPlagaDialogState extends State<AddEditPlagaDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       contentPadding: EdgeInsets.only(left: 25, right: 25),
-      title: Center(child: Text("Plaga")),
+      title: Center(child: Text("Etapa Fenologica")),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       content: Container(
@@ -64,8 +66,8 @@ class _AddEditPlagaDialogState extends State<AddEditPlagaDialog> {
                   return null;
                 },
                 decoration: InputDecoration(
-                    labelText: 'Plaga',
-                    hintText: 'Plaga',
+                    labelText: 'Etapa Fenologica',
+                    hintText: 'Etapa Fenologica',
                     //filled: true,
                     icon: const Icon(Icons.bug_report),
                     labelStyle:
@@ -91,12 +93,13 @@ class _AddEditPlagaDialogState extends State<AddEditPlagaDialog> {
   }
 }
 
-Future<Plaga> addEditPlagaDialog(BuildContext context, {Plaga plaga}) {
+Future<EtapaFenologica> addEditEtapaFenologicaDialog(BuildContext context,
+    {EtapaFenologica etapaFenologica}) {
   return showDialog(
       context: context,
       builder: (context) {
-        return AddEditPlagaDialog(
-          plaga: plaga,
+        return AddEditEtapaFenologicaDialog(
+          etapaFenologica: etapaFenologica,
         );
       });
 }
