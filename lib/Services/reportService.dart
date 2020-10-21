@@ -12,7 +12,7 @@ class ReportService extends HttpModel {
     ReportDataList lista = ReportDataList(reportes: reportes);
     print(json.encode(lista.toJson()));
     return http
-        .post(HttpModel.getUrl() + url + "Agregar",
+        .post(HttpModel.getUrl + url + "Agregar",
             headers: {
               'Authorization': "Bearer " + authToken,
               'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ class ReportService extends HttpModel {
   Future<APIResponse<ReportData>> getReport(authToken, int idReport) {
     return http
         .get(
-          HttpModel.getUrl() + url + "Get/$idReport",
+          HttpModel.getUrl + url + "Get/$idReport",
           headers: {'Authorization': "Bearer " + authToken},
         )
         .timeout(Duration(seconds: 15))
@@ -69,7 +69,7 @@ class ReportService extends HttpModel {
   Future<APIResponse<List<DataSearch>>> getDataSearch(authToken) {
     return http
         .get(
-          HttpModel.getUrl() + url + "GetSearchList",
+          HttpModel.getUrl + url + "GetSearchList",
           headers: {'Authorization': "Bearer " + authToken},
         )
         .timeout(Duration(seconds: 15))

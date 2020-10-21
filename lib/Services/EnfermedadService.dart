@@ -10,7 +10,7 @@ class EnfermedadService extends HttpModel {
   Future<APIResponse<List<Enfermedad>>> getListEnfermedad(authToken) {
     return http
         .get(
-          HttpModel.getUrl() + url + "GetEnfermedades",
+          HttpModel.getUrl + url + "GetEnfermedades",
           headers: {'Authorization': "Bearer " + authToken},
         )
         .timeout(Duration(seconds: 15))
@@ -35,7 +35,7 @@ class EnfermedadService extends HttpModel {
 
   Future<APIResponse<bool>> deleteEnfermedad(int idEnfermedad, authToken) {
     return http
-        .delete(HttpModel.getUrl() + url + "Delete/$idEnfermedad", headers: {
+        .delete(HttpModel.getUrl + url + "Delete/$idEnfermedad", headers: {
           'Authorization': "Bearer " + authToken,
           'Content-Type': 'application/json'
         })

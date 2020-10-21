@@ -11,7 +11,7 @@ class UserService extends HttpModel {
   static String urlU = "Usuarios/";
 
   Future<APIResponse<dynamic>> authenticateUser(String email, String password) {
-    var uri = HttpModel.getUrl() + url + "Ingresar";
+    var uri = HttpModel.getUrl + url + "Ingresar";
     return http
         .post(
           uri,
@@ -48,7 +48,7 @@ class UserService extends HttpModel {
   }
 
   Future<APIResponse<dynamic>> createUser(User user) {
-    var uri = HttpModel.getUrl() + url + "CreateUser";
+    var uri = HttpModel.getUrl + url + "CreateUser";
     return http
         .post(
           uri,
@@ -85,7 +85,7 @@ class UserService extends HttpModel {
   }
 
   Future<APIResponse<bool>> deleteUser(String userName, authToken) {
-    var uri = HttpModel.getUrl() + urlU + "DeleteUser/$userName";
+    var uri = HttpModel.getUrl + urlU + "DeleteUser/$userName";
     return http
         .delete(
           uri,
@@ -113,7 +113,7 @@ class UserService extends HttpModel {
   }
 
   Future<APIResponse<bool>> aproveUser(String userName, authToken) {
-    var uri = HttpModel.getUrl() + urlU + "AproveUser/$userName";
+    var uri = HttpModel.getUrl + urlU + "AproveUser/$userName";
     return http
         .put(
           uri,
@@ -143,7 +143,7 @@ class UserService extends HttpModel {
   Future<APIResponse<List<User>>> getListUser(authToken) {
     return http
         .get(
-          HttpModel.getUrl() + urlU + "GetAll",
+          HttpModel.getUrl + urlU + "GetAll",
           headers: {'Authorization': "Bearer " + authToken},
         )
         .timeout(Duration(seconds: 15))
@@ -163,11 +163,5 @@ class UserService extends HttpModel {
             error: true,
             errorMessage:
                 "Ocurrio un error al conectar a internet " + error.toString()));
-  }
-
-  static showSnackBar(GlobalKey<ScaffoldState> scaffoldKey, String message) {
-    scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: new Text(message ?? 'Estas desconectado de internet'),
-    ));
   }
 }

@@ -10,7 +10,7 @@ class PlagaService extends HttpModel {
   Future<APIResponse<List<Plaga>>> getListPlaga(authToken) {
     return http
         .get(
-          HttpModel.getUrl() + url + "GetPlagas",
+          HttpModel.getUrl + url + "GetPlagas",
           headers: {'Authorization': "Bearer " + authToken},
         )
         .timeout(Duration(seconds: 15))
@@ -34,7 +34,7 @@ class PlagaService extends HttpModel {
 
   Future<APIResponse<bool>> deletePlaga(int idPlaga, authToken) {
     return http
-        .delete(HttpModel.getUrl() + url + "Delete/$idPlaga", headers: {
+        .delete(HttpModel.getUrl + url + "Delete/$idPlaga", headers: {
           'Authorization': "Bearer " + authToken,
           'Content-Type': 'application/json'
         })

@@ -7,7 +7,7 @@ class Ping extends HttpModel {
 
   Future<bool> ping() async {
     try {
-      var uri = HttpModel.getUrl() + url + "Ping";
+      var uri = HttpModel.getUrl + url + "Ping";
       return http
           .head(
             uri,

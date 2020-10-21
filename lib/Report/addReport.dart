@@ -322,7 +322,7 @@ class _AddReportState extends State<AddReport> {
                                   context: context,
                                   builder: (_) => DeleteDialog()) ??
                               false;
-                          //If delete is confirmed delete from list and selected list if exist
+                          //If delete is confirmed delete from list if exist
                           if (result) {
                             await deleteEtapa(val);
                           }
@@ -407,9 +407,7 @@ class _AddReportState extends State<AddReport> {
                 "Seleccione si desea crear un elemento nuevo o editar el pulsado",
           );
         }).then((create) async => {
-          create ?? true,
-          //If create don't pass etapa as argument
-          if (create)
+          if (create ?? true)
             await addEditEtapaFenologicaDialog(context).then((value) {
               if (value == null || value.nombre == null) return;
               setState(() {
@@ -454,7 +452,7 @@ class _AddReportState extends State<AddReport> {
     }
   }
 
-  _fetchEtapas() async {
+  fetchEtapas() async {
     _sharedPreferences = await _prefs;
     isOnline = await ping.ping() ?? false;
     bool isNotLogged = !Auth.isLogged(_sharedPreferences);
@@ -525,7 +523,7 @@ class _AddReportState extends State<AddReport> {
     data.id = 0;
     isLoading = true;
     isOnline = true;
-    _fetchEtapas();
+    fetchEtapas();
   }
 
   @override

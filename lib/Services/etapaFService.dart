@@ -10,7 +10,7 @@ class EtapaFService extends HttpModel {
   Future<APIResponse<List<EtapaFenologica>>> getListEtapas(authToken) {
     return http
         .get(
-          HttpModel.getUrl() + url + "GetAllEtapas",
+          HttpModel.getUrl + url + "GetAllEtapas",
           headers: {'Authorization': "Bearer " + authToken},
         )
         .timeout(Duration(seconds: 15))
@@ -34,7 +34,7 @@ class EtapaFService extends HttpModel {
 
   Future<APIResponse<bool>> deleteEtapa(int idEtapa, authToken) {
     return http
-        .delete(HttpModel.getUrl() + url + "Delete/$idEtapa", headers: {
+        .delete(HttpModel.getUrl + url + "Delete/$idEtapa", headers: {
           'Authorization': "Bearer " + authToken,
           'Content-Type': 'application/json'
         })
