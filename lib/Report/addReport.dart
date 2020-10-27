@@ -1,8 +1,11 @@
+import 'dart:io';
+import 'dart:ui';
 import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/alertEditCreate.dart';
 import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
 import 'package:LikeApp/CommonWidgets/etapaDialog.dart';
 import 'package:LikeApp/Login/login.dart';
+import 'package:LikeApp/Report/getImages.dart';
 import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Storage/files.dart';
 import 'package:LikeApp/Storage/localStorage.dart';
@@ -34,15 +37,38 @@ class _AddReportState extends State<AddReport> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   SharedPreferences _sharedPreferences;
   APIResponse<List<EtapaFenologica>> res;
+  List<Image> images;
   bool isLoading;
   bool isOnline;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Reporte'),
-      ),
+      appBar: AppBar(title: Text('Reporte'), actions: <Widget>[
+        FlatButton(
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+              children: <Widget>[
+                Center(
+                  child:
+                      Text("Imagenes", style: TextStyle(color: Colors.white)),
+                ),
+                Icon(
+                  Icons.photo,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+            onPressed: () async {
+              data.images = await Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        new ImagenPicker(images: data.images),
+                    fullscreenDialog: true,
+                  ));
+            })
+      ]),
       body: Builder(builder: (context) {
         if (isLoading) {
           return LoadingScreen();

@@ -286,7 +286,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
 
     <table style="width: 100%">
       <tr>
-        <td style="border-top: none; text-align: left">Lugar y Fecha: ${r.lugar} ${fecha}</td>
+        <td style="border-top: none; text-align: left">Lugar y Fecha: ${r.lugar} $fecha</td>
       </tr>
       <tr>
         <td style="text-align: left">Nombre del produtor: ${r.productor}</td>

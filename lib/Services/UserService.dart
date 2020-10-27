@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:LikeApp/Models/APIResponse.dart';
 import 'package:LikeApp/Models/HttpModel.dart';
 import 'package:LikeApp/Models/user.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class UserService extends HttpModel {

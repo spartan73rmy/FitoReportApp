@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:LikeApp/Models/enfermedad.dart';
 import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/producto.dart';
@@ -19,6 +21,8 @@ class ReportData {
   List<Producto> producto;
   List<Plaga> plaga;
 
+  List<File> images;
+
   ReportData(
       {this.id,
       this.lugar,
@@ -33,7 +37,8 @@ class ReportData {
       this.litros,
       this.enfermedad,
       this.producto,
-      this.plaga});
+      this.plaga,
+      this.images});
 
   factory ReportData.fromJSON(Map<String, dynamic> item) {
     return ReportData(

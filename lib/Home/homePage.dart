@@ -5,6 +5,7 @@ import 'package:LikeApp/Login/login.dart';
 import 'package:LikeApp/Models/apiResponse.dart';
 import 'package:LikeApp/Models/dataSearch.dart';
 import 'package:LikeApp/Models/reportData.dart';
+import 'package:LikeApp/Report/getImages.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Services/reportService.dart';
@@ -87,6 +88,7 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {
             Navigator.push(
               context,
+              // MaterialPageRoute(builder: (context) => ImagenPicker()),
               MaterialPageRoute(builder: (context) => AddReport()),
             );
           },
