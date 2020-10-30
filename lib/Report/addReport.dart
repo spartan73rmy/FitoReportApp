@@ -5,7 +5,7 @@ import 'package:LikeApp/CommonWidgets/alertEditCreate.dart';
 import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
 import 'package:LikeApp/CommonWidgets/etapaDialog.dart';
 import 'package:LikeApp/Login/login.dart';
-import 'package:LikeApp/Report/getImages.dart';
+import 'package:LikeApp/Report/pickImage.dart';
 import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Storage/files.dart';
 import 'package:LikeApp/Storage/localStorage.dart';
