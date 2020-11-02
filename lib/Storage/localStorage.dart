@@ -4,7 +4,9 @@ import 'package:LikeApp/Models/enfermedad.dart';
 import 'package:LikeApp/Models/etapaFenologica.dart';
 import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/reportData.dart';
+import 'package:LikeApp/Storage/randomIntId.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 class LocalStorage {
   LocalStorage(this.fileName);
@@ -122,6 +124,7 @@ class LocalStorage {
   }
 
   Future<void> addReport(ReportData reporte) async {
+    reporte.id = IdGen.getId();
     final file = await _localFile;
     List<ReportData> lista;
 
@@ -133,6 +136,8 @@ class LocalStorage {
       lista = new List<ReportData>();
       lista.add(reporte);
     }
+    //Save Images with IdReport
+    await writeImages(reporte.images, reporte.id);
 
     String jsonData = jsonEncode(new ReportDataList(reportes: lista)
         .toJson()); // this will automatically call toJson
@@ -145,6 +150,8 @@ class LocalStorage {
       String contents = await file.readAsString();
       var lista = ReportDataList.fromJSON(json.decode(contents)).reportes;
       if (lista.length > index && lista.length > 0 && index >= 0) {
+        //Delete Images in the index of report
+        deleteImages(lista[index].id);
         lista.removeAt(index);
         refreshReportes(lista);
       }
@@ -169,6 +176,24 @@ class LocalStorage {
     }
   }
 
+  Future<List<ReportData>> readReportsImages() async {
+    try {
+      final file = await _localFile;
+      String contents = await file.readAsString();
+      var lista = ReportDataList.fromJSON(json.decode(contents)).reportes;
+
+      //Set images from directory and set to report data
+      for (int i = 0; i < lista.length; i++)
+        lista[i].images = await readImages(lista[i].id);
+
+      return lista;
+    } catch (e) {
+      print("File corrupt -> $e");
+      await clearReportFile();
+      return new List<ReportData>();
+    }
+  }
+
   Future<List<EtapaFenologica>> readEtapas() async {
     try {
       final file = await _localFile;
@@ -177,7 +202,7 @@ class LocalStorage {
       return lista;
     } catch (e) {
       print("File corrupt -> $e");
-      await clearReportFile();
+      await clearEtapasFile();
       return new List<EtapaFenologica>();
     }
   }
@@ -190,7 +215,7 @@ class LocalStorage {
       return lista;
     } catch (e) {
       print("File corrupt -> $e");
-      await clearReportFile();
+      await clearPlagasFile();
       return new List<Plaga>();
     }
   }
@@ -203,8 +228,54 @@ class LocalStorage {
       return lista;
     } catch (e) {
       print("File corrupt -> $e");
-      await clearReportFile();
+      await clearEnfermedadesFile();
       return new List<Enfermedad>();
+    }
+  }
+
+  Future<void> deleteAllImages() async {
+    final path = await _localPath;
+    Directory dir = Directory('$path/images/');
+    if (dir.existsSync()) await dir.delete(recursive: true);
+    print('All images are deleted');
+  }
+
+  Future<void> deleteImages(int id) async {
+    Directory dir = await imagesDir(id);
+    if (dir.existsSync()) await dir.delete(recursive: true);
+    print('Imagenes en $id eliminadas');
+  }
+
+  Future<List<File>> readImages(int id) async {
+    var filesList = new List<File>();
+    Directory dir = await imagesDir(id);
+    dir.listSync(recursive: true).forEach((element) {
+      if (element is File) {
+        filesList.add(element);
+      }
+    });
+    return filesList;
+  }
+
+  Future<void> writeImages(List<File> images, int id) async {
+    String route = (await imagesDir(id)).path;
+    for (int i = 0; i < images.length; i++) {
+      String newPath = path.join(route, '$i.jpg');
+      print(newPath);
+      await File(images[i].path).copy(newPath);
+    }
+  }
+
+  Future<Directory> imagesDir(int idReport) async {
+    final path = await _localPath;
+    Directory imagesDir = Directory('$path/images/$idReport/');
+    bool exist = await imagesDir.exists();
+    print(exist);
+    if (exist) {
+      return imagesDir;
+    } else {
+      imagesDir = await imagesDir.create(recursive: true);
+      return imagesDir;
     }
   }
 }

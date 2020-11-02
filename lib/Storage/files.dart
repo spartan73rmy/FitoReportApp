@@ -3,5 +3,5 @@ class FileName {
   String get plaga => "plagaData.json";
   String get enfermedad => "enfermedadData.json";
   String get etapa => "etapaFenologicaData.json";
-  String get images => "images.json";
+  String get images => "images";
 }

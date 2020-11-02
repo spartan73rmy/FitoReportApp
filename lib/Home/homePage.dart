@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   APIResponse<bool> res;
   List<DataSearch> busqueda;
   bool isOnline;
+
   @override
   void initState() {
     res = new APIResponse<bool>();
@@ -62,7 +63,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(Icons.cloud_upload),
             onPressed: () async {
-              await saveData();
+              await uploadData();
             },
           ),
           IconButton(
@@ -129,7 +130,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> saveData() async {
+  Future<void> uploadData() async {
     isOnline = await ping.ping() ?? false;
     _sharedPreferences = await _prefs;
     bool isNotLogged = !Auth.isLogged(_sharedPreferences);
@@ -191,7 +192,7 @@ class _HomePageState extends State<HomePage> {
         : showSnackBar("Modo sin conexion");
   }
 
-  void showSnackBar(String value) {
+  showSnackBar(String value) {
     scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(value)));
   }

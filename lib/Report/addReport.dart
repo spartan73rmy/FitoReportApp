@@ -60,13 +60,16 @@ class _AddReportState extends State<AddReport> {
               ],
             ),
             onPressed: () async {
-              data.images = await Navigator.push(
+              var images = await Navigator.push(
                   context,
                   new MaterialPageRoute(
                     builder: (BuildContext context) =>
                         new ImagenPicker(images: data.images),
                     fullscreenDialog: true,
                   ));
+              setState(() {
+                data.images = images;
+              });
             })
       ]),
       body: Builder(builder: (context) {
@@ -80,7 +83,6 @@ class _AddReportState extends State<AddReport> {
 
         return Container(
             child: Form(
-          autovalidate: true,
           key: _formKey,
           child: ListView(shrinkWrap: true, children: <Widget>[
             Stepper(
@@ -416,6 +418,7 @@ class _AddReportState extends State<AddReport> {
 
   void _saveData() {
     data.etapaFenologica = etapaFenologica;
+    print(data.images);
     final form = _formKey.currentState;
     form.save();
     for (var item in formKeys) {
