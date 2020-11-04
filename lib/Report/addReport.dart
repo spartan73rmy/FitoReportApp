@@ -321,71 +321,84 @@ class _AddReportState extends State<AddReport> {
                 });
               },
             ),
-            DropdownButton(
-              hint: etapaFenologica == null
-                  ? Text(
-                      'Selecciona la etapa fenologica',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    )
-                  : Text(etapaFenologica,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal)),
-              isExpanded: true,
-              elevation: 2,
-              iconSize: 40,
-              style: TextStyle(color: Colors.blue, fontSize: 16),
-              items: res.data.map(
-                (val) {
-                  return DropdownMenuItem<String>(
-                    value: val.nombre,
-                    child: Dismissible(
-                        key: ValueKey(val.nombre),
-                        direction: DismissDirection.startToEnd,
-                        onDismissed: (direction) async {},
-                        confirmDismiss: (direction) async {
-                          final result = await showDialog(
-                                  context: context,
-                                  builder: (_) => DeleteDialog()) ??
-                              false;
-                          //If delete is confirmed delete from list if exist
-                          if (result) {
-                            await deleteEtapa(val);
-                          }
-                          return result;
+            res.data.isEmpty
+                ? FlatButton(
+                    onPressed: () async {
+                      await addEditEtapaFenologicaDialog(context).then((value) {
+                        if (value == null || value.nombre == null) return;
+                        setState(() {
+                          res.data.add(value);
+                          etapaFenologica = value.nombre;
+                        });
+                      });
+                    },
+                    child: Text("Agregar Etapa Fenologica"))
+                : DropdownButton(
+                    hint: etapaFenologica == null
+                        ? Text(
+                            'Selecciona la etapa fenologica',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          )
+                        : Text(etapaFenologica,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal)),
+                    isExpanded: true,
+                    elevation: 2,
+                    iconSize: 40,
+                    style: TextStyle(color: Colors.blue, fontSize: 16),
+                    items: res.data.map(
+                      (val) {
+                        return DropdownMenuItem<String>(
+                          value: val.nombre,
+                          child: Dismissible(
+                              key: ValueKey(val.nombre),
+                              direction: DismissDirection.startToEnd,
+                              onDismissed: (direction) async {},
+                              confirmDismiss: (direction) async {
+                                final result = await showDialog(
+                                        context: context,
+                                        builder: (_) => DeleteDialog()) ??
+                                    false;
+                                //If delete is confirmed delete from list if exist
+                                if (result) {
+                                  await deleteEtapa(val);
+                                }
+                                return result;
+                              },
+                              background: Container(
+                                color: Colors.blue,
+                                padding: EdgeInsets.only(left: 16),
+                                child: Align(
+                                  child:
+                                      Icon(Icons.delete, color: Colors.white),
+                                  alignment: Alignment.centerLeft,
+                                ),
+                              ),
+                              child: GestureDetector(
+                                onLongPress: () async {
+                                  await addEditEtapa(val);
+                                },
+                                child: Container(
+                                  height: 40,
+                                  width: 600,
+                                  child: Text(val.nombre),
+                                ),
+                              )),
+                        );
+                      },
+                    ).toList(),
+                    onChanged: (val) {
+                      setState(
+                        () {
+                          etapaFenologica = val;
+                          data.etapaFenologica = etapaFenologica;
                         },
-                        background: Container(
-                          color: Colors.blue,
-                          padding: EdgeInsets.only(left: 16),
-                          child: Align(
-                            child: Icon(Icons.delete, color: Colors.white),
-                            alignment: Alignment.centerLeft,
-                          ),
-                        ),
-                        child: GestureDetector(
-                          onLongPress: () async {
-                            await addEditEtapa(val);
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 600,
-                            child: Text(val.nombre),
-                          ),
-                        )),
-                  );
-                },
-              ).toList(),
-              onChanged: (val) {
-                setState(
-                  () {
-                    etapaFenologica = val;
-                    data.etapaFenologica = etapaFenologica;
-                  },
-                );
-              },
-            ),
+                      );
+                    },
+                  ),
           ]),
         ));
       }),

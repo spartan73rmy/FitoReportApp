@@ -258,6 +258,7 @@ class LocalStorage {
   }
 
   Future<void> writeImages(List<File> images, int id) async {
+    if (images == null) return;
     String route = (await imagesDir(id)).path;
     for (int i = 0; i < images.length; i++) {
       String newPath = path.join(route, '$i.jpg');

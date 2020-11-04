@@ -97,10 +97,10 @@ class _DrawerContentState extends State<DrawerContent> {
                     TextStyle(color: Color(Colors.black.value), fontSize: 15)),
           ),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PDFPrinterShare()),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => PDFPrinterShare()),
+            // );
           },
         ),
         ListTile(
