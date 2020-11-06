@@ -198,7 +198,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
     String plagas = "";
     String enfermedades = "";
     String productos = "";
-    DateTime today = DateTime.now(); //TODO agregar fecha de creacion
+    DateTime today = r.created;
     String fecha =
         "${today.day.toString().padLeft(2, '0')}/${today.month.toString().padLeft(2, '0')}/${today.year.toString()}";
     r.plaga.forEach((plaga) {

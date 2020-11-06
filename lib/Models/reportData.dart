@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:LikeApp/Models/enfermedad.dart';
 import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/producto.dart';
@@ -16,7 +15,7 @@ class ReportData {
   String etapaFenologica;
   String observaciones;
   int litros;
-
+  DateTime created;
   List<Enfermedad> enfermedad;
   List<Producto> producto;
   List<Plaga> plaga;
@@ -38,7 +37,8 @@ class ReportData {
       this.enfermedad,
       this.producto,
       this.plaga,
-      this.images});
+      this.images,
+      this.created});
 
   factory ReportData.fromJSON(Map<String, dynamic> item) {
     return ReportData(
@@ -53,6 +53,7 @@ class ReportData {
         etapaFenologica: item["etapaFenologica"],
         observaciones: item["observaciones"],
         litros: item["litros"],
+        created: DateTime.parse(item["created"]),
         enfermedad: EnfermedadList.fromJSON(item).enfermedades,
         plaga: PlagaList.fromJSON(item).plagas,
         producto: ProductoList.fromJSON(item).productos);
@@ -67,7 +68,7 @@ class ReportData {
         : null;
     List<Map> plaga =
         this.plaga != null ? this.plaga.map((i) => i.toJson()).toList() : null;
-
+    DateTime createdDate = created ?? DateTime.now();
     return {
       "id": id,
       "lugar": lugar,
@@ -80,6 +81,7 @@ class ReportData {
       "etapaFenologica": etapaFenologica,
       "observaciones": observaciones,
       "litros": litros,
+      "created": createdDate.toIso8601String(),
       "enfermedades": enfermedad,
       "plagas": plaga,
       "productos": productos,
