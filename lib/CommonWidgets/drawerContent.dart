@@ -1,6 +1,5 @@
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Login/login.dart';
-import 'package:LikeApp/Pdf/pdfPrinter.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/User/listUsers.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/alertEditCreate.dart';
@@ -27,7 +26,7 @@ class AddReport extends StatefulWidget {
 
 class _AddReportState extends State<AddReport> {
   int currStep = 0;
-  static var _focusNode = FocusNode();
+  static List<FocusNode> _focusNode;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   static ReportData data = new ReportData();
   String etapaFenologica;
@@ -97,7 +96,7 @@ class _AddReportState extends State<AddReport> {
                       child: Column(
                         children: <Widget>[
                           TextFormField(
-                            focusNode: _focusNode,
+                            focusNode: _focusNode[0],
                             keyboardType: TextInputType.text,
                             autocorrect: false,
                             onSaved: (String value) => {data.productor = value},
@@ -128,7 +127,7 @@ class _AddReportState extends State<AddReport> {
                       child: Column(
                         children: <Widget>[
                           TextFormField(
-                            focusNode: _focusNode,
+                            focusNode: _focusNode[1],
                             keyboardType: TextInputType.text,
                             autocorrect: false,
                             onSaved: (String value) {
@@ -161,7 +160,7 @@ class _AddReportState extends State<AddReport> {
                       child: Column(
                         children: <Widget>[
                           TextFormField(
-                            focusNode: _focusNode,
+                            focusNode: _focusNode[2],
                             keyboardType: TextInputType.text,
                             autocorrect: false,
                             onSaved: (String value) {
@@ -194,7 +193,7 @@ class _AddReportState extends State<AddReport> {
                       child: Column(
                         children: <Widget>[
                           TextFormField(
-                            focusNode: _focusNode,
+                            focusNode: _focusNode[3],
                             keyboardType: TextInputType.text,
                             autocorrect: false,
                             onSaved: (String value) {
@@ -228,7 +227,7 @@ class _AddReportState extends State<AddReport> {
                       child: Column(
                         children: <Widget>[
                           TextFormField(
-                            focusNode: _focusNode,
+                            focusNode: _focusNode[4],
                             keyboardType: TextInputType.text,
                             autocorrect: false,
                             onSaved: (String value) {
@@ -262,7 +261,7 @@ class _AddReportState extends State<AddReport> {
                       child: Column(
                         children: <Widget>[
                           TextFormField(
-                            focusNode: _focusNode,
+                            focusNode: _focusNode[5],
                             keyboardType: TextInputType.text,
                             autocorrect: false,
                             onSaved: (String value) {
@@ -304,6 +303,7 @@ class _AddReportState extends State<AddReport> {
                               Text("Llena correctamente los pasos faltantes")));
                     }
                   }
+                  FocusScope.of(context).requestFocus(_focusNode[currStep]);
                 });
               },
               onStepCancel: () {
@@ -557,11 +557,15 @@ class _AddReportState extends State<AddReport> {
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
-    _focusNode.addListener(() {
-      setState(() {});
-      print('Has focus: $_focusNode.hasFocus');
-    });
+    _focusNode = [
+      FocusNode(),
+      FocusNode(),
+      FocusNode(),
+      FocusNode(),
+      FocusNode(),
+      FocusNode(),
+    ];
+
     data.id = 0;
     isLoading = true;
     isOnline = true;
@@ -570,7 +574,9 @@ class _AddReportState extends State<AddReport> {
 
   @override
   void dispose() {
-    _focusNode.dispose();
+    _focusNode.forEach((element) {
+      element.dispose();
+    });
     super.dispose();
   }
 }

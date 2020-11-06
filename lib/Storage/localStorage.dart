@@ -124,7 +124,7 @@ class LocalStorage {
   }
 
   Future<void> addReport(ReportData reporte) async {
-    reporte.id = IdGen.getId();
+    reporte.id = IdGen.getId(); //Get Temp ID to save report and its own images
     final file = await _localFile;
     List<ReportData> lista;
 
@@ -263,7 +263,7 @@ class LocalStorage {
     for (int i = 0; i < images.length; i++) {
       String newPath = path.join(route, '$i.jpg');
       print(newPath);
-      await File(images[i].path).copy(newPath);
+      images[i] = await File(images[i].path).copy(newPath);
     }
   }
 

@@ -47,7 +47,7 @@ class _ImagenPickerState extends State<ImagenPicker> {
   }
 
   pickImage(ImageSource source) async {
-    PickedFile image = await picker.getImage(source: source, imageQuality: 50);
+    PickedFile image = await picker.getImage(source: source, imageQuality: 40);
     if (image == null) return;
     setState(() {
       images.add(File(image.path));
@@ -93,9 +93,6 @@ class _ImagenPickerState extends State<ImagenPicker> {
                             borderRadius: BorderRadius.circular(15),
                             child: Image.file(
                               images[i],
-                              //TODO set way to resize
-                              // height: 400,
-                              // width: 300,
                               fit: BoxFit.cover,
                             ))
                       ]))));

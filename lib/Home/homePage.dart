@@ -5,7 +5,6 @@ import 'package:LikeApp/Login/login.dart';
 import 'package:LikeApp/Models/apiResponse.dart';
 import 'package:LikeApp/Models/dataSearch.dart';
 import 'package:LikeApp/Models/reportData.dart';
-import 'package:LikeApp/Report/pickImage.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Services/reportService.dart';
