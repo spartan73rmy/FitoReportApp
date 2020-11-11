@@ -318,6 +318,7 @@ class _AddReportState extends State<AddReport> {
               onStepTapped: (step) {
                 setState(() {
                   currStep = step;
+                  FocusScope.of(context).requestFocus(_focusNode[currStep]);
                 });
               },
             ),

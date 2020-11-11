@@ -163,10 +163,10 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 maxLines: 1,
                 onSaved: (String value) {
                   producto.concentracion =
-                      (int.tryParse(value) ?? 0).toString();
+                      (double.tryParse(value) ?? 0).toString();
                 },
                 validator: (value) {
-                  var num = int.tryParse(value);
+                  var num = double.tryParse(value);
                   if (num == null || value.isEmpty) {
                     return "Solo introduce la cantidad sin %";
                   }

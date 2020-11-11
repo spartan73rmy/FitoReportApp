@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.LikeApp"
-        minSdkVersion 21
+        minSdkVersion 20
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

@@ -30,7 +30,7 @@ class _ReciepReportState extends State<ReciepReport> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: UniqueKey(),
-      appBar: AppBar(title: Text('Productos'), actions: <Widget>[
+      appBar: AppBar(title: Text('Recomendacion'), actions: <Widget>[
         FlatButton(
           onPressed: () {
             alertInputDiag(context, "Litros", "Cantidad", "Introduce un numero")
@@ -43,7 +43,7 @@ class _ReciepReportState extends State<ReciepReport> {
               }
             });
           },
-          child: Center(child: Text("Litros: ${data.litros ?? 0}")),
+          child: Center(child: Text("${data.litros ?? 0} L agua")),
         ),
         IconButton(
           icon: Icon(Icons.save),
