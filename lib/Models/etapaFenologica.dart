@@ -26,12 +26,12 @@ class EtapaFList {
 
   Map<String, dynamic> toJson() {
     return {
-      "etapas": this.etapas,
+      'etapaFenologica': this.etapas,
     };
   }
 
   factory EtapaFList.fromJSON(Map<String, dynamic> parsedJson) {
-    var list = parsedJson['etapas'] as List;
+    var list = parsedJson['etapaFenologica'] as List;
     List<EtapaFenologica> etapas =
         list.map((i) => EtapaFenologica.fromJSON(i)).toList();
     return EtapaFList(etapas: etapas);

@@ -1,23 +1,13 @@
 import 'dart:ui';
-import 'package:LikeApp/CommonWidgets/alert.dart';
-import 'package:LikeApp/CommonWidgets/alertEditCreate.dart';
-import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
-import 'package:LikeApp/CommonWidgets/etapaDialog.dart';
 import 'package:LikeApp/Login/login.dart';
 import 'package:LikeApp/Report/pickImage.dart';
+import 'package:LikeApp/Report/selectEtapasFenologicas.dart';
 import 'package:LikeApp/Services/conectionService.dart';
-import 'package:LikeApp/Storage/files.dart';
-import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
-import 'package:LikeApp/Models/etapaFenologica.dart';
-import 'package:LikeApp/Report/selectPlaga.dart';
-import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Services/etapaFService.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../Models/reportData.dart';
-import 'package:LikeApp/Models/APIResponse.dart';
 
 class AddReport extends StatefulWidget {
   @override
@@ -29,13 +19,8 @@ class _AddReportState extends State<AddReport> {
   static List<FocusNode> _focusNode;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   static ReportData data = new ReportData();
-  String etapaFenologica;
-
   EtapaFService get service => GetIt.I<EtapaFService>();
   Ping get ping => GetIt.I<Ping>();
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  SharedPreferences _sharedPreferences;
-  APIResponse<List<EtapaFenologica>> res;
   List<Image> images;
   bool isLoading;
   bool isOnline;
@@ -75,11 +60,6 @@ class _AddReportState extends State<AddReport> {
         if (isLoading) {
           return LoadingScreen();
         }
-
-        if (isOnline && res.error ?? false) {
-          return Center(child: Text(res.errorMessage));
-        }
-
         return Container(
             child: Form(
           key: _formKey,
@@ -322,84 +302,6 @@ class _AddReportState extends State<AddReport> {
                 });
               },
             ),
-            res.data.isEmpty
-                ? FlatButton(
-                    onPressed: () async {
-                      await addEditEtapaFenologicaDialog(context).then((value) {
-                        if (value == null || value.nombre == null) return;
-                        setState(() {
-                          res.data.add(value);
-                          etapaFenologica = value.nombre;
-                        });
-                      });
-                    },
-                    child: Text("Agregar Etapa Fenologica"))
-                : DropdownButton(
-                    hint: etapaFenologica == null
-                        ? Text(
-                            'Selecciona la etapa fenologica',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          )
-                        : Text(etapaFenologica,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.normal)),
-                    isExpanded: true,
-                    elevation: 2,
-                    iconSize: 40,
-                    style: TextStyle(color: Colors.blue, fontSize: 16),
-                    items: res.data.map(
-                      (val) {
-                        return DropdownMenuItem<String>(
-                          value: val.nombre,
-                          child: Dismissible(
-                              key: ValueKey(val.nombre),
-                              direction: DismissDirection.startToEnd,
-                              onDismissed: (direction) async {},
-                              confirmDismiss: (direction) async {
-                                final result = await showDialog(
-                                        context: context,
-                                        builder: (_) => DeleteDialog()) ??
-                                    false;
-                                //If delete is confirmed delete from list if exist
-                                if (result) {
-                                  await deleteEtapa(val);
-                                }
-                                return result;
-                              },
-                              background: Container(
-                                color: Colors.blue,
-                                padding: EdgeInsets.only(left: 16),
-                                child: Align(
-                                  child:
-                                      Icon(Icons.delete, color: Colors.white),
-                                  alignment: Alignment.centerLeft,
-                                ),
-                              ),
-                              child: GestureDetector(
-                                onLongPress: () async {
-                                  await addEditEtapa(val);
-                                },
-                                child: Container(
-                                  height: 40,
-                                  width: 600,
-                                  child: Text(val.nombre),
-                                ),
-                              )),
-                        );
-                      },
-                    ).toList(),
-                    onChanged: (val) {
-                      setState(
-                        () {
-                          etapaFenologica = val;
-                          data.etapaFenologica = etapaFenologica;
-                        },
-                      );
-                    },
-                  ),
           ]),
         ));
       }),
@@ -413,7 +315,7 @@ class _AddReportState extends State<AddReport> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => SelectPlaga(data: data)),
+                    builder: (context) => SelectEtapa(data: data)),
               );
             }
           },
@@ -425,113 +327,14 @@ class _AddReportState extends State<AddReport> {
 
   bool isValid() {
     for (var item in formKeys) if (!item.currentState.validate()) return false;
-
-    if (etapaFenologica == null) return false;
     return true;
   }
 
   void _saveData() {
-    data.etapaFenologica = etapaFenologica;
-    print(data.images);
     final form = _formKey.currentState;
     form.save();
     for (var item in formKeys) {
       item.currentState.save();
-    }
-  }
-
-  addEditEtapa(EtapaFenologica val) async {
-    await showDialog(
-        context: context,
-        builder: (context) {
-          return SelectCreateEdit(
-            tittle: "Crear o Editar",
-            text:
-                "Seleccione si desea crear un elemento nuevo o editar el pulsado",
-          );
-        }).then((create) async => {
-          if (create ?? true)
-            await addEditEtapaFenologicaDialog(context).then((value) {
-              if (value == null || value.nombre == null) return;
-              setState(() {
-                res.data.add(value);
-                etapaFenologica = value.nombre;
-              });
-            })
-          else
-            await addEditEtapaFenologicaDialog(context, etapaFenologica: val)
-                .then((value) {
-              if (value == null || value.nombre == null) return;
-              setState(() {
-                val.nombre = value.nombre;
-                etapaFenologica = val.nombre;
-              });
-            })
-        });
-  }
-
-  deleteEtapa(EtapaFenologica data) async {
-    isOnline = await ping.ping() ?? false;
-    bool isNotLocal = data.id != null;
-
-    if (isNotLocal && isOnline) {
-      _sharedPreferences = await _prefs;
-      String authToken = Auth.getToken(_sharedPreferences);
-      var resp = await service.deleteEtapa(data.id, authToken);
-      if (resp.error)
-        await alertDiag(context, "Error", resp.errorMessage);
-      else if (res.data.contains(data))
-        setState(() {
-          etapaFenologica = null;
-          res.data.remove(data);
-        });
-    } else {
-      //Remove from local
-      if (res.data.contains(data))
-        setState(() {
-          etapaFenologica = null;
-          res.data.remove(data);
-        });
-    }
-  }
-
-  fetchEtapas() async {
-    _sharedPreferences = await _prefs;
-    isOnline = await ping.ping() ?? false;
-    bool isNotLogged = !Auth.isLogged(_sharedPreferences);
-    LocalStorage localS = LocalStorage(FileName().etapa);
-
-    if (isOnline) {
-      if (isNotLogged) toLogIn();
-      _showLoading();
-      String authToken = Auth.getToken(_sharedPreferences);
-      var resp = await service.getListEtapas(authToken);
-
-      if (resp.error) {
-        await alertDiag(context, "Error", res.errorMessage);
-        setState(() {
-          res = resp;
-        });
-      } else {
-        //En cada peticion con internet se actualizan los datos localmente
-        await localS.refreshEtapas(resp.data);
-
-        setState(() {
-          res = resp;
-        });
-      }
-      _hideLoading();
-    } else {
-      _showLoading();
-      List<EtapaFenologica> resp = await localS.readEtapas();
-      if (resp.length == 0) {
-        await alertDiag(context, "Error",
-            "No hay datos para cargar, favor de conectarse a internet");
-      }
-      setState(() {
-        res = APIResponse<List<EtapaFenologica>>(data: resp, error: false);
-      });
-      _hideLoading();
     }
   }
 
@@ -541,18 +344,6 @@ class _AddReportState extends State<AddReport> {
       context,
       MaterialPageRoute(builder: (context) => Login("FitoReport")),
     );
-  }
-
-  _showLoading() {
-    setState(() {
-      isLoading = true;
-    });
-  }
-
-  _hideLoading() {
-    setState(() {
-      isLoading = false;
-    });
   }
 
   @override
@@ -568,9 +359,8 @@ class _AddReportState extends State<AddReport> {
     ];
 
     data.id = 0;
-    isLoading = true;
+    isLoading = false;
     isOnline = true;
-    fetchEtapas();
   }
 
   @override

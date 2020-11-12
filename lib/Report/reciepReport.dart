@@ -1,6 +1,7 @@
 import 'package:LikeApp/CommonWidgets/alertInput.dart';
 import 'package:LikeApp/Home/homePage.dart';
 import 'package:LikeApp/Models/enfermedad.dart';
+import 'package:LikeApp/Models/etapaFenologica.dart';
 import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/Models/producto.dart';
@@ -135,6 +136,8 @@ class _ReciepReportState extends State<ReciepReport> {
     enfer.add(Enfermedad(id: 1, nombre: "Enfermedad"));
     List<Plaga> plag = new List<Plaga>();
     plag.add(Plaga(id: 1, nombre: "Enfermedad"));
+    List<EtapaFenologica> etapas = new List<EtapaFenologica>();
+    etapas.add(EtapaFenologica(id: 1, nombre: "Etapa"));
     List<Producto> prod = new List<Producto>();
     prod.add(Producto(
         nombre: "Enfermedad",
@@ -152,11 +155,11 @@ class _ReciepReportState extends State<ReciepReport> {
         ubicacion: "Periban de ramos",
         predio: "El pedregal III",
         cultivo: "Aguacate",
-        etapaFenologica: "EtapaF",
         observaciones: "Muchas observaciones al respecto",
         litros: 100,
         enfermedad: enfer,
         plaga: plag,
+        etapaFenologica: etapas,
         producto: prod));
   }
 }

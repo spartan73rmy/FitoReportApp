@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:LikeApp/Models/enfermedad.dart';
+import 'package:LikeApp/Models/etapaFenologica.dart';
 import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/producto.dart';
 
@@ -12,13 +13,13 @@ class ReportData {
   String ubicacion;
   String predio;
   String cultivo;
-  String etapaFenologica;
   String observaciones;
   int litros;
   DateTime created;
   List<Enfermedad> enfermedad;
   List<Producto> producto;
   List<Plaga> plaga;
+  List<EtapaFenologica> etapaFenologica;
 
   List<File> images;
 
@@ -50,10 +51,10 @@ class ReportData {
         ubicacion: item["ubicacion"],
         predio: item["predio"],
         cultivo: item["cultivo"],
-        etapaFenologica: item["etapaFenologica"],
         observaciones: item["observaciones"],
         litros: item["litros"],
-        created: DateTime.parse(item["created"]),
+        created: DateTime.parse(item["created"]).toUtc(),
+        etapaFenologica: EtapaFList.fromJSON(item).etapas,
         enfermedad: EnfermedadList.fromJSON(item).enfermedades,
         plaga: PlagaList.fromJSON(item).plagas,
         producto: ProductoList.fromJSON(item).productos);
@@ -78,10 +79,10 @@ class ReportData {
       "ubicacion": ubicacion,
       "predio": predio,
       "cultivo": cultivo,
-      "etapaFenologica": etapaFenologica,
       "observaciones": observaciones,
       "litros": litros,
       "created": createdDate.toIso8601String(),
+      "etapaFenologica": etapaFenologica,
       "enfermedades": enfermedad,
       "plagas": plaga,
       "productos": productos,
