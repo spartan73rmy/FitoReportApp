@@ -20,7 +20,6 @@ class ReportData {
   List<Producto> producto;
   List<Plaga> plaga;
   List<EtapaFenologica> etapaFenologica;
-
   List<File> images;
 
   ReportData(

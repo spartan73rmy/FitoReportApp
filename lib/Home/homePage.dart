@@ -20,7 +20,6 @@ import "dataSearch.dart";
 class HomePage extends StatefulWidget {
   HomePage(this.title, {Key key}) : super(key: key);
   final String title;
-
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -60,13 +59,13 @@ class _HomePageState extends State<HomePage> {
         title: Text(this.widget.title),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.cloud_upload),
+            icon: isOnline ? Icon(Icons.cloud_upload) : Icon(Icons.cloud_off),
             onPressed: () async {
               await uploadData();
             },
           ),
           IconButton(
-            icon: Icon(Icons.search),
+            icon: isOnline ? Icon(Icons.search) : Icon(Icons.search_off),
             onPressed: () async {
               bool search = await getDataSearch();
               if (search)

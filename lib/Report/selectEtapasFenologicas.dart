@@ -147,39 +147,19 @@ class _SelectEtapaState extends State<SelectEtapa> {
   }
 
   fetchEtapaFenologicaes() async {
-    isOnline = await ping.ping() ?? false;
     LocalStorage localS = LocalStorage(FileName().etapa);
-    if (isOnline) {
-      _showLoading();
 
-      _sharedPreferences = await _prefs;
-      String authToken = Auth.getToken(_sharedPreferences);
-      var resp = await service.getListEtapas(authToken);
+    _showLoading();
+    List<EtapaFenologica> resp = await localS.readEtapas();
+    if (resp.length == 0)
+      await alertDiag(context, "Error",
+          "No hay datos para cargar, favor de conectarse a internet");
 
-      setState(() {
-        res = resp;
-      });
-
-      if (resp.error)
-        await alertDiag(context, "Error", res.errorMessage);
-      else
-        //En ada peticion con internet se actualizan los datos localmente
-        await localS.refreshEtapas(resp.data);
-
-      _hideLoading();
-    } else {
-      _showLoading();
-      List<EtapaFenologica> resp = await localS.readEtapas();
-      if (resp.length == 0)
-        await alertDiag(context, "Error",
-            "No hay datos para cargar, favor de conectarse a internet");
-
-      setState(() {
-        res = APIResponse<List<EtapaFenologica>>(
-            data: resp, error: false, errorMessage: null);
-      });
-      _hideLoading();
-    }
+    setState(() {
+      res = APIResponse<List<EtapaFenologica>>(
+          data: resp, error: false, errorMessage: null);
+    });
+    _hideLoading();
   }
 
   Widget buildRow(EtapaFenologica etapaFenologica) {

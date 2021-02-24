@@ -146,39 +146,19 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
   }
 
   fetchEnfermedades() async {
-    isOnline = await ping.ping() ?? false;
     LocalStorage localS = LocalStorage(FileName().enfermedad);
-    if (isOnline) {
-      _showLoading();
 
-      _sharedPreferences = await _prefs;
-      String authToken = Auth.getToken(_sharedPreferences);
-      var resp = await service.getListEnfermedad(authToken);
+    _showLoading();
+    List<Enfermedad> resp = await localS.readEnfermedades();
+    if (resp.length == 0)
+      await alertDiag(context, "Error",
+          "No hay datos para cargar, favor de conectarse a internet");
 
-      setState(() {
-        res = resp;
-      });
-
-      if (resp.error)
-        await alertDiag(context, "Error", res.errorMessage);
-      else
-        //En ada peticion con internet se actualizan los datos localmente
-        await localS.refreshEnfermedades(resp.data);
-
-      _hideLoading();
-    } else {
-      _showLoading();
-      List<Enfermedad> resp = await localS.readEnfermedades();
-      if (resp.length == 0)
-        await alertDiag(context, "Error",
-            "No hay datos para cargar, favor de conectarse a internet");
-
-      setState(() {
-        res = APIResponse<List<Enfermedad>>(
-            data: resp, error: false, errorMessage: null);
-      });
-      _hideLoading();
-    }
+    setState(() {
+      res = APIResponse<List<Enfermedad>>(
+          data: resp, error: false, errorMessage: null);
+    });
+    _hideLoading();
   }
 
   Widget buildRow(Enfermedad enfermedad) {

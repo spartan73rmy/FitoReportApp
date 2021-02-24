@@ -1,6 +1,9 @@
+import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Login/login.dart';
+import 'package:LikeApp/Services/SyncData.dart';
 import 'package:LikeApp/Services/auth.dart';
+import 'package:LikeApp/Syncing/Syncing.dart';
 import 'package:LikeApp/User/listUsers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -88,7 +91,7 @@ class _DrawerContentState extends State<DrawerContent> {
         ),
         ListTile(
           leading: Icon(Icons.work),
-          title: Text('Catalogos'),
+          title: Text('Sincronizar Catalogos'),
           subtitle: Text.rich(
             TextSpan(
                 text: "Plagas,Enfermedades, Etapa Fenologica",
@@ -96,10 +99,10 @@ class _DrawerContentState extends State<DrawerContent> {
                     TextStyle(color: Color(Colors.black.value), fontSize: 15)),
           ),
           onTap: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => PDFPrinterShare()),
-            // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SyncingData()),
+            );
           },
         ),
         ListTile(

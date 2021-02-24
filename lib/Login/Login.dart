@@ -1,7 +1,6 @@
 import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/inputField.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
-import 'package:LikeApp/CommonWidgets/loginButton.dart';
 import 'package:LikeApp/CommonWidgets/passField.dart';
 import 'package:LikeApp/Home/homePage.dart';
 import 'package:LikeApp/Models/apiResponse.dart';
@@ -38,7 +37,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    _fetchSessionAndNavigate();
+    // _fetchSessionAndNavigate();
     _userNameController = new TextEditingController();
     _passwordController = new TextEditingController();
   }
@@ -69,12 +68,19 @@ class _LoginState extends State<Login> {
     });
   }
 
-  _authenticateUser() async {
+  _authenticateUser(bool offline) async {
     _showLoading();
-
-    var isOnline = await ping.ping();
     sharedPreferences = await _prefs;
 
+    if (offline) {
+      await Auth.logoutUser(sharedPreferences);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage(widget.title)),
+      );
+    }
+
+    var isOnline = await ping.ping();
     if (isOnline) {
       if (_isValid()) {
         var res = await userService.authenticateUser(
@@ -94,12 +100,6 @@ class _LoginState extends State<Login> {
         }
         _hideLoading();
       }
-    } else {
-      await Auth.logoutUser(sharedPreferences);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(widget.title)),
-      );
     }
     _hideLoading();
   }
@@ -141,7 +141,17 @@ class _LoginState extends State<Login> {
             passwordError: _passwordError,
             togglePassword: _togglePassword,
           ),
-          new LoginButton(text: "Log In", onPressed: _authenticateUser),
+          FloatingActionButton.extended(
+              icon: Icon(Icons.supervised_user_circle_sharp),
+              backgroundColor: Color(Colors.blueAccent.value),
+              label: Text("Iniciar Sesion", style: TextStyle(fontSize: 20)),
+              onPressed: () => {_authenticateUser(false)}),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+              child: TextButton(
+                  child: Text("Iniciar Sin Conexion",
+                      style: TextStyle(fontSize: 20)),
+                  onPressed: () async => {_authenticateUser(true)})),
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:LikeApp/Login/Login.dart';
+import 'package:LikeApp/Services/SyncData.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Services/enfermedadService.dart';
@@ -41,6 +42,7 @@ void instanceGetIt() {
   GetIt.I.registerLazySingleton(() => EtapaFService());
   GetIt.I.registerLazySingleton(() => EnfermedadService());
   GetIt.I.registerLazySingleton(() => Auth());
+  GetIt.I.registerLazySingleton(() => SyncData());
 }
 
 class MyHttpOverrides extends HttpOverrides {

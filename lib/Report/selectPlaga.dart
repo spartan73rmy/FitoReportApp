@@ -149,40 +149,20 @@ class _SelectPlagaState extends State<SelectPlaga> {
   }
 
   fetchPlaga() async {
-    isOnline = await ping.ping() ?? false;
     LocalStorage localS = LocalStorage(FileName().plaga);
-    if (isOnline) {
-      _showLoading();
 
-      _sharedPreferences = await _prefs;
-      String authToken = Auth.getToken(_sharedPreferences);
-      var resp = await service.getListPlaga(authToken);
-
-      setState(() {
-        res = resp;
-      });
-
-      if (resp.error) {
-        await alertDiag(context, "Error", res.errorMessage);
-      } else {
-        //En cada peticion con internet se actualizan los datos localmente
-        await localS.refreshPlagas(resp.data);
-      }
-      _hideLoading();
-    } else {
-      _showLoading();
-      List<Plaga> resp = await localS.readPlagas();
-      if (resp.length == 0) {
-        await alertDiag(context, "Error",
-            "No hay datos para cargar, favor de conectarse a internet");
-      }
-
-      setState(() {
-        res = APIResponse<List<Plaga>>(
-            data: resp, error: false, errorMessage: "");
-      });
-      _hideLoading();
+    _showLoading();
+    List<Plaga> resp = await localS.readPlagas();
+    if (resp.length == 0) {
+      await alertDiag(context, "Error",
+          "No hay datos para cargar, favor de conectarse a internet");
     }
+
+    setState(() {
+      res =
+          APIResponse<List<Plaga>>(data: resp, error: false, errorMessage: "");
+    });
+    _hideLoading();
   }
 
   Widget buildRow(Plaga plaga) {

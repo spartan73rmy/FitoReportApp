@@ -15,10 +15,18 @@ class ListTempReportBody extends StatefulWidget {
 
 class _ListTempReportBodyState extends State<ListTempReportBody> {
   Future<List<ReportData>> data;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
   @override
   void initState() {
     data = getData();
     super.initState();
+  }
+
+  refreshData() {
+    setState(() {
+      data = getData();
+    });
   }
 
   Future<List<ReportData>> getData() async {
@@ -43,38 +51,44 @@ class _ListTempReportBodyState extends State<ListTempReportBody> {
               return LoadingScreen();
             default:
               if (snapshot.hasError)
-                return new Text('Error: ${snapshot.error}');
+                return Text('Error: ${snapshot.error}');
               else {
-                return new ListView.builder(
-                    itemCount: snapshot.data.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Dismissible(
-                          key: ValueKey(snapshot.data[index].id),
-                          direction: DismissDirection.startToEnd,
-                          onDismissed: (direction) {},
-                          confirmDismiss: (direction) async {
-                            final result = await showDialog(
-                                    context: context,
-                                    builder: (_) => DeleteDialog()) ??
-                                false;
-                            if (result) {
-                              setState(() {
-                                data = deleteReport(index);
-                              });
-                            }
-                            return result;
-                          },
-                          background: Container(
-                            color: Colors.blue,
-                            padding: EdgeInsets.only(left: 16),
-                            child: Align(
-                              child: Icon(Icons.delete, color: Colors.white),
-                              alignment: Alignment.centerLeft,
+                return RefreshIndicator(
+                  key: _refreshIndicatorKey,
+                  onRefresh: () async {
+                    refreshData();
+                  },
+                  child: ListView.builder(
+                      itemCount: snapshot.data.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Dismissible(
+                            key: ValueKey(snapshot.data[index].id),
+                            direction: DismissDirection.startToEnd,
+                            onDismissed: (direction) {},
+                            confirmDismiss: (direction) async {
+                              final result = await showDialog(
+                                      context: context,
+                                      builder: (_) => DeleteDialog()) ??
+                                  false;
+                              if (result) {
+                                setState(() {
+                                  data = deleteReport(index);
+                                });
+                              }
+                              return result;
+                            },
+                            background: Container(
+                              color: Colors.blue,
+                              padding: EdgeInsets.only(left: 16),
+                              child: Align(
+                                child: Icon(Icons.delete, color: Colors.white),
+                                alignment: Alignment.centerLeft,
+                              ),
                             ),
-                          ),
-                          child: ListTempReportCard(snapshot.data[index]));
-                    });
+                            child: ListTempReportCard(snapshot.data[index]));
+                      }),
+                );
               }
           }
         });
