@@ -1,14 +1,20 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:LikeApp/Models/apiResponse.dart';
 import 'package:LikeApp/Models/HttpModel.dart';
 import 'package:LikeApp/Models/dataSearch.dart';
+import 'package:LikeApp/Models/idReporte.dart';
 import 'package:LikeApp/Models/reportData.dart';
+import 'package:LikeApp/Services/userFileService.dart';
+import 'package:LikeApp/Storage/files.dart';
+import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:http/http.dart' as http;
 
 class ReportService extends HttpModel {
   String url = "Reporte/";
 
-  Future<APIResponse<bool>> createReport(List<ReportData> reportes, authToken) {
+  Future<APIResponse<bool>> createReport(
+      List<ReportData> reportes, authToken) async {
     ReportDataList lista = ReportDataList(reportes: reportes);
     print(json.encode(lista.toJson()));
     return http
@@ -19,9 +25,13 @@ class ReportService extends HttpModel {
             },
             body: json.encode(lista.toJson()))
         .timeout(Duration(seconds: 15))
-        .then((data) {
+        .then((data) async {
       if (data.statusCode == 200) {
-        return APIResponse<bool>(data: true);
+        List<int> idsReporte = IdReporte.fromJson(jsonDecode(data.body)).id;
+        bool complete =
+            await uploadFiles(lista.reportes, idsReporte, authToken);
+
+        return APIResponse<bool>(data: complete);
       }
       print(data.statusCode);
       return APIResponse<bool>(
@@ -33,6 +43,30 @@ class ReportService extends HttpModel {
             error: true,
             errorMessage: "Ocurrio un error al conectar a internet \n" +
                 error.toString()));
+  }
+
+  Future<bool> uploadFiles(
+      List<ReportData> lista, List<int> id, String authToken) async {
+    UserFilesService userFilesService = new UserFilesService();
+    LocalStorage localStorage = new LocalStorage(FileName().images);
+    List<String> hashes = new List<String>();
+    int index = 0;
+    bool allComplete = true;
+    for (var i in lista) {
+      List<File> images = await localStorage.readImages(i.id);
+      int idReporte = id[index];
+
+      if (images != null)
+        for (File image in images) {
+          var response =
+              await userFilesService.uploadFile(image, idReporte, authToken);
+          allComplete &= !response.error;
+          if (!response.error) {
+            hashes.add(response.data);
+          }
+        }
+    }
+    return allComplete;
   }
 
   Future<APIResponse<ReportData>> getReport(authToken, int idReport) {

@@ -1,6 +1,6 @@
 import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
-import 'package:LikeApp/Services/SyncData.dart';
+import 'package:LikeApp/Services/syncData.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 

@@ -1,13 +1,13 @@
 import 'package:LikeApp/Models/etapaFenologica.dart';
 import 'package:LikeApp/Services/Auth.dart';
-import 'package:LikeApp/Services/PlagaService.dart';
+import 'package:LikeApp/Services/plagaService.dart';
 import 'package:LikeApp/Services/etapaFService.dart';
 import 'package:LikeApp/Storage/files.dart';
 import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'EnfermedadService.dart';
+import 'enfermedadService.dart';
 import 'conectionService.dart';
 
 class SyncData {

@@ -22,13 +22,19 @@ class _ImagenPickerState extends State<ImagenPicker> {
   }
 
   @override
+  void dispose() {
+    this.images = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
             title: Text('Imagen'),
             leading: IconButton(
                 icon: Icon(Icons.chevron_left),
-                onPressed: () => Navigator.pop(context, images))),
+                onPressed: () => {Navigator.pop(context, this.images)})),
         body: listPreviewImages(images),
         persistentFooterButtons: [
           FloatingActionButton.extended(
@@ -42,7 +48,7 @@ class _ImagenPickerState extends State<ImagenPicker> {
               icon: Icon(Icons.add_a_photo),
               backgroundColor: Theme.of(context).primaryColor,
               onPressed: () => {pickImage(ImageSource.camera)},
-              label: Text("Tomar Foto"))
+              label: Text("Tomar Foto")),
         ]);
   }
 

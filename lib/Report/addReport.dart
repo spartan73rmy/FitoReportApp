@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:LikeApp/Login/login.dart';
 import 'package:LikeApp/Report/pickImage.dart';
@@ -44,7 +45,7 @@ class _AddReportState extends State<AddReport> {
               ],
             ),
             onPressed: () async {
-              var images = await Navigator.push(
+              List<File> images = await Navigator.push(
                   context,
                   new MaterialPageRoute(
                     builder: (BuildContext context) =>

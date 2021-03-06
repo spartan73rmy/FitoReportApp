@@ -1,7 +1,7 @@
 import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Login/login.dart';
-import 'package:LikeApp/Services/SyncData.dart';
+import 'package:LikeApp/Services/syncData.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Syncing/Syncing.dart';
 import 'package:LikeApp/User/listUsers.dart';

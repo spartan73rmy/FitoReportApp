@@ -8,6 +8,7 @@ import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Services/reportService.dart';
+import 'package:LikeApp/Services/userFileService.dart';
 import 'package:LikeApp/Storage/files.dart';
 import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:LikeApp/TempReports/listTempReport.dart';
@@ -151,7 +152,7 @@ class _HomePageState extends State<HomePage> {
         if (res.error != true) {
           alertDiag(context, "Finalizado",
               "Los reportes fueron sincronizados con la nube ");
-          await localStorage.clearReportFile();
+          // await localStorage.clearReportFile();
         }
       }
 

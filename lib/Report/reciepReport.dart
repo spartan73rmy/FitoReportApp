@@ -1,8 +1,5 @@
 import 'package:LikeApp/CommonWidgets/alertInput.dart';
 import 'package:LikeApp/Home/homePage.dart';
-import 'package:LikeApp/Models/enfermedad.dart';
-import 'package:LikeApp/Models/etapaFenologica.dart';
-import 'package:LikeApp/Models/plaga.dart';
 import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/Models/producto.dart';
 import 'package:LikeApp/Storage/files.dart';
@@ -87,6 +84,12 @@ class _ReciepReportState extends State<ReciepReport> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    this.data = null;
+    super.dispose();
+  }
+
   addProduct(Producto product) {
     setState(() {
       products.add(product);
@@ -127,39 +130,5 @@ class _ReciepReportState extends State<ReciepReport> {
   Future<void> saveToLocal() async {
     LocalStorage localS = LocalStorage(FileName().report);
     localS.addReport(this.data);
-  }
-
-  saveTempExample() async {
-    LocalStorage localS = LocalStorage(FileName().report);
-
-    List<Enfermedad> enfer = new List<Enfermedad>();
-    enfer.add(Enfermedad(id: 1, nombre: "Enfermedad"));
-    List<Plaga> plag = new List<Plaga>();
-    plag.add(Plaga(id: 1, nombre: "Enfermedad"));
-    List<EtapaFenologica> etapas = new List<EtapaFenologica>();
-    etapas.add(EtapaFenologica(id: 1, nombre: "Etapa"));
-    List<Producto> prod = new List<Producto>();
-    prod.add(Producto(
-        nombre: "Enfermedad",
-        cantidad: 12,
-        ingredienteActivo: "Ingrediente Activo",
-        concentracion: "12%",
-        intervaloSeguridad: "12 Dias"));
-
-    await localS.addReport(new ReportData(
-        id: 0,
-        lugar: "Periban de ramos",
-        productor: "Jose Alberto Espinoza Morelos 3",
-        latitude: data.latitude ?? 0.0,
-        longitud: data.longitud ?? 0.0,
-        ubicacion: "Periban de ramos",
-        predio: "El pedregal III",
-        cultivo: "Aguacate",
-        observaciones: "Muchas observaciones al respecto",
-        litros: 100,
-        enfermedad: enfer,
-        plaga: plag,
-        etapaFenologica: etapas,
-        producto: prod));
   }
 }

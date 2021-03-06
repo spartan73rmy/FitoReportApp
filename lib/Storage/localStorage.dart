@@ -262,7 +262,7 @@ class LocalStorage {
     String route = (await imagesDir(id)).path;
     for (int i = 0; i < images.length; i++) {
       String newPath = path.join(route, '$i.jpg');
-      print(newPath);
+      // print(newPath);
       images[i] = await File(images[i].path).copy(newPath);
     }
   }

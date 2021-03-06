@@ -143,7 +143,7 @@ class _LoginState extends State<Login> {
           ),
           FloatingActionButton.extended(
               icon: Icon(Icons.supervised_user_circle_sharp),
-              backgroundColor: Color(Colors.blueAccent.value),
+              backgroundColor: Theme.of(context).primaryColor,
               label: Text("Iniciar Sesion", style: TextStyle(fontSize: 20)),
               onPressed: () => {_authenticateUser(false)}),
           Padding(

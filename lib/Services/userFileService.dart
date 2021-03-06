@@ -1,38 +1,49 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:LikeApp/Models/apiResponse.dart';
 import 'package:LikeApp/Models/HttpModel.dart';
-import 'package:http/http.dart' as http;
+import 'package:LikeApp/Models/fileHash.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:http/http.dart' as http;
 
 class UserFilesService extends HttpModel {
   String url = "Archivos/";
 
-  Future<APIResponse<bool>> uploadFile(File image) async {
-    final imageUploadRequest = http.MultipartRequest(
+  Future<APIResponse<String>> uploadFile(
+      File image, int idReporte, authToken) async {
+    Map<String, String> headers = {
+      'Authorization': "Bearer $authToken",
+      'Content-Type': 'application/json'
+    };
+    final request = http.MultipartRequest(
       'POST',
       Uri.parse(HttpModel.getUrl + url + "AgregarArchivo"),
     );
+    request.headers.addAll(headers);
 
-    // Attach the file in the request
-    final file = await http.MultipartFile.fromPath('Archivo', image.path,
-        contentType: new MediaType('image', 'jpeg'));
+    request.files.add(http.MultipartFile(
+      'file',
+      image.readAsBytes().asStream(),
+      image.lengthSync(),
+      filename: "Archivo.jpeg",
+      contentType: MediaType('image', 'jpeg'),
+    ));
 
-    imageUploadRequest.files.add(file);
-    imageUploadRequest.fields['Nombre'] = "Example";
-
+    request.fields.addAll({"idReporte": "$idReporte"});
     try {
-      final streamedResponse = await imageUploadRequest.send();
+      final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
-      if (response.statusCode != 200) {
-        return APIResponse<bool>(data: true);
+      if (response.statusCode == 200) {
+        return APIResponse<String>(
+            data: FileHash.fromJson(jsonDecode(response.body)).hash);
       }
-      return APIResponse<bool>(
-          data: false,
+      return APIResponse<String>(
+          data: null,
           error: true,
           errorMessage: "La sesion ha caducado, reinicie sesion");
     } catch (error) {
-      return APIResponse<bool>(
-          data: false,
+      return APIResponse<String>(
+          data: null,
           error: true,
           errorMessage:
               "Ocurrio un error al conectar a internet " + error.toString());
