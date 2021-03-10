@@ -349,7 +349,6 @@ class _AddReportState extends State<AddReport> {
 
   @override
   void initState() {
-    super.initState();
     _focusNode = [
       FocusNode(),
       FocusNode(),
@@ -358,10 +357,12 @@ class _AddReportState extends State<AddReport> {
       FocusNode(),
       FocusNode(),
     ];
-
+    data = new ReportData();
     data.id = 0;
     isLoading = false;
     isOnline = true;
+    images = new List<Image>();
+    super.initState();
   }
 
   @override
@@ -369,6 +370,9 @@ class _AddReportState extends State<AddReport> {
     _focusNode.forEach((element) {
       element.dispose();
     });
+    images?.clear();
+    data.images?.clear();
+    data = null;
     super.dispose();
   }
 }
