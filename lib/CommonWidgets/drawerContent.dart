@@ -1,7 +1,5 @@
-import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Login/login.dart';
-import 'package:LikeApp/Services/syncData.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Syncing/Syncing.dart';
 import 'package:LikeApp/User/listUsers.dart';
@@ -61,17 +59,17 @@ class _DrawerContentState extends State<DrawerContent> {
             color: Theme.of(context).primaryColor,
           ),
           child: Text(
-            'Hola\nJose Alberto Espinoza Morelos',
+            'FitoReportApp Bienvenido',
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
             ),
           ),
         ),
-        ListTile(
-          leading: Icon(Icons.account_circle),
-          title: Text('Perfil'),
-        ),
+        // ListTile(
+        //   leading: Icon(Icons.account_circle),
+        //   title: Text('Perfil'),
+        // ),
         ListTile(
           enabled: widget.isAdmin,
           leading: Icon(Icons.supervised_user_circle),
@@ -90,14 +88,8 @@ class _DrawerContentState extends State<DrawerContent> {
           },
         ),
         ListTile(
-          leading: Icon(Icons.work),
+          leading: Icon(Icons.cloud_download),
           title: Text('Sincronizar Catalogos'),
-          subtitle: Text.rich(
-            TextSpan(
-                text: "Plagas,Enfermedades, Etapa Fenologica",
-                style:
-                    TextStyle(color: Color(Colors.black.value), fontSize: 15)),
-          ),
           onTap: () {
             Navigator.push(
               context,
@@ -105,16 +97,11 @@ class _DrawerContentState extends State<DrawerContent> {
             );
           },
         ),
-        ListTile(
-          leading: Icon(Icons.settings),
-          title: Text('Configuracion'),
-          onTap: () async {},
-        ),
-        ListTile(
-          leading: Icon(Icons.cloud_download),
-          title: Text('Sincronizar Catalogos'),
-          onTap: () async {},
-        ),
+        // ListTile(
+        //   leading: Icon(Icons.settings),
+        //   title: Text('Configuracion'),
+        //   onTap: () async {},
+        // ),
         Expanded(
             child: Align(
           alignment: Alignment.bottomCenter,

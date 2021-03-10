@@ -37,23 +37,77 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    // _fetchSessionAndNavigate();
     _userNameController = new TextEditingController();
     _passwordController = new TextEditingController();
   }
 
-  _fetchSessionAndNavigate() async {
-    sharedPreferences = await _prefs;
-    String authToken = Auth.getToken(sharedPreferences);
+  Widget _loginScreen() {
+    return Container(
+      child: ListView(
+        padding: const EdgeInsets.only(top: 100.0, left: 16.0, right: 16.0),
+        children: <Widget>[
+          Icon(
+            Icons.weekend,
+            size: 80,
+          ),
+          Center(
+              child: Text(
+            "Inicio de Sesion",
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+          )),
+          InputField("Usuario", _userNameController, _emailError,
+              TextInputType.emailAddress),
+          PasswordField(
+            passwordController: _passwordController,
+            obscureText: _obscureText,
+            passwordError: _passwordError,
+            togglePassword: _togglePassword,
+          ),
+          FloatingActionButton.extended(
+              icon: Icon(Icons.supervised_user_circle_sharp),
+              backgroundColor: Theme.of(context).primaryColor,
+              label: Text("Iniciar Sesion", style: TextStyle(fontSize: 20)),
+              onPressed: () => {_authenticateUser(false)}),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+              child: TextButton(
+                  child: Text("Iniciar Sin Conexion",
+                      style: TextStyle(fontSize: 20)),
+                  onPressed: () async => {_authenticateUser(true)})),
+        ],
+      ),
+    );
+  }
 
-    if (authToken != null && Auth.isLogged(sharedPreferences)) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(widget.title)),
-      );
-    } else {
-      Auth.logoutUser(sharedPreferences);
-    }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(actions: <Widget>[
+          FlatButton(
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+              // Replace with a Row for horizontal icon + text
+              children: <Widget>[
+                Center(
+                  child:
+                      Text("Registrar", style: TextStyle(color: Colors.white)),
+                ),
+                Icon(
+                  Icons.account_box,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Register()),
+              );
+            },
+          )
+        ]),
+        key: _scaffoldKey,
+        body: _isLoading ? LoadingScreen() : _loginScreen());
   }
 
   _showLoading() {
@@ -65,6 +119,12 @@ class _LoginState extends State<Login> {
   _hideLoading() {
     setState(() {
       _isLoading = false;
+    });
+  }
+
+  _togglePassword() {
+    setState(() {
+      _obscureText = !_obscureText;
     });
   }
 
@@ -125,59 +185,5 @@ class _LoginState extends State<Login> {
     // }
 
     return valid;
-  }
-
-  Widget _loginScreen() {
-    return new Container(
-      child: new ListView(
-        padding: const EdgeInsets.only(top: 100.0, left: 16.0, right: 16.0),
-        children: <Widget>[
-          new Icon(Icons.weekend),
-          new InputField("Usuario", _userNameController, _emailError,
-              TextInputType.emailAddress),
-          new PasswordField(
-            passwordController: _passwordController,
-            obscureText: _obscureText,
-            passwordError: _passwordError,
-            togglePassword: _togglePassword,
-          ),
-          FloatingActionButton.extended(
-              icon: Icon(Icons.supervised_user_circle_sharp),
-              backgroundColor: Theme.of(context).primaryColor,
-              label: Text("Iniciar Sesion", style: TextStyle(fontSize: 20)),
-              onPressed: () => {_authenticateUser(false)}),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-              child: TextButton(
-                  child: Text("Iniciar Sin Conexion",
-                      style: TextStyle(fontSize: 20)),
-                  onPressed: () async => {_authenticateUser(true)})),
-        ],
-      ),
-    );
-  }
-
-  _togglePassword() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: AppBar(actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.account_box),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Register()),
-              );
-            },
-          )
-        ]),
-        key: _scaffoldKey,
-        body: _isLoading ? LoadingScreen() : _loginScreen());
   }
 }

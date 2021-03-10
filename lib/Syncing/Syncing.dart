@@ -13,6 +13,7 @@ class SyncingData extends StatefulWidget {
 
 class _SyncingDataState extends State<SyncingData> {
   bool _isLoading = false;
+  bool synced = false;
   SyncData get service => GetIt.I<SyncData>();
 
   @override
@@ -23,24 +24,54 @@ class _SyncingDataState extends State<SyncingData> {
       ),
       body: _isLoading
           ? LoadingScreen()
-          : Center(
-              child: IconButton(
-                icon: Icon(Icons.sync),
-                iconSize: 50,
-                onPressed: () async {
-                  _showLoading();
-                  bool synced = await service.syncData();
-                  _hideLoading();
-                  if (synced) {
-                    alertDiag(context, "Datos Syncronizados",
-                        "Los datos se guardaron correctamente");
-                  } else {
-                    alertDiag(context, "Datos Syncronizados",
-                        "Los datos se guardaron correctamente");
-                  }
-                },
+          : Column(children: [
+              Center(
+                child: synced
+                    ? IconButton(
+                        icon: Icon(Icons.cloud_download),
+                        iconSize: 64,
+                        onPressed: () async {
+                          _showLoading();
+                          bool syncResult = await service.syncData();
+                          setState(() {
+                            synced = syncResult;
+                          });
+                          _hideLoading();
+                          if (synced) {
+                            alertDiag(context, "Datos Syncronizados",
+                                "Los datos se guardaron correctamente");
+                          } else {
+                            alertDiag(context, "Datos Syncronizados",
+                                "Favor de conectarse a internet e iniciar sesion");
+                          }
+                        },
+                      )
+                    : IconButton(
+                        icon: Icon(Icons.sync),
+                        iconSize: 64,
+                        onPressed: () async {
+                          _showLoading();
+                          bool syncResult = await service.syncData();
+                          setState(() {
+                            synced = syncResult;
+                          });
+                          _hideLoading();
+                          if (synced) {
+                            alertDiag(context, "Datos Syncronizados",
+                                "Los datos se guardaron correctamente");
+                          } else {
+                            alertDiag(context, "Datos Syncronizados",
+                                "Favor de conectarse a internet e iniciar sesion");
+                          }
+                        },
+                      ),
               ),
-            ),
+              Center(
+                child: synced
+                    ? Text("Datos Syncronizados")
+                    : Text("Se necesita syncronizacion"),
+              )
+            ]),
     );
   }
 

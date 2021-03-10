@@ -1,4 +1,3 @@
-import 'package:LikeApp/Models/etapaFenologica.dart';
 import 'package:LikeApp/Services/Auth.dart';
 import 'package:LikeApp/Services/plagaService.dart';
 import 'package:LikeApp/Services/etapaFService.dart';
@@ -37,7 +36,7 @@ class SyncData {
     if (isOnline) {
       var resp = await enfermedadService.getListEnfermedad(authToken);
       if (!resp.error) await localS.refreshEnfermedades(resp.data);
-      return true;
+      return resp.error == false;
     }
     return false;
   }
@@ -48,7 +47,7 @@ class SyncData {
     if (isOnline) {
       var resp = await plagaService.getListPlaga(authToken);
       if (!resp.error) await localS.refreshPlagas(resp.data);
-      return true;
+      return resp.error == false;
     }
     return false;
   }
@@ -59,7 +58,7 @@ class SyncData {
     if (isOnline) {
       var resp = await etapaService.getListEtapas(authToken);
       if (!resp.error) await localS.refreshEtapas(resp.data);
-      return true;
+      return resp.error == false;
     }
     return false;
   }

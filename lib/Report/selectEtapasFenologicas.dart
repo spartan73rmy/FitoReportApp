@@ -9,6 +9,7 @@ import 'package:LikeApp/Report/selectPlaga.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Services/conectionService.dart';
 import 'package:LikeApp/Services/etapaFService.dart';
+import 'package:LikeApp/Services/syncData.dart';
 import 'package:LikeApp/Storage/files.dart';
 import 'package:LikeApp/Storage/localStorage.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class _SelectEtapaState extends State<SelectEtapa> {
   ReportData data;
   bool _isLoading = true;
   bool isOnline = true;
+  bool needFetch = true;
 
   Ping get ping => GetIt.I<Ping>();
   EtapaFService get service => GetIt.I<EtapaFService>();
@@ -37,7 +39,7 @@ class _SelectEtapaState extends State<SelectEtapa> {
   @override
   void initState() {
     data = widget.data;
-    fetchEtapaFenologicaes();
+    fetchEtapaFenologicas();
     super.initState();
   }
 
@@ -72,11 +74,30 @@ class _SelectEtapaState extends State<SelectEtapa> {
         if (_isLoading) {
           return LoadingScreen();
         }
-
-        if (isOnline && res.error ?? false) {
+        if (isOnline && res != null && res.error ?? false) {
           return Center(child: Text(res.errorMessage));
         }
 
+        if (needFetch) {
+          return Center(
+              child: IconButton(
+            icon: Icon(Icons.sync),
+            iconSize: 64,
+            onPressed: () async {
+              isOnline = await ping.ping() ?? false;
+              bool finished = false;
+              if (isOnline) {
+                SyncData s = new SyncData();
+                finished = await s.syncData();
+                if (finished) await fetchEtapaFenologicas();
+              }
+              if (!finished) {
+                await alertDiag(context, "Error",
+                    "No pudieron sincronizarse los datos , revise su conexion a internet");
+              }
+            },
+          ));
+        }
         return ListView.builder(
             itemCount: res.data.length,
             padding: EdgeInsets.all(16.0),
@@ -108,6 +129,7 @@ class _SelectEtapaState extends State<SelectEtapa> {
       }),
       persistentFooterButtons: [
         FloatingActionButton.extended(
+          heroTag: null,
           icon: Icon(Icons.add),
           label: Text("Agregar EtapaFenologica"),
           onPressed: () {
@@ -146,19 +168,21 @@ class _SelectEtapaState extends State<SelectEtapa> {
     }
   }
 
-  fetchEtapaFenologicaes() async {
+  fetchEtapaFenologicas() async {
     LocalStorage localS = LocalStorage(FileName().etapa);
-
     _showLoading();
     List<EtapaFenologica> resp = await localS.readEtapas();
-    if (resp.length == 0)
-      await alertDiag(context, "Error",
-          "No hay datos para cargar, favor de conectarse a internet");
+    needFetch = false;
 
-    setState(() {
-      res = APIResponse<List<EtapaFenologica>>(
-          data: resp, error: false, errorMessage: null);
-    });
+    if (resp.length == 0) {
+      await alertDiag(context, "Error",
+          "No hay datos para cargar, favor de syncronizar los datos");
+      needFetch = true;
+    } else
+      setState(() {
+        res = APIResponse<List<EtapaFenologica>>(
+            data: resp, error: false, errorMessage: null);
+      });
     _hideLoading();
   }
 

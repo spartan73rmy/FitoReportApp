@@ -5,6 +5,4 @@ class UserType {
   static const String user = "Usuario";
   static const int productorT = 3;
   static const String productor = "Productor";
-  // static const int visorT = 4; //TODO definir como agregar visores
-  // static const String visor = "Visor";
 }

@@ -21,6 +21,7 @@ class ReportData {
   List<Plaga> plaga;
   List<EtapaFenologica> etapaFenologica;
   List<File> images;
+  List<String> imagesHash;
 
   ReportData(
       {this.id,
@@ -38,7 +39,8 @@ class ReportData {
       this.producto,
       this.plaga,
       this.images,
-      this.created});
+      this.created,
+      this.imagesHash});
 
   factory ReportData.fromJSON(Map<String, dynamic> item) {
     return ReportData(
@@ -53,6 +55,9 @@ class ReportData {
         observaciones: item["observaciones"],
         litros: item["litros"],
         created: DateTime.parse(item["created"]).toUtc(),
+        imagesHash: item['imagesHash'] != null
+            ? item['imagesHash'].cast<String>()
+            : null,
         etapaFenologica: EtapaFList.fromJSON(item).etapas,
         enfermedad: EnfermedadList.fromJSON(item).enfermedades,
         plaga: PlagaList.fromJSON(item).plagas,
