@@ -46,7 +46,6 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   String url = "http://192.168.43.141:8080/details/";
   String qrPath;
   List<File> images;
-  double carga = 0;
   @override
   void initState() {
     super.initState();
@@ -58,7 +57,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Reporte $carga"),
+        title: Text("Reporte"),
         actions: <Widget>[
           Center(child: Text("Imagenes")),
           IconButton(
@@ -386,7 +385,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
     <style>
       table {
         border-collapse: separate;
-        border-spacing: 10;
+        border-spacing: 2;
         border: 1px solid black;
         border-radius: 15px;
         -moz-border-radius: 20px;
@@ -431,15 +430,15 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   <body>
         <img
       style="float: right"
-      width="100"
-      height="100"
+      width="90"
+      height="90"
       src="data:image/png;base64,$uni"
       alt="Universidad"
     />
     <img
       style="float: left"
-      width="150"
-      height="100"
+      width="140"
+      height="90"
       src="data:image/jpeg;base64,$cuidaPlaneta"
       alt="Planeta"
     />
@@ -476,11 +475,8 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
       <tr>
         <td style="text-align: left">Plagas: $plagas</td>
       </tr>
-    </table>
-    <br />
-    <table style="width: 100%">
       <tr>
-        <td style="border-top: none; text-align: left">Observaciones: ${r.observaciones}</td>
+        <td style="text-align: left">Observaciones: ${r.observaciones}</td>
       </tr>
     </table>
 
@@ -499,19 +495,18 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
       </tr>
         $productos
     </table>
-        <br />
             <a href="$url${widget.idReport}" style="float: right">Clic para ver reporte</a>
-    <h3>ELVIN MISAEL GALVAN GUERRERO</h3>
-    <h4>Ingeniero Agronomo Fruticultor</h4>
+    <br/>
+    <h4>ELVIN MISAEL GALVAN GUERRERO</43>
+    <h5>Ingeniero Agronomo Fruticultor</h5>
     <p><b>No. De CEDULA:</b></p>
     <p><b>354 110 2486</b></p>
-        <img
-      style="float: right"
+        <img style="float: right"
       width="100"
       height="100"
       src="file://$qrPath"
-      alt="QR"
-    />          
+      alt="QR"/>    
+      <br/>      
           $imgs64
 
   </body>
@@ -520,7 +515,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
 
     Directory appDocDir = await getApplicationDocumentsDirectory();
     var targetPath = appDocDir.path;
-    var targetFileName = "Reporte ${r.productor}";
+    var targetFileName = "Reporte ${r.productor} ${r.created}";
 
     var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
         htmlContent, targetPath, targetFileName);

@@ -1,5 +1,6 @@
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Login/login.dart';
+import 'package:LikeApp/QrScan/qrScanner.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Syncing/Syncing.dart';
 import 'package:LikeApp/User/listUsers.dart';
@@ -71,6 +72,16 @@ class _DrawerContentState extends State<DrawerContent> {
         //   title: Text('Perfil'),
         // ),
         ListTile(
+          leading: Icon(Icons.qr_code_scanner_outlined),
+          title: Text('Escanear QR'),
+          onTap: () async {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => QrScaner()),
+            );
+          },
+        ),
+        ListTile(
           enabled: widget.isAdmin,
           leading: Icon(Icons.supervised_user_circle),
           title: Text('Usuarios'),
@@ -97,11 +108,6 @@ class _DrawerContentState extends State<DrawerContent> {
             );
           },
         ),
-        // ListTile(
-        //   leading: Icon(Icons.settings),
-        //   title: Text('Configuracion'),
-        //   onTap: () async {},
-        // ),
         Expanded(
             child: Align(
           alignment: Alignment.bottomCenter,
