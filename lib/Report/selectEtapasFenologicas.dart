@@ -46,7 +46,7 @@ class _SelectEtapaState extends State<SelectEtapa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('EtapaFenologicaes'), actions: <Widget>[
+      appBar: AppBar(title: Text('Etapas Fenologicas'), actions: <Widget>[
         FlatButton(
           padding: EdgeInsets.all(10.0),
           child: Row(
@@ -131,7 +131,7 @@ class _SelectEtapaState extends State<SelectEtapa> {
         FloatingActionButton.extended(
           heroTag: null,
           icon: Icon(Icons.add),
-          label: Text("Agregar EtapaFenologica"),
+          label: Text("Agregar Etapa Fenologica"),
           onPressed: () {
             //If is valid add to list else return
             addEditEtapaFenologicaDialog(context).then((value) {
