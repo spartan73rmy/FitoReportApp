@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
+import 'package:LikeApp/Image/zoom.dart';
 
 class ImagenPicker extends StatefulWidget {
   final List<File> images;
@@ -95,12 +96,21 @@ class _ImagenPickerState extends State<ImagenPicker> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                         SizedBox(height: 20),
-                        ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Image.file(
-                              images[i],
-                              fit: BoxFit.cover,
-                            ))
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ZoomImage(images[i])),
+                            );
+                          },
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.file(
+                                images[i],
+                                fit: BoxFit.cover,
+                              )),
+                        )
                       ]))));
         });
   }

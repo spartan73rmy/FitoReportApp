@@ -27,6 +27,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:LikeApp/Image/zoom.dart';
 
 class PDFPrinterShare extends StatefulWidget {
   final int idReport;
@@ -157,12 +158,21 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                           SizedBox(height: 10),
-                          ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.file(
-                                images[i],
-                                fit: BoxFit.cover,
-                              ))
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ZoomImage(images[i])),
+                              );
+                            },
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: Image.file(
+                                  images[i],
+                                  fit: BoxFit.cover,
+                                )),
+                          )
                         ]))));
           }),
     );
