@@ -1,5 +1,6 @@
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Login/login.dart';
+import 'package:LikeApp/Map/map.dart';
 import 'package:LikeApp/QrScan/qrScanner.dart';
 import 'package:LikeApp/Services/auth.dart';
 import 'package:LikeApp/Syncing/Syncing.dart';
@@ -67,10 +68,6 @@ class _DrawerContentState extends State<DrawerContent> {
             ),
           ),
         ),
-        // ListTile(
-        //   leading: Icon(Icons.account_circle),
-        //   title: Text('Perfil'),
-        // ),
         ListTile(
           leading: Icon(Icons.qr_code_scanner_outlined),
           title: Text('Escanear QR'),

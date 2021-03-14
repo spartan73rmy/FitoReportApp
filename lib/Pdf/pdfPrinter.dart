@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:latlong/latlong.dart';
 import 'package:LikeApp/CommonWidgets/alert.dart';
 import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
 import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
 import 'package:LikeApp/Login/login.dart';
+import 'package:LikeApp/Map/map.dart';
 import 'package:LikeApp/Models/HttpModel.dart';
 import 'package:LikeApp/Models/reportData.dart';
 import 'package:LikeApp/Models/tokenDescarga.dart';
@@ -84,7 +86,20 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
         if (_isLoading) {
           return LoadingScreen();
         }
-        return images.isNotEmpty ? listPreviewImages() : Container();
+        return Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              _isLoading
+                  ? LoadingScreen()
+                  : MapArea(LatLng(report.latitude, report.longitud)),
+              images.isNotEmpty
+                  ? listPreviewImages()
+                  : Text("Marque la opcion imagenes para mostrar las imagenes")
+            ],
+          ),
+        );
       }),
       floatingActionButton: _isLoading
           ? null
@@ -103,49 +118,54 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   }
 
   Widget listPreviewImages() {
-    return ListView.builder(
-        scrollDirection: Axis.vertical,
-        // shrinkWrap: true,
-        itemCount: images.length,
-        itemBuilder: (BuildContext context, int i) {
-          return Padding(
-              padding: EdgeInsets.all(5),
-              child: new Dismissible(
-                  key: UniqueKey(),
-                  direction: DismissDirection.startToEnd,
-                  onDismissed: (direction) {
-                    setState(() {
-                      images.removeAt(i);
-                    });
-                    loadReport();
-                  },
-                  confirmDismiss: (direction) async {
-                    final bool delete = await showDialog(
-                            context: context, builder: (_) => DeleteDialog()) ??
-                        false;
-                    return delete;
-                  },
-                  background: Container(
-                    color: Colors.blue,
-                    padding: EdgeInsets.only(left: 16),
-                    child: Align(
-                      child: Icon(Icons.delete, color: Colors.white),
-                      alignment: Alignment.centerLeft,
+    return Container(
+      alignment: Alignment.bottomCenter,
+      height: MediaQuery.of(context).size.height * 0.50,
+      child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          // shrinkWrap: true,
+          itemCount: images.length,
+          itemBuilder: (BuildContext context, int i) {
+            return Padding(
+                padding: EdgeInsets.all(5),
+                child: Dismissible(
+                    key: UniqueKey(),
+                    direction: DismissDirection.startToEnd,
+                    onDismissed: (direction) {
+                      setState(() {
+                        images.removeAt(i);
+                      });
+                      loadReport();
+                    },
+                    confirmDismiss: (direction) async {
+                      final bool delete = await showDialog(
+                              context: context,
+                              builder: (_) => DeleteDialog()) ??
+                          false;
+                      return delete;
+                    },
+                    background: Container(
+                      color: Colors.blue,
+                      padding: EdgeInsets.only(left: 16),
+                      child: Align(
+                        child: Icon(Icons.delete, color: Colors.white),
+                        alignment: Alignment.centerLeft,
+                      ),
                     ),
-                  ),
-                  child: Container(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                        SizedBox(height: 20),
-                        ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Image.file(
-                              images[i],
-                              fit: BoxFit.cover,
-                            ))
-                      ]))));
-        });
+                    child: Container(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                          SizedBox(height: 10),
+                          ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.file(
+                                images[i],
+                                fit: BoxFit.cover,
+                              ))
+                        ]))));
+          }),
+    );
   }
 
   Future<File> downloadFile(
