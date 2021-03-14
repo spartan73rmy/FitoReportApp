@@ -8,6 +8,7 @@ class Ping extends HttpModel {
   Future<bool> ping() async {
     try {
       var uri = HttpModel.getUrl + url + "Ping";
+      print(uri);
       return http
           .head(
             uri,
@@ -15,7 +16,7 @@ class Ping extends HttpModel {
               HttpHeaders.contentTypeHeader: 'application/json',
             },
           )
-          .timeout(Duration(seconds: 1))
+          .timeout(Duration(seconds: 3))
           .then((data) {
             if (data.statusCode == 200) {
               return true;

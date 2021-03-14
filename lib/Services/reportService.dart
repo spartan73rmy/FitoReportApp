@@ -24,7 +24,7 @@ class ReportService extends HttpModel {
               'Content-Type': 'application/json'
             },
             body: json.encode(lista.toJson()))
-        .timeout(Duration(seconds: 15))
+        .timeout(Duration(seconds: 25))
         .then((data) async {
       if (data.statusCode == 200) {
         List<int> idsReporte = IdReporte.fromJson(jsonDecode(data.body)).id;
@@ -75,7 +75,7 @@ class ReportService extends HttpModel {
           HttpModel.getUrl + url + "Get/$idReport",
           headers: {'Authorization': "Bearer " + authToken},
         )
-        .timeout(Duration(seconds: 15))
+        .timeout(Duration(seconds: 25))
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);
@@ -93,11 +93,14 @@ class ReportService extends HttpModel {
               error: true,
               errorMessage: "La sesion ha caducado, reinicie sesion");
         })
-        .catchError((error) => APIResponse<ReportData>(
-            data: new ReportData(),
-            error: true,
-            errorMessage:
-                "Ocurrio un error al conectar a internet " + error.toString()));
+        .catchError((error) {
+          print(error);
+          return APIResponse<ReportData>(
+              data: new ReportData(),
+              error: true,
+              errorMessage: "Ocurrio un error al conectar a internet " +
+                  error.toString());
+        });
   }
 
   Future<APIResponse<List<DataSearch>>> getDataSearch(authToken) {
@@ -106,7 +109,7 @@ class ReportService extends HttpModel {
           HttpModel.getUrl + url + "GetSearchList",
           headers: {'Authorization': "Bearer " + authToken},
         )
-        .timeout(Duration(seconds: 15))
+        .timeout(Duration(seconds: 30))
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);

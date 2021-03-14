@@ -375,7 +375,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
     });
     r.producto.forEach((p) {
       productos +=
-          "<tr><td>${p.cantidad}</td><td>${p.nombre}</td><td>${p.ingredienteActivo}</td><td>${p.concentracion}</td><td>${p.intervaloSeguridad}</td></tr>";
+          "<tr><td>${p.cantidad} ${p.unidad}</td><td>${p.nombre}</td><td>${p.ingredienteActivo}</td><td>${p.concentracion}</td><td>${p.intervaloSeguridad}</td></tr>";
     });
 
     var htmlContent = """
