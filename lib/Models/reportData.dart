@@ -1,8 +1,8 @@
 import 'dart:io';
-import 'package:LikeApp/Models/enfermedad.dart';
-import 'package:LikeApp/Models/etapaFenologica.dart';
-import 'package:LikeApp/Models/plaga.dart';
-import 'package:LikeApp/Models/producto.dart';
+import '../Models/enfermedad.dart';
+import '../Models/etapaFenologica.dart';
+import '../Models/plaga.dart';
+import '../Models/producto.dart';
 
 class ReportData {
   int id;

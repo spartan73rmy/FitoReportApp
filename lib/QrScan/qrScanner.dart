@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:LikeApp/CommonWidgets/alert.dart';
-import 'package:LikeApp/Pdf/pdfPrinter.dart';
-import 'package:flutter/cupertino.dart';
+import '../CommonWidgets/alert.dart';
+import '../Pdf/pdfPrinter.dart';
 import 'package:flutter/material.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 

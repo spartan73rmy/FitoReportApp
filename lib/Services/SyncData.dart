@@ -1,8 +1,8 @@
-import 'package:LikeApp/Services/Auth.dart';
-import 'package:LikeApp/Services/plagaService.dart';
-import 'package:LikeApp/Services/etapaFService.dart';
-import 'package:LikeApp/Storage/files.dart';
-import 'package:LikeApp/Storage/localStorage.dart';
+import '../Services/Auth.dart';
+import '../Services/plagaService.dart';
+import '../Services/etapaFService.dart';
+import '../Storage/files.dart';
+import '../Storage/localStorage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

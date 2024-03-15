@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:LikeApp/Models/APIResponse.dart';
-import 'package:LikeApp/Models/HttpModel.dart';
-import 'package:LikeApp/Models/user.dart';
+import '../Models/APIResponse.dart';
+import '../Models/HttpModel.dart';
+import '../Models/user.dart';
 import 'package:http/http.dart' as http;
 
 class UserService extends HttpModel {

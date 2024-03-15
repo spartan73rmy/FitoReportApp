@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:LikeApp/Models/enfermedad.dart';
-import 'package:LikeApp/Models/etapaFenologica.dart';
-import 'package:LikeApp/Models/plaga.dart';
-import 'package:LikeApp/Models/reportData.dart';
-import 'package:LikeApp/Storage/randomIntId.dart';
+import '../Models/enfermedad.dart';
+import '../Models/etapaFenologica.dart';
+import '../Models/plaga.dart';
+import '../Models/reportData.dart';
+import '../Storage/randomIntId.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 

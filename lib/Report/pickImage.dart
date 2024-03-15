@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
-import 'package:LikeApp/Image/zoom.dart';
+import '../CommonWidgets/deleteDialog.dart';
+import '../Image/zoom.dart';
 
 class ImagenPicker extends StatefulWidget {
   final List<File> images;

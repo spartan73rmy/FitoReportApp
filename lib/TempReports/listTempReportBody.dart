@@ -1,9 +1,9 @@
-import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
-import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
-import 'package:LikeApp/Models/reportData.dart';
-import 'package:LikeApp/Storage/files.dart';
-import 'package:LikeApp/Storage/localStorage.dart';
-import 'package:LikeApp/TempReports/listTempReportCard.dart';
+import '../CommonWidgets/deleteDialog.dart';
+import '../CommonWidgets/loadingScreen.dart';
+import '../Models/reportData.dart';
+import '../Storage/files.dart';
+import '../Storage/localStorage.dart';
+import '../TempReports/listTempReportCard.dart';
 import 'package:flutter/material.dart';
 
 class ListTempReportBody extends StatefulWidget {

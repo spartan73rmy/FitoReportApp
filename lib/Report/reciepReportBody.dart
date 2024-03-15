@@ -1,6 +1,6 @@
-import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
-import 'package:LikeApp/Models/producto.dart';
-import 'package:LikeApp/CommonWidgets/productDialog.dart';
+import '../CommonWidgets/deleteDialog.dart';
+import '../Models/producto.dart';
+import '../CommonWidgets/productDialog.dart';
 import 'package:flutter/material.dart';
 
 class ReciepReportBody extends StatefulWidget {

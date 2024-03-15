@@ -1,9 +1,9 @@
-import 'package:LikeApp/CommonWidgets/alertInput.dart';
-import 'package:LikeApp/Home/homePage.dart';
-import 'package:LikeApp/Models/reportData.dart';
-import 'package:LikeApp/Models/producto.dart';
-import 'package:LikeApp/Storage/files.dart';
-import 'package:LikeApp/Storage/localStorage.dart';
+import '../CommonWidgets/alertInput.dart';
+import '../Home/homePage.dart';
+import '../Models/reportData.dart';
+import '../Models/producto.dart';
+import '../Storage/files.dart';
+import '../Storage/localStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import '../CommonWidgets/productDialog.dart';

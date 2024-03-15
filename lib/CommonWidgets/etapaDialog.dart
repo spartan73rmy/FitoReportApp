@@ -1,4 +1,4 @@
-import 'package:LikeApp/Models/etapaFenologica.dart';
+import '../Models/etapaFenologica.dart';
 import 'package:flutter/material.dart';
 
 class AddEditEtapaFenologicaDialog extends StatefulWidget {

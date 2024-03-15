@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:LikeApp/Models/HttpModel.dart';
+import '../Models/HttpModel.dart';
 import 'package:http/http.dart' as http;
 
 class Ping extends HttpModel {

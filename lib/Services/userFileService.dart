@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:LikeApp/Models/apiResponse.dart';
-import 'package:LikeApp/Models/HttpModel.dart';
-import 'package:LikeApp/Models/fileHash.dart';
-import 'package:LikeApp/Models/tokenDescarga.dart';
+import '../Models/apiResponse.dart';
+import '../Models/HttpModel.dart';
+import '../Models/fileHash.dart';
+import '../Models/tokenDescarga.dart';
 import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;

@@ -1,4 +1,4 @@
-import 'package:LikeApp/Models/enfermedad.dart';
+import '../Models/enfermedad.dart';
 import 'package:flutter/material.dart';
 
 class AddEditEnfermedadDialog extends StatefulWidget {

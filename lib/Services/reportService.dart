@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:LikeApp/Models/apiResponse.dart';
-import 'package:LikeApp/Models/HttpModel.dart';
-import 'package:LikeApp/Models/dataSearch.dart';
-import 'package:LikeApp/Models/idReporte.dart';
-import 'package:LikeApp/Models/reportData.dart';
-import 'package:LikeApp/Services/userFileService.dart';
-import 'package:LikeApp/Storage/files.dart';
-import 'package:LikeApp/Storage/localStorage.dart';
+import '../Models/apiResponse.dart';
+import '../Models/HttpModel.dart';
+import '../Models/dataSearch.dart';
+import '../Models/idReporte.dart';
+import '../Models/reportData.dart';
+import '../Services/userFileService.dart';
+import '../Storage/files.dart';
+import '../Storage/localStorage.dart';
 import 'package:http/http.dart' as http;
 
 class ReportService extends HttpModel {

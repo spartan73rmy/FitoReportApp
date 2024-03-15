@@ -1,4 +1,4 @@
-import 'package:LikeApp/Models/userType.dart';
+import '../Models/userType.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth {

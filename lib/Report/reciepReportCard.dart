@@ -1,5 +1,5 @@
-import 'package:LikeApp/Models/producto.dart';
-import 'package:LikeApp/CommonWidgets/productDialog.dart';
+import '../Models/producto.dart';
+import '../CommonWidgets/productDialog.dart';
 import 'package:flutter/material.dart';
 
 class ReciepReportCard extends StatefulWidget {

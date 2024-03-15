@@ -1,13 +1,13 @@
 import 'dart:io';
-import 'package:LikeApp/Login/Login.dart';
-import 'package:LikeApp/Services/syncData.dart';
-import 'package:LikeApp/Services/auth.dart';
-import 'package:LikeApp/Services/conectionService.dart';
-import 'package:LikeApp/Services/enfermedadService.dart';
-import 'package:LikeApp/Services/etapaFService.dart';
-import 'package:LikeApp/Services/plagaService.dart';
-import 'package:LikeApp/Services/reportService.dart';
-import 'package:LikeApp/Services/userService.dart';
+import '../Login/Login.dart';
+import '../Services/syncData.dart';
+import '../Services/auth.dart';
+import '../Services/conectionService.dart';
+import '../Services/enfermedadService.dart';
+import '../Services/etapaFService.dart';
+import '../Services/plagaService.dart';
+import '../Services/reportService.dart';
+import '../Services/userService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-       debugShowCheckedModeBanner:false,
+      debugShowCheckedModeBanner: false,
       title: _title,
       theme: ThemeData(
         primaryColor: Colors.teal,

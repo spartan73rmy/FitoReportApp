@@ -1,4 +1,4 @@
-import 'package:LikeApp/Models/reportData.dart';
+import '../Models/reportData.dart';
 import 'package:flutter/material.dart';
 
 class ListTempReportCard extends StatefulWidget {

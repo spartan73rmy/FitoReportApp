@@ -1,10 +1,10 @@
-import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
-import 'package:LikeApp/Login/login.dart';
-import 'package:LikeApp/Map/map.dart';
-import 'package:LikeApp/QrScan/qrScanner.dart';
-import 'package:LikeApp/Services/auth.dart';
-import 'package:LikeApp/Syncing/Syncing.dart';
-import 'package:LikeApp/User/listUsers.dart';
+import '../CommonWidgets/loadingScreen.dart';
+import '../Login/login.dart';
+import '../Map/map.dart';
+import '../QrScan/qrScanner.dart';
+import '../Services/auth.dart';
+import '../Syncing/Syncing.dart';
+import '../User/listUsers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

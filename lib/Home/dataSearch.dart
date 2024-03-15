@@ -1,5 +1,5 @@
-import 'package:LikeApp/Models/dataSearch.dart';
-import 'package:LikeApp/Pdf/pdfPrinter.dart';
+import '../Models/dataSearch.dart';
+import '../Pdf/pdfPrinter.dart';
 import 'package:flutter/material.dart';
 
 class Search extends SearchDelegate<String> {

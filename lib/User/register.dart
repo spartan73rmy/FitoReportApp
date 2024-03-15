@@ -1,11 +1,11 @@
-import 'package:LikeApp/CommonWidgets/alert.dart';
-import 'package:LikeApp/CommonWidgets/inputField.dart';
-import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
-import 'package:LikeApp/CommonWidgets/passField.dart';
-import 'package:LikeApp/Models/APIResponse.dart';
-import 'package:LikeApp/Models/user.dart';
-import 'package:LikeApp/Models/userType.dart';
-import 'package:LikeApp/Services/userService.dart';
+import '../CommonWidgets/alert.dart';
+import '../CommonWidgets/inputField.dart';
+import '../CommonWidgets/loadingScreen.dart';
+import '../CommonWidgets/passField.dart';
+import '../Models/APIResponse.dart';
+import '../Models/user.dart';
+import '../Models/userType.dart';
+import '../Services/userService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 

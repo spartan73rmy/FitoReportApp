@@ -1,12 +1,11 @@
 import 'dart:io';
-import 'dart:ui';
-import 'package:LikeApp/Login/login.dart';
-import 'package:LikeApp/Report/pickImage.dart';
-import 'package:LikeApp/Report/selectEtapasFenologicas.dart';
-import 'package:LikeApp/Services/conectionService.dart';
+import '../Login/login.dart';
+import '../Report/pickImage.dart';
+import '../Report/selectEtapasFenologicas.dart';
+import '../Services/conectionService.dart';
 import 'package:flutter/material.dart';
-import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
-import 'package:LikeApp/Services/etapaFService.dart';
+import '../CommonWidgets/loadingScreen.dart';
+import '../Services/etapaFService.dart';
 import 'package:get_it/get_it.dart';
 import '../Models/reportData.dart';
 

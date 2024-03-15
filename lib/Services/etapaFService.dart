@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:LikeApp/Models/APIResponse.dart';
-import 'package:LikeApp/Models/HttpModel.dart';
-import 'package:LikeApp/Models/etapaFenologica.dart';
+import '../Models/APIResponse.dart';
+import '../Models/HttpModel.dart';
+import '../Models/etapaFenologica.dart';
 import 'package:http/http.dart' as http;
 
 class EtapaFService extends HttpModel {

@@ -1,4 +1,4 @@
-import 'package:LikeApp/Models/producto.dart';
+import '../Models/producto.dart';
 import 'package:flutter/material.dart';
 
 class AddProductDialog extends StatefulWidget {

@@ -1,14 +1,14 @@
-import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
-import 'package:LikeApp/Models/user.dart';
-import 'package:LikeApp/Services/auth.dart';
-import 'package:LikeApp/Services/userService.dart';
-import 'package:LikeApp/User/aproveUser.dart';
-import 'package:LikeApp/User/register.dart';
-import 'package:LikeApp/CommonWidgets/deleteDialog.dart';
+import '../CommonWidgets/loadingScreen.dart';
+import '../Models/user.dart';
+import '../Services/auth.dart';
+import '../Services/userService.dart';
+import '../User/aproveUser.dart';
+import '../User/register.dart';
+import '../CommonWidgets/deleteDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:LikeApp/Models/APIResponse.dart';
+import '../Models/APIResponse.dart';
 
 class ListUsers extends StatefulWidget {
   ListUsers({Key key}) : super(key: key);

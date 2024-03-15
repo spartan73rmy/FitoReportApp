@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:LikeApp/Models/HttpModel.dart';
-import 'package:LikeApp/Models/apiResponse.dart';
-import 'package:LikeApp/Models/plaga.dart';
+import '../Models/HttpModel.dart';
+import '../Models/apiResponse.dart';
+import '../Models/plaga.dart';
 import 'package:http/http.dart' as http;
 
 class PlagaService extends HttpModel {

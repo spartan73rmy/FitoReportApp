@@ -1,4 +1,4 @@
-import 'package:LikeApp/Models/plaga.dart';
+import '../Models/plaga.dart';
 import 'package:flutter/material.dart';
 
 class AddEditPlagaDialog extends StatefulWidget {

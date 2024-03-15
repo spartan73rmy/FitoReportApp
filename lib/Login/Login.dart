@@ -1,16 +1,16 @@
-import 'package:LikeApp/CommonWidgets/alert.dart';
-import 'package:LikeApp/CommonWidgets/inputField.dart';
-import 'package:LikeApp/CommonWidgets/loadingScreen.dart';
-import 'package:LikeApp/CommonWidgets/passField.dart';
-import 'package:LikeApp/Home/homePage.dart';
-import 'package:LikeApp/Models/apiResponse.dart';
-import 'package:LikeApp/Services/auth.dart';
-import 'package:LikeApp/Services/conectionService.dart';
-import 'package:LikeApp/User/register.dart';
+import '../CommonWidgets/alert.dart';
+import '../CommonWidgets/inputField.dart';
+import '../CommonWidgets/loadingScreen.dart';
+import '../CommonWidgets/passField.dart';
+import '../Home/homePage.dart';
+import '../Models/apiResponse.dart';
+import '../Services/auth.dart';
+import '../Services/conectionService.dart';
+import '../User/register.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:LikeApp/Services/userService.dart';
+import '../Services/userService.dart';
 
 class Login extends StatefulWidget {
   final String title;
