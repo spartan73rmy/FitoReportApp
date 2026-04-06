@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_full_pdf_viewer/flutter_full_pdf_viewer.dart';
 
 class PdfPreview extends StatelessWidget {
   final String path;
 
-  PdfPreview({this.path});
+  const PdfPreview({super.key, required this.path});
 
   @override
   Widget build(BuildContext context) {
-    return PDFViewerScaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text("PDF"),
+        title: const Text("PDF"),
       ),
-      // primary: false,
-      path: path,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.picture_as_pdf, size: 64),
+            const SizedBox(height: 16),
+            Text('PDF: $path'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('Abrir'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

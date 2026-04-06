@@ -1,5 +1,5 @@
 class IdReporte {
-  List<int> id;
+  List<int>? id;
 
   IdReporte({this.id});
 
@@ -8,7 +8,7 @@ class IdReporte {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = this.id;
     return data;
   }

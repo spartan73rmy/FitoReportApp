@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import '../Models/APIResponse.dart';
 import '../Models/HttpModel.dart';
 import '../Models/user.dart';
@@ -13,16 +12,16 @@ class UserService extends HttpModel {
     var uri = HttpModel.getUrl + url + "Ingresar";
     return http
         .post(
-          uri,
+          Uri.parse(uri),
           body: json.encode({
             'nombreUsuario': email.toString().trim(),
             'password': password.toString()
           }),
           headers: {
-            HttpHeaders.contentTypeHeader: 'application/json',
+            'Content-Type': 'application/json',
           },
         )
-        .timeout(Duration(seconds: 15))
+        .timeout(const Duration(seconds: 15))
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);
@@ -50,13 +49,13 @@ class UserService extends HttpModel {
     var uri = HttpModel.getUrl + url + "CreateUser";
     return http
         .post(
-          uri,
+          Uri.parse(uri),
           body: json.encode(user.toJson()),
           headers: {
-            HttpHeaders.contentTypeHeader: 'application/json',
+            'Content-Type': 'application/json',
           },
         )
-        .timeout(Duration(seconds: 15))
+        .timeout(const Duration(seconds: 15))
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);
@@ -83,17 +82,17 @@ class UserService extends HttpModel {
                 "Ocurrio un error al conectar a internet" + error.toString()));
   }
 
-  Future<APIResponse<bool>> deleteUser(String userName, authToken) {
+  Future<APIResponse<bool>> deleteUser(String userName, String authToken) {
     var uri = HttpModel.getUrl + urlU + "DeleteUser/$userName";
     return http
         .delete(
-          uri,
+          Uri.parse(uri),
           headers: {
             'Authorization': "Bearer " + authToken,
-            HttpHeaders.contentTypeHeader: 'application/json',
+            'Content-Type': 'application/json',
           },
         )
-        .timeout(Duration(seconds: 15))
+        .timeout(const Duration(seconds: 15))
         .then((data) {
           if (data.statusCode == 200) {
             return APIResponse<bool>(data: true);
@@ -111,18 +110,18 @@ class UserService extends HttpModel {
                 "Ocurrio un error al conectar a internet" + error.toString()));
   }
 
-  Future<APIResponse<bool>> aproveUser(String userName, authToken) {
+  Future<APIResponse<bool>> aproveUser(String userName, String authToken) {
     var uri = HttpModel.getUrl + urlU + "AproveUser/$userName";
     return http
         .put(
-          uri,
+          Uri.parse(uri),
           body: json.encode({}),
           headers: {
             'Authorization': "Bearer " + authToken,
-            HttpHeaders.contentTypeHeader: 'application/json',
+            'Content-Type': 'application/json',
           },
         )
-        .timeout(Duration(seconds: 15))
+        .timeout(const Duration(seconds: 15))
         .then((data) {
           if (data.statusCode == 200) {
             return APIResponse<bool>(data: true);
@@ -139,26 +138,26 @@ class UserService extends HttpModel {
                 "Ocurrio un error al conectar a internet" + error.toString()));
   }
 
-  Future<APIResponse<List<User>>> getListUser(authToken) {
+  Future<APIResponse<List<User>>> getListUser(String authToken) {
     return http
         .get(
-          HttpModel.getUrl + urlU + "GetAll",
+          Uri.parse(HttpModel.getUrl + urlU + "GetAll"),
           headers: {'Authorization': "Bearer " + authToken},
         )
-        .timeout(Duration(seconds: 15))
+        .timeout(const Duration(seconds: 15))
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);
             final userList = UserList.fromJSON(jsonData);
-            return APIResponse<List<User>>(data: userList.usuarios);
+            return APIResponse<List<User>>(data: userList.usuarios ?? []);
           }
           return APIResponse<List<User>>(
-              data: new List<User>(),
+              data: <User>[],
               error: true,
               errorMessage: "La sesion ha caducado, reinicie sesion");
         })
         .catchError((error) => APIResponse<List<User>>(
-            data: new List<User>(),
+            data: <User>[],
             error: true,
             errorMessage:
                 "Ocurrio un error al conectar a internet " + error.toString()));

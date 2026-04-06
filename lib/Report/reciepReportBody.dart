@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class ReciepReportBody extends StatefulWidget {
   final List<Producto> allProducts;
 
-  ReciepReportBody(this.allProducts, {Key key}) : super(key: key);
+  const ReciepReportBody(this.allProducts, {super.key});
 
   @override
   _ReciepReportBodyState createState() => _ReciepReportBodyState();
@@ -33,14 +33,14 @@ class _ReciepReportBodyState extends State<ReciepReportBody> {
                           confirmDismiss: (direction) async {
                             final result = await showDialog(
                                     context: context,
-                                    builder: (_) => DeleteDialog()) ??
+                                    builder: (_) => const DeleteDialog()) ??
                                 false;
                             return result;
                           },
                           background: Container(
                               color: Colors.blue,
-                              padding: EdgeInsets.only(left: 16),
-                              child: Align(
+                              padding: const EdgeInsets.only(left: 16),
+                              child: const Align(
                                 child: Icon(Icons.delete, color: Colors.white),
                                 alignment: Alignment.centerLeft,
                               )),
@@ -49,110 +49,93 @@ class _ReciepReportBodyState extends State<ReciepReportBody> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
                                 ListTile(
-                                    leading: Icon(Icons.archive),
+                                    leading: const Icon(Icons.archive),
                                     title: RichText(
                                         text: TextSpan(
                                             text: 'Producto: ',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18,
-                                                color:
-                                                    Color(Colors.black.value)),
+                                                color: Colors.black),
                                             children: <TextSpan>[
                                           TextSpan(
                                               text:
                                                   '${widget.allProducts[i].nombre}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.normal,
                                                   fontSize: 18,
-                                                  color: Color(
-                                                      Colors.black.value)))
+                                                  color: Colors.black))
                                         ])),
                                     subtitle: RichText(
                                         text: TextSpan(
                                             text: 'Cant: ',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: Color(
-                                                    Colors.black45.value)),
+                                                color: Colors.black45),
                                             children: <TextSpan>[
                                           TextSpan(
                                               text:
                                                   '${widget.allProducts[i].cantidad} ${widget.allProducts[i].unidad}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.normal,
-                                                  color: Color(
-                                                      Colors.black.value))),
-                                          TextSpan(
+                                                  color: Colors.black)),
+                                          const TextSpan(
                                               text: '       Concentracion: ',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
-                                                  color: Color(
-                                                      Colors.black45.value))),
+                                                  color: Colors.black45)),
                                           TextSpan(
                                               text:
                                                   '${widget.allProducts[i].concentracion}%',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.normal,
-                                                  color: Color(
-                                                      Colors.black.value))),
-                                          TextSpan(
+                                                  color: Colors.black)),
+                                          const TextSpan(
                                               text: '\nIngr. Activo: ',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
-                                                  color: Color(
-                                                      Colors.black45.value))),
+                                                  color: Colors.black45)),
                                           TextSpan(
                                               text:
                                                   '${widget.allProducts[i].ingredienteActivo}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontWeight: FontWeight.normal,
-                                                  color: Color(
-                                                      Colors.black.value))),
-                                          TextSpan(
+                                                  color: Colors.black)),
+                                          const TextSpan(
                                               text:
                                                   '\nIntervalo de seguridad: ',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
-                                                  color: Color(
-                                                      Colors.black45.value))),
+                                                  color: Colors.black45)),
                                           TextSpan(
                                             text:
                                                 '${widget.allProducts[i].intervaloSeguridad} Dias\n',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontWeight: FontWeight.normal,
-                                                color:
-                                                    Color(Colors.black.value)),
+                                                color: Colors.black),
                                           )
                                         ]))),
-                                ButtonBarTheme(
-                                    data: ButtonBarThemeData(),
-                                    child: ButtonBar(children: <Widget>[
-                                      FlatButton(
-                                          child: const Text('Editar'),
-                                          onPressed: () {
-                                            addEditProductDialog(context,
-                                                    producto:
-                                                        widget.allProducts[i])
-                                                .then((value) {
-                                              if (value == null) return;
-                                              bool isValidProduct = value
-                                                          .nombre !=
-                                                      null &&
-                                                  value.cantidad != null &&
-                                                  value.unidad != null &&
-                                                  value.concentracion != null &&
-                                                  value.ingredienteActivo !=
-                                                      null &&
-                                                  value.intervaloSeguridad !=
-                                                      null;
-                                              if (isValidProduct)
-                                                setState(() {
-                                                  widget.allProducts[i] = value;
-                                                });
+                                OverflowBar(children: <Widget>[
+                                  TextButton(
+                                      child: const Text('Editar'),
+                                      onPressed: () {
+                                        addEditProductDialog(context,
+                                                producto:
+                                                    widget.allProducts[i])
+                                            .then((value) {
+                                          if (value == null) return;
+                                          bool isValidProduct = value
+                                                      .nombre
+                                                      .isNotEmpty &&
+                                              value.cantidad > 0 &&
+                                              value.unidad.isNotEmpty;
+                                          if (isValidProduct)
+                                            setState(() {
+                                              widget.allProducts[i] = value;
                                             });
-                                          })
-                                    ]))
+                                        });
+                                      })
+                                ])
                               ]))));
                 })));
   }

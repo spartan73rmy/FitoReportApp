@@ -2,9 +2,9 @@ import '../Models/plaga.dart';
 import 'package:flutter/material.dart';
 
 class AddEditPlagaDialog extends StatefulWidget {
-  final Plaga plaga;
+  final Plaga? plaga;
 
-  AddEditPlagaDialog({this.plaga});
+  const AddEditPlagaDialog({super.key, this.plaga});
 
   @override
   _AddEditPlagaDialogState createState() => _AddEditPlagaDialogState();
@@ -13,8 +13,8 @@ class AddEditPlagaDialog extends StatefulWidget {
 class _AddEditPlagaDialogState extends State<AddEditPlagaDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Plaga p = new Plaga();
-  bool isEdit;
-  List<TextEditingController> c;
+  late bool isEdit;
+  late List<TextEditingController> c;
   @override
   void initState() {
     super.initState();
@@ -25,7 +25,7 @@ class _AddEditPlagaDialogState extends State<AddEditPlagaDialog> {
     isEdit = widget.plaga != null;
 
     if (isEdit) {
-      p = widget.plaga;
+      p = widget.plaga!;
       c[0].text = "${p.nombre}";
     }
   }
@@ -33,8 +33,8 @@ class _AddEditPlagaDialogState extends State<AddEditPlagaDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: EdgeInsets.only(left: 25, right: 25),
-      title: Center(child: Text("Plaga")),
+      contentPadding: const EdgeInsets.only(left: 25, right: 25),
+      title: const Center(child: Text("Plaga")),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       content: Container(
@@ -46,7 +46,7 @@ class _AddEditPlagaDialogState extends State<AddEditPlagaDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
@@ -54,20 +54,19 @@ class _AddEditPlagaDialogState extends State<AddEditPlagaDialog> {
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 maxLines: 1,
-                onSaved: (String value) {
+                onSaved: (String? value) {
                   p.nombre = value;
                 },
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return "Introduce el nombre";
                   }
                   return null;
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     labelText: 'Plaga',
                     hintText: 'Plaga',
-                    //filled: true,
-                    icon: const Icon(Icons.bug_report),
+                    icon: Icon(Icons.bug_report),
                     labelStyle:
                         TextStyle(decorationStyle: TextDecorationStyle.solid)),
               ),
@@ -76,11 +75,11 @@ class _AddEditPlagaDialogState extends State<AddEditPlagaDialog> {
         )),
       ),
       actions: <Widget>[
-        FlatButton(
-          child: isEdit ? Text("Editar") : Text("Agregar"),
+        TextButton(
+          child: isEdit ? const Text("Editar") : const Text("Agregar"),
           onPressed: () {
             final form = _formKey.currentState;
-            if (form.validate()) {
+            if (form != null && form.validate()) {
               form.save();
               Navigator.pop(context, p);
             }
@@ -91,8 +90,8 @@ class _AddEditPlagaDialogState extends State<AddEditPlagaDialog> {
   }
 }
 
-Future<Plaga> addEditPlagaDialog(BuildContext context, {Plaga plaga}) {
-  return showDialog(
+Future<Plaga?> addEditPlagaDialog(BuildContext context, {Plaga? plaga}) {
+  return showDialog<Plaga?>(
       context: context,
       builder: (context) {
         return AddEditPlagaDialog(

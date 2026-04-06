@@ -15,21 +15,23 @@ import '../Services/userService.dart';
 class Login extends StatefulWidget {
   final String title;
 
-  Login(this.title, {Key key}) : super(key: key);
+  const Login(this.title, {super.key});
 
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  SharedPreferences sharedPreferences;
+  late SharedPreferences sharedPreferences;
   bool _isLoading = false;
   bool _obscureText = true;
-  APIResponse<dynamic> response;
-  TextEditingController _userNameController, _passwordController;
-  String _emailError, _passwordError;
+  APIResponse<dynamic>? response;
+  late TextEditingController _userNameController;
+  late TextEditingController _passwordController;
+  String? _emailError;
+  String? _passwordError;
 
   UserService get userService => GetIt.I<UserService>();
   Ping get ping => GetIt.I<Ping>();
@@ -37,8 +39,8 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    _userNameController = new TextEditingController();
-    _passwordController = new TextEditingController();
+    _userNameController = TextEditingController();
+    _passwordController = TextEditingController();
   }
 
   Widget _loginScreen() {
@@ -46,11 +48,11 @@ class _LoginState extends State<Login> {
       child: ListView(
         padding: const EdgeInsets.only(top: 100.0, left: 16.0, right: 16.0),
         children: <Widget>[
-          Icon(
+          const Icon(
             Icons.weekend,
             size: 80,
           ),
-          Center(
+          const Center(
               child: Text(
             "Inicio de Sesion",
             style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
@@ -64,14 +66,14 @@ class _LoginState extends State<Login> {
             togglePassword: _togglePassword,
           ),
           FloatingActionButton.extended(
-              icon: Icon(Icons.supervised_user_circle_sharp),
+              icon: const Icon(Icons.supervised_user_circle_sharp),
               backgroundColor: Theme.of(context).primaryColor,
-              label: Text("Iniciar Sesion", style: TextStyle(fontSize: 20)),
+              label: const Text("Iniciar Sesion", style: TextStyle(fontSize: 20)),
               onPressed: () => {_authenticateUser(false)}),
           Padding(
               padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
               child: TextButton(
-                  child: Text("Iniciar Sin Conexion",
+                  child: const Text("Iniciar Sin Conexion",
                       style: TextStyle(fontSize: 20)),
                   onPressed: () async => {_authenticateUser(true)})),
         ],
@@ -83,14 +85,14 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(actions: <Widget>[
-          FlatButton(
-            padding: EdgeInsets.all(10.0),
-            child: Row(
-              // Replace with a Row for horizontal icon + text
+          TextButton(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.all(10.0),
+            ),
+            child: const Row(
               children: <Widget>[
                 Center(
-                  child:
-                      Text("Registrar", style: TextStyle(color: Colors.white)),
+                  child: Text("Registrar", style: TextStyle(color: Colors.white)),
                 ),
                 Icon(
                   Icons.account_box,
@@ -101,7 +103,7 @@ class _LoginState extends State<Login> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Register()),
+                MaterialPageRoute(builder: (context) => const Register()),
               );
             },
           )
@@ -110,19 +112,19 @@ class _LoginState extends State<Login> {
         body: _isLoading ? LoadingScreen() : _loginScreen());
   }
 
-  _showLoading() {
+  void _showLoading() {
     setState(() {
       _isLoading = true;
     });
   }
 
-  _hideLoading() {
+  void _hideLoading() {
     setState(() {
       _isLoading = false;
     });
   }
 
-  _togglePassword() {
+  void _togglePassword() {
     setState(() {
       _obscureText = !_obscureText;
     });
@@ -156,7 +158,7 @@ class _LoginState extends State<Login> {
         }
 
         if (res.error) {
-          alertDiag(context, "Error", res.errorMessage);
+          alertDiag(context, "Error", res.errorMessage ?? '');
         }
         _hideLoading();
       }
@@ -164,7 +166,7 @@ class _LoginState extends State<Login> {
     _hideLoading();
   }
 
-  _isValid() {
+  bool _isValid() {
     bool valid = true;
 
     if (_userNameController.text.isEmpty) {
@@ -179,10 +181,6 @@ class _LoginState extends State<Login> {
         _passwordError = "Introduce una contraseña";
       });
     }
-    // else if (_passwordController.text.length < 6) {
-    //   valid = false;
-    //   _passwordError = "Password is invalid!";
-    // }
 
     return valid;
   }

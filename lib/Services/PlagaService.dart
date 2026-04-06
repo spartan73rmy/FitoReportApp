@@ -7,38 +7,38 @@ import 'package:http/http.dart' as http;
 class PlagaService extends HttpModel {
   String url = "Plaga/";
 
-  Future<APIResponse<List<Plaga>>> getListPlaga(authToken) {
+  Future<APIResponse<List<Plaga>>> getListPlaga(String authToken) {
     return http
         .get(
-          HttpModel.getUrl + url + "GetPlagas",
+          Uri.parse(HttpModel.getUrl + url + "GetPlagas"),
           headers: {'Authorization': "Bearer " + authToken},
         )
-        .timeout(Duration(seconds: 15))
+        .timeout(const Duration(seconds: 15))
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);
             final plagaList = PlagaList.fromJSON(jsonData);
-            return APIResponse<List<Plaga>>(data: plagaList.plagas);
+            return APIResponse<List<Plaga>>(data: plagaList.plagas ?? []);
           }
           return APIResponse<List<Plaga>>(
-              data: new List<Plaga>(),
+              data: <Plaga>[],
               error: true,
               errorMessage: "La sesion ha caducado, reinicie sesion");
         })
         .catchError((error) => APIResponse<List<Plaga>>(
-            data: new List<Plaga>(),
+            data: <Plaga>[],
             error: true,
             errorMessage:
                 "Ocurrio un error al conectar a internet " + error.toString()));
   }
 
-  Future<APIResponse<bool>> deletePlaga(int idPlaga, authToken) {
+  Future<APIResponse<bool>> deletePlaga(int idPlaga, String authToken) {
     return http
-        .delete(HttpModel.getUrl + url + "Delete/$idPlaga", headers: {
+        .delete(Uri.parse(HttpModel.getUrl + url + "Delete/$idPlaga"), headers: {
           'Authorization': "Bearer " + authToken,
           'Content-Type': 'application/json'
         })
-        .timeout(Duration(seconds: 15))
+        .timeout(const Duration(seconds: 15))
         .then((data) {
           if (data.statusCode == 200) {
             return APIResponse<bool>(data: true);

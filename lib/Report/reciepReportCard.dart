@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class ReciepReportCard extends StatefulWidget {
   final Producto data;
   final int id;
-  ReciepReportCard(this.data, this.id, {Key key}) : super(key: key);
+  const ReciepReportCard(this.data, this.id, {super.key});
 
   @override
   _ReciepReportCardState createState() => _ReciepReportCardState();
@@ -15,96 +15,92 @@ class _ReciepReportCardState extends State<ReciepReportCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: new Card(
+        child: Card(
             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
       ListTile(
           leading: const Icon(Icons.archive),
           title: RichText(
               text: TextSpan(
                   text: 'Producto: ',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: Color(Colors.black.value)),
+                      color: Colors.black),
                   children: <TextSpan>[
                 TextSpan(
                   text: '${widget.data.nombre}',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 18,
-                      color: Color(Colors.black.value)),
+                      color: Colors.black),
                 ),
               ])),
           subtitle: RichText(
             text: TextSpan(
               text: 'Cant: ',
-              style: TextStyle(
+              style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Color(Colors.black45.value)),
+                  color: Colors.black45),
               children: <TextSpan>[
                 TextSpan(
                   text: '${widget.data.cantidad} ${widget.data.unidad}',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.normal,
-                      color: Color(Colors.black.value)),
+                      color: Colors.black),
                 ),
-                TextSpan(
+                const TextSpan(
                   text: '       Concentracion: ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Color(Colors.black45.value)),
+                      color: Colors.black45),
                 ),
                 TextSpan(
                   text: '${widget.data.concentracion}%',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.normal,
-                      color: Color(Colors.black.value)),
+                      color: Colors.black),
                 ),
-                TextSpan(
+                const TextSpan(
                   text: '\nIngr. Activo: ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Color(Colors.black45.value)),
+                      color: Colors.black45),
                 ),
                 TextSpan(
                   text: '${widget.data.ingredienteActivo}',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.normal,
-                      color: Color(Colors.black.value)),
+                      color: Colors.black),
                 ),
-                TextSpan(
+                const TextSpan(
                   text: '\nIntervalo de seguridad: ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Color(Colors.black45.value)),
+                      color: Colors.black45),
                 ),
                 TextSpan(
                   text: '${widget.data.intervaloSeguridad} Dias\n',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.normal,
-                      color: Color(Colors.black.value)),
+                      color: Colors.black),
                 ),
               ],
             ),
           )),
-      new ButtonBarTheme(
-          data: ButtonBarThemeData(),
-          // make buttons use the appropriate styles for cards
-          child: new ButtonBar(children: <Widget>[
-            new FlatButton(
-              child: const Text('Editar'),
-              onPressed: () {
-                addEditProductDialog(context).then((value) {
-                  if (value == null) return;
-                  // if (isValidProduct) addProduct(value);
-                });
-              },
-            ),
-            new FlatButton(
-              child: const Text('Eliminar'),
-              onPressed: () {},
-            )
-          ]))
+      OverflowBar(children: <Widget>[
+        TextButton(
+          child: const Text('Editar'),
+          onPressed: () {
+            addEditProductDialog(context).then((value) {
+              if (value == null) return;
+            });
+          },
+        ),
+        TextButton(
+          child: const Text('Eliminar'),
+          onPressed: () {},
+        )
+      ])
     ])));
   }
 }

@@ -14,7 +14,7 @@ class UserFilesService extends HttpModel {
   String url = "Archivos/";
 
   Future<APIResponse<String>> uploadFile(
-      File image, int idReporte, authToken) async {
+      File image, int idReporte, String authToken) async {
     Map<String, String> headers = {
       'Authorization': "Bearer $authToken",
       'Content-Type': 'application/json'
@@ -39,15 +39,15 @@ class UserFilesService extends HttpModel {
       final response = await http.Response.fromStream(streamedResponse);
       if (response.statusCode == 200) {
         return APIResponse<String>(
-            data: FileHash.fromJson(jsonDecode(response.body)).hash);
+            data: FileHash.fromJson(jsonDecode(response.body)).hash ?? '');
       }
       return APIResponse<String>(
-          data: null,
+          data: '',
           error: true,
           errorMessage: "La sesion ha caducado, reinicie sesion");
     } catch (error) {
       return APIResponse<String>(
-          data: null,
+          data: '',
           error: true,
           errorMessage:
               "Ocurrio un error al conectar a internet " + error.toString());
@@ -55,17 +55,17 @@ class UserFilesService extends HttpModel {
   }
 
   Future<APIResponse<TokenHashDescarga>> getTokenFile(
-      authToken, String hashArchivo) {
+      String authToken, String hashArchivo) {
     return http
         .post(
-          HttpModel.getUrl + url + "GeneraTokenDescarga",
+          Uri.parse(HttpModel.getUrl + url + "GeneraTokenDescarga"),
           body: jsonEncode(TokenDescarga(hashArchivo).toJson()),
           headers: {
             'Authorization': "Bearer " + authToken,
             'Content-Type': 'application/json'
           },
         )
-        .timeout(Duration(seconds: 15))
+        .timeout(const Duration(seconds: 15))
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);
@@ -75,60 +75,56 @@ class UserFilesService extends HttpModel {
           }
           if (data.statusCode == 401) {
             return APIResponse<TokenHashDescarga>(
-                data: new TokenHashDescarga(""),
+                data: TokenHashDescarga(""),
                 error: true,
                 errorMessage: "No tiene permiso para acceder");
           }
           return APIResponse<TokenHashDescarga>(
-              data: new TokenHashDescarga(""),
+              data: TokenHashDescarga(""),
               error: true,
               errorMessage: "La sesion ha caducado, reinicie sesion");
         })
         .catchError((error) => APIResponse<TokenHashDescarga>(
-            data: new TokenHashDescarga(""),
+            data: TokenHashDescarga(""),
             error: true,
             errorMessage:
                 "Ocurrio un error al conectar a internet " + error.toString()));
   }
 
-  downloadFile(String url, TokenHashDescarga tokenHash) async {
+  Future<void> downloadFile(String url, TokenHashDescarga tokenHash) async {
     var httpClient = http.Client();
     var request = new http.Request(
         'GET',
         Uri.parse(
-            HttpModel.getUrl + url + "DescargarArchivo/" + tokenHash.hash));
+            HttpModel.getUrl + url + "DescargarArchivo/" + (tokenHash.hash ?? '')));
 
     request.headers.addAll({'Content-Type': 'application/json'});
-    request.headers.addAll(tokenHash.toJson());
+    request.headers.addAll(tokenHash.toJson().map((k, v) => MapEntry(k, v?.toString() ?? '')));
 
     var response = httpClient.send(request);
     String dir = (await getApplicationDocumentsDirectory()).path;
 
-    List<List<int>> chunks = new List();
+    List<List<int>> chunks = <List<int>>[];
     int downloaded = 0;
 
-    response.asStream().listen((http.StreamedResponse r) {
+    await response.asStream().listen((http.StreamedResponse r) {
       r.stream.listen((List<int> chunk) {
-        // Display percentage of completion
-        debugPrint('downloadPercentage: ${downloaded / r.contentLength * 100}');
+        debugPrint('downloadPercentage: ${downloaded / (r.contentLength ?? 1) * 100}');
 
         chunks.add(chunk);
         downloaded += chunk.length;
       }, onDone: () async {
-        // Display percentage of completion
-        debugPrint('downloadPercentage: ${downloaded / r.contentLength * 100}');
+        debugPrint('downloadPercentage: ${downloaded / (r.contentLength ?? 1) * 100}');
 
-        // Save the file
-        File file = new File('$dir/archivo');
-        final Uint8List bytes = Uint8List(r.contentLength);
+        File file = File('$dir/archivo');
+        final Uint8List bytes = Uint8List(r.contentLength ?? 0);
         int offset = 0;
         for (List<int> chunk in chunks) {
           bytes.setRange(offset, offset + chunk.length, chunk);
           offset += chunk.length;
         }
         await file.writeAsBytes(bytes);
-        return file;
       });
-    });
+    }).asFuture();
   }
 }

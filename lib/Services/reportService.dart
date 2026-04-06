@@ -14,22 +14,22 @@ class ReportService extends HttpModel {
   String url = "Reporte/";
 
   Future<APIResponse<bool>> createReport(
-      List<ReportData> reportes, authToken) async {
+      List<ReportData> reportes, String authToken) async {
     ReportDataList lista = ReportDataList(reportes: reportes);
     print(json.encode(lista.toJson()));
     return http
-        .post(HttpModel.getUrl + url + "Agregar",
+        .post(Uri.parse(HttpModel.getUrl + url + "Agregar"),
             headers: {
               'Authorization': "Bearer " + authToken,
               'Content-Type': 'application/json'
             },
             body: json.encode(lista.toJson()))
-        .timeout(Duration(seconds: 25))
+        .timeout(const Duration(seconds: 25))
         .then((data) async {
       if (data.statusCode == 200) {
-        List<int> idsReporte = IdReporte.fromJson(jsonDecode(data.body)).id;
+        List<int>? idsReporte = IdReporte.fromJson(jsonDecode(data.body)).id;
         bool complete =
-            await uploadFiles(lista.reportes, idsReporte, authToken);
+            await uploadFiles(lista.reportes ?? [], idsReporte ?? [], authToken);
 
         return APIResponse<bool>(data: complete);
       }
@@ -46,36 +46,37 @@ class ReportService extends HttpModel {
   }
 
   Future<bool> uploadFiles(
-      List<ReportData> lista, List<int> id, String authToken) async {
-    UserFilesService userFilesService = new UserFilesService();
-    LocalStorage localStorage = new LocalStorage(FileName().images);
-    List<String> hashes = new List<String>();
+      List<ReportData?> lista, List<int> id, String authToken) async {
+    UserFilesService userFilesService = UserFilesService();
+    LocalStorage localStorage = LocalStorage(FileName().images);
+    List<String> hashes = <String>[];
     int index = 0;
     bool allComplete = true;
     for (var i in lista) {
-      List<File> images = await localStorage.readImages(i.id);
+      if (i == null) continue;
+      List<File> images = await localStorage.readImages(i.id ?? 0);
       int idReporte = id[index];
 
-      if (images != null)
+      if (images.isNotEmpty)
         for (File image in images) {
           var response =
               await userFilesService.uploadFile(image, idReporte, authToken);
           allComplete &= !response.error;
           if (!response.error) {
-            hashes.add(response.data);
+            hashes.add(response.data ?? '');
           }
         }
     }
     return allComplete;
   }
 
-  Future<APIResponse<ReportData>> getReport(authToken, int idReport) {
+  Future<APIResponse<ReportData>> getReport(String authToken, int idReport) {
     return http
         .get(
-          HttpModel.getUrl + url + "Get/$idReport",
+          Uri.parse(HttpModel.getUrl + url + "Get/$idReport"),
           headers: {'Authorization': "Bearer " + authToken},
         )
-        .timeout(Duration(seconds: 25))
+        .timeout(const Duration(seconds: 25))
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);
@@ -84,45 +85,45 @@ class ReportService extends HttpModel {
           }
           if (data.statusCode == 401) {
             return APIResponse<ReportData>(
-                data: new ReportData(),
+                data: ReportData(created: DateTime.now()),
                 error: true,
                 errorMessage: "No tiene permiso para acceder");
           }
           return APIResponse<ReportData>(
-              data: new ReportData(),
+              data: ReportData(created: DateTime.now()),
               error: true,
               errorMessage: "La sesion ha caducado, reinicie sesion");
         })
         .catchError((error) {
           print(error);
           return APIResponse<ReportData>(
-              data: new ReportData(),
+              data: ReportData(created: DateTime.now()),
               error: true,
               errorMessage: "Ocurrio un error al conectar a internet " +
                   error.toString());
         });
   }
 
-  Future<APIResponse<List<DataSearch>>> getDataSearch(authToken) {
+  Future<APIResponse<List<DataSearch>>> getDataSearch(String authToken) {
     return http
         .get(
-          HttpModel.getUrl + url + "GetSearchList",
+          Uri.parse(HttpModel.getUrl + url + "GetSearchList"),
           headers: {'Authorization': "Bearer " + authToken},
         )
-        .timeout(Duration(seconds: 30))
+        .timeout(const Duration(seconds: 30))
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);
             final dataSearchList = DataSearchList.fromJSON(jsonData);
-            return APIResponse<List<DataSearch>>(data: dataSearchList.busqueda);
+            return APIResponse<List<DataSearch>>(data: dataSearchList.busqueda ?? []);
           }
           return APIResponse<List<DataSearch>>(
-              data: new List<DataSearch>(),
+              data: <DataSearch>[],
               error: true,
               errorMessage: "La sesion ha caducado, reinicie sesion");
         })
         .catchError((error) => APIResponse<List<DataSearch>>(
-            data: new List<DataSearch>(),
+            data: <DataSearch>[],
             error: true,
             errorMessage:
                 "Ocurrio un error al conectar a internet " + error.toString()));

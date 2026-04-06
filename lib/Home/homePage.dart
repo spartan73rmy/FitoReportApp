@@ -18,31 +18,27 @@ import '../Report/addReport.dart';
 import "dataSearch.dart";
 
 class HomePage extends StatefulWidget {
-  HomePage(this.title, {Key key}) : super(key: key);
+  HomePage(this.title, {super.key});
   final String title;
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isLoading;
-  bool isAdmin;
+  bool isLoading = false;
+  bool? isAdmin;
 
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   ReportService get service => GetIt.I<ReportService>();
   Ping get ping => GetIt.I<Ping>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  SharedPreferences _sharedPreferences;
-  APIResponse<bool> res;
-  List<DataSearch> busqueda;
-  bool isOnline;
+  late SharedPreferences _sharedPreferences;
+  APIResponse<bool> res = APIResponse<bool>();
+  List<DataSearch> busqueda = [];
+  bool isOnline = false;
 
   @override
   void initState() {
-    res = new APIResponse<bool>();
-    isLoading = false;
-    isOnline = false;
-
     super.initState();
     isAdm();
     isConnected();
@@ -59,16 +55,16 @@ class _HomePageState extends State<HomePage> {
         title: Text(this.widget.title),
         actions: <Widget>[
           IconButton(
-            icon: isOnline ? Icon(Icons.cloud_upload) : Icon(Icons.cloud_off),
+            icon: isOnline ? const Icon(Icons.cloud_upload) : const Icon(Icons.cloud_off),
             onPressed: () async {
               await uploadData();
             },
           ),
           IconButton(
-            icon: isOnline ? Icon(Icons.search) : Icon(Icons.search_off),
+            icon: isOnline ? const Icon(Icons.search) : const Icon(Icons.search_off),
             onPressed: () async {
               bool search = await getDataSearch();
-              if (search)
+              if (search && context.mounted)
                 showSearch(context: context, delegate: Search(busqueda));
             },
           )
@@ -78,20 +74,19 @@ class _HomePageState extends State<HomePage> {
         if (isLoading) {
           return LoadingScreen();
         }
-        return ListTempReport();
+        return const ListTempReport();
       }),
       persistentFooterButtons: <Widget>[
         FloatingActionButton.extended(
-          icon: Icon(Icons.add),
+          icon: const Icon(Icons.add),
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
             Navigator.push(
               context,
-              // MaterialPageRoute(builder: (context) => ImagenPicker()),
-              MaterialPageRoute(builder: (context) => AddReport()),
+              MaterialPageRoute(builder: (context) => const AddReport()),
             );
           },
-          label: Text("Agregar Reporte"),
+          label: const Text("Agregar Reporte"),
         )
       ],
     );
@@ -101,7 +96,7 @@ class _HomePageState extends State<HomePage> {
     showLoading();
     _sharedPreferences = await _prefs;
     bool isNotLogged = !Auth.isLogged(_sharedPreferences);
-    String authToken = Auth.getToken(_sharedPreferences);
+    String authToken = Auth.getToken(_sharedPreferences) ?? '';
     isOnline = await ping.ping();
 
     if (isOnline) {
@@ -109,13 +104,13 @@ class _HomePageState extends State<HomePage> {
       var resp = await service.getDataSearch(authToken);
 
       if (res.error) {
-        alertDiag(context, "Error", res.errorMessage);
+        alertDiag(context, "Error", res.errorMessage ?? '');
         hideLoading();
         return false;
       }
 
       setState(() {
-        busqueda = resp.data;
+        busqueda = resp.data ?? [];
       });
 
       hideLoading();
@@ -129,7 +124,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> uploadData() async {
-    isOnline = await ping.ping() ?? false;
+    isOnline = await ping.ping();
     _sharedPreferences = await _prefs;
     bool isNotLogged = !Auth.isLogged(_sharedPreferences);
 
@@ -137,12 +132,12 @@ class _HomePageState extends State<HomePage> {
       if (isNotLogged) toLogIn();
 
       showLoading();
-      String authToken = Auth.getToken(_sharedPreferences);
+      String authToken = Auth.getToken(_sharedPreferences) ?? '';
 
-      LocalStorage localStorage = new LocalStorage(FileName().report);
+      LocalStorage localStorage = LocalStorage(FileName().report);
       List<ReportData> tempReports = await localStorage.readReports();
 
-      if (tempReports.length > 0) {
+      if (tempReports.isNotEmpty) {
         var resp = await service.createReport(tempReports, authToken);
         setState(() {
           res = resp;
@@ -156,7 +151,7 @@ class _HomePageState extends State<HomePage> {
         }
       }
 
-      if (res.error) alertDiag(context, "Error", res.errorMessage);
+      if (res.error) alertDiag(context, "Error", res.errorMessage ?? '');
 
       hideLoading();
     } else {
@@ -177,7 +172,7 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).popUntil((route) => route.isFirst);
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Login("FitoReport")),
+      MaterialPageRoute(builder: (context) => const Login("FitoReport")),
     );
   }
 
@@ -186,23 +181,24 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       isOnline = l;
     });
-    isOnline
-        ? showSnackBar("Conexion con el servidor")
-        : showSnackBar("Modo sin conexion");
+    if (scaffoldKey.currentState != null) {
+      isOnline
+          ? showSnackBar("Conexion con el servidor")
+          : showSnackBar("Modo sin conexion");
+    }
   }
 
-  showSnackBar(String value) {
-    scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
+  void showSnackBar(String value) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
   }
 
-  showLoading() {
+  void showLoading() {
     setState(() {
       isLoading = true;
     });
   }
 
-  hideLoading() {
+  void hideLoading() {
     setState(() {
       isLoading = false;
     });

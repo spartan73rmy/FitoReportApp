@@ -7,21 +7,21 @@ class Producto {
   String intervaloSeguridad = '';
 
   Producto(
-      {this.nombre,
-      this.cantidad,
-      this.unidad,
-      this.ingredienteActivo,
-      this.concentracion,
-      this.intervaloSeguridad});
+      {this.nombre = '',
+      this.cantidad = 0.0,
+      this.unidad = '',
+      this.ingredienteActivo = '',
+      this.concentracion = '',
+      this.intervaloSeguridad = ''});
 
   factory Producto.fromJSON(Map<String, dynamic> item) {
     return Producto(
-      cantidad: item["cantidad"],
-      unidad: item["unidad"],
-      nombre: item["nombre"],
-      ingredienteActivo: item["ingredienteActivo"],
-      concentracion: item["concentracion"],
-      intervaloSeguridad: item["intervaloSeguridad"],
+      cantidad: (item["cantidad"] ?? 0).toDouble(),
+      unidad: item["unidad"] ?? '',
+      nombre: item["nombre"] ?? '',
+      ingredienteActivo: item["ingredienteActivo"] ?? '',
+      concentracion: item["concentracion"] ?? '',
+      intervaloSeguridad: item["intervaloSeguridad"] ?? '',
     );
   }
   Map<String, dynamic> toJson() {
@@ -37,13 +37,13 @@ class Producto {
 }
 
 class ProductoList {
-  List<Producto> productos;
+  List<Producto>? productos;
 
   ProductoList({this.productos});
 
   factory ProductoList.fromJSON(Map<String, dynamic> parsedJson) {
     var list = parsedJson['productos'] as List;
-    List<Producto> productos = list.map((i) => Producto.fromJSON(i)).toList();
+    List<Producto> productos = list.map((i) => Producto.fromJSON(i as Map<String, dynamic>)).toList();
 
     return ProductoList(productos: productos);
   }

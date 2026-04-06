@@ -1,9 +1,9 @@
 class DataSearch {
-  int idReport;
-  String productor;
-  String lugar;
-  String predio;
-  String ubicacion;
+  int? idReport;
+  String? productor;
+  String? lugar;
+  String? predio;
+  String? ubicacion;
   DateTime fecha;
 
   DataSearch(
@@ -12,7 +12,7 @@ class DataSearch {
       this.lugar,
       this.predio,
       this.ubicacion,
-      this.fecha});
+      required this.fecha});
 
   factory DataSearch.fromJSON(Map<String, dynamic> item) {
     return DataSearch(
@@ -26,14 +26,14 @@ class DataSearch {
 }
 
 class DataSearchList {
-  List<DataSearch> busqueda;
+  List<DataSearch>? busqueda;
 
   DataSearchList({this.busqueda});
 
   factory DataSearchList.fromJSON(Map<String, dynamic> parsedJson) {
     var list = parsedJson['busqueda'] as List;
     List<DataSearch> busqueda =
-        list.map((i) => DataSearch.fromJSON(i)).toList();
+        list.map((i) => DataSearch.fromJSON(i as Map<String, dynamic>)).toList();
 
     return DataSearchList(busqueda: busqueda);
   }

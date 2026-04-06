@@ -11,12 +11,12 @@ class Ping extends HttpModel {
       print(uri);
       return http
           .head(
-            uri,
+            Uri.parse(uri),
             headers: {
               HttpHeaders.contentTypeHeader: 'application/json',
             },
           )
-          .timeout(Duration(seconds: 3))
+          .timeout(const Duration(seconds: 3))
           .then((data) {
             if (data.statusCode == 200) {
               return true;

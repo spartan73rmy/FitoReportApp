@@ -10,7 +10,7 @@ class Search extends SearchDelegate<String> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-          icon: Icon(Icons.clear),
+          icon: const Icon(Icons.clear),
           onPressed: () {
             query = "";
           })
@@ -23,33 +23,33 @@ class Search extends SearchDelegate<String> {
       icon: AnimatedIcon(
           icon: AnimatedIcons.menu_arrow, progress: transitionAnimation),
       onPressed: () {
-        close(context, null);
+        close(context, '');
       },
     );
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    return PDFPrinterShare();
+    return PDFPrinterShare(idReport: 0);
   }
 
   Widget show(BuildContext context, DataSearch item) {
     return Card(
         color: Colors.white,
         child: Center(
-          child: Text(item.productor),
+          child: Text(item.productor ?? ''),
         ));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     final suggetionsList = query.isEmpty
-        ? new List<DataSearch>()
+        ? <DataSearch>[]
         : busqueda
             .where((p) =>
-                p.productor.toLowerCase().contains(query.toLowerCase()) ||
-                p.lugar.toLowerCase().contains(query.toLowerCase()) ||
-                p.predio.toLowerCase().contains(query.toLowerCase()))
+                (p.productor?.toLowerCase().contains(query.toLowerCase()) ?? false) ||
+                (p.lugar?.toLowerCase().contains(query.toLowerCase()) ?? false) ||
+                (p.predio?.toLowerCase().contains(query.toLowerCase()) ?? false))
             .toList();
 
     return ListView.builder(
@@ -60,28 +60,28 @@ class Search extends SearchDelegate<String> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    PDFPrinterShare(idReport: suggetionsList[index].idReport)),
+                    PDFPrinterShare(idReport: suggetionsList[index].idReport ?? 0)),
           );
         },
-        leading: Icon(Icons.location_city),
+        leading: const Icon(Icons.location_city),
         title: RichText(
           text: TextSpan(
-            text: suggetionsList[index].productor,
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            text: suggetionsList[index].productor ?? '',
+            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             children: [
               TextSpan(
-                  text: "\nPredio: ${suggetionsList[index].predio}",
-                  style: TextStyle(color: Colors.grey)),
+                  text: "\nPredio: ${suggetionsList[index].predio ?? ''}",
+                  style: const TextStyle(color: Colors.grey)),
               TextSpan(
-                  text: "\nLugar: ${suggetionsList[index].lugar}",
-                  style: TextStyle(color: Colors.grey)),
+                  text: "\nLugar: ${suggetionsList[index].lugar ?? ''}",
+                  style: const TextStyle(color: Colors.grey)),
               TextSpan(
-                  text: "\nUbicacion: ${suggetionsList[index].ubicacion}",
-                  style: TextStyle(color: Colors.grey)),
+                  text: "\nUbicacion: ${suggetionsList[index].ubicacion ?? ''}",
+                  style: const TextStyle(color: Colors.grey)),
               TextSpan(
                   text:
                       "\n${suggetionsList[index].fecha.day}/${suggetionsList[index].fecha.month}/${suggetionsList[index].fecha.year}",
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.black54, fontWeight: FontWeight.bold)),
             ],
           ),

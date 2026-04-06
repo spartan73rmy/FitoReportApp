@@ -2,9 +2,9 @@ import '../Models/producto.dart';
 import 'package:flutter/material.dart';
 
 class AddProductDialog extends StatefulWidget {
-  final Producto producto;
+  final Producto? producto;
 
-  AddProductDialog({this.producto});
+  const AddProductDialog({super.key, this.producto});
 
   @override
   _AddProductDialogState createState() => _AddProductDialogState();
@@ -14,8 +14,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Producto producto = new Producto();
   List<String> unidades = ["Kg", "L", "g", "mL"];
-  bool isEdit;
-  List<TextEditingController> textController;
+  late bool isEdit;
+  late List<TextEditingController> textController;
   @override
   void initState() {
     super.initState();
@@ -30,9 +30,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
     isEdit = widget.producto != null;
 
     if (isEdit) {
-      producto = widget.producto;
+      producto = widget.producto!;
       textController[0].text = "${producto.cantidad}";
-      // c[1].text = "${p.unidad}";
       textController[1].text = "${producto.nombre}";
       textController[2].text = "${producto.ingredienteActivo}";
       textController[3].text = "${producto.concentracion}";
@@ -43,8 +42,8 @@ class _AddProductDialogState extends State<AddProductDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: EdgeInsets.only(left: 25, right: 25),
-      title: Center(child: Text("Producto")),
+      contentPadding: const EdgeInsets.only(left: 25, right: 25),
+      title: const Center(child: Text("Producto")),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       content: Container(
@@ -56,7 +55,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Row(
@@ -67,35 +66,31 @@ class _AddProductDialogState extends State<AddProductDialog> {
                     keyboardType: TextInputType.number,
                     autocorrect: false,
                     maxLines: 1,
-                    onSaved: (String value) {
-                      producto.cantidad = double.tryParse(value) ?? 0;
+                    onSaved: (String? value) {
+                      producto.cantidad = double.tryParse(value ?? '') ?? 0;
                     },
                     validator: (value) {
-                      var num = double.tryParse(value);
-                      if (num == null || value.isEmpty) {
+                      var num = double.tryParse(value ?? '');
+                      if (num == null || value == null || value.isEmpty) {
                         return "Introduce la cantidad";
                       }
                       return null;
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         labelText: 'Cantidad',
                         hintText: 'Cantidad',
-                        icon: const Icon(Icons.opacity),
+                        icon: Icon(Icons.opacity),
                         labelStyle: TextStyle(
                             decorationStyle: TextDecorationStyle.solid)),
                   )),
                   Expanded(
-                      child: DropdownButton(
-                    hint: producto.unidad == null
-                        ? Text('Unidad')
-                        : Text(
-                            producto.unidad,
-                            style: TextStyle(color: Colors.black),
-                          ),
+                      child: DropdownButton<String>(
+                    value: producto.unidad.isEmpty ? null : producto.unidad,
+                    hint: const Text('Unidad'),
                     isExpanded: true,
                     elevation: 2,
                     iconSize: 30.0,
-                    style: TextStyle(color: Colors.blue),
+                    style: const TextStyle(color: Colors.blue),
                     items: unidades.map(
                       (val) {
                         return DropdownMenuItem<String>(
@@ -106,7 +101,7 @@ class _AddProductDialogState extends State<AddProductDialog> {
                     ).toList(),
                     onChanged: (val) {
                       setState(() {
-                        producto.unidad = val;
+                        producto.unidad = val ?? '';
                       });
                     },
                   )),
@@ -117,20 +112,19 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 maxLines: 1,
-                onSaved: (String value) {
-                  producto.nombre = value;
+                onSaved: (String? value) {
+                  producto.nombre = value ?? '';
                 },
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return "Introduce el nombre";
                   }
                   return null;
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     labelText: 'Producto',
                     hintText: 'Producto',
-                    //filled: true,
-                    icon: const Icon(Icons.filter_hdr),
+                    icon: Icon(Icons.filter_hdr),
                     labelStyle:
                         TextStyle(decorationStyle: TextDecorationStyle.solid)),
               ),
@@ -139,20 +133,19 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 maxLines: 1,
-                onSaved: (String value) {
-                  producto.ingredienteActivo = value;
+                onSaved: (String? value) {
+                  producto.ingredienteActivo = value ?? '';
                 },
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return "Introduce el ingrediente activo";
                   }
                   return null;
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     labelText: 'Ingrediente Activo',
                     hintText: 'Ingrediente Activo',
-                    //filled: true,
-                    icon: const Icon(Icons.build),
+                    icon: Icon(Icons.build),
                     labelStyle:
                         TextStyle(decorationStyle: TextDecorationStyle.solid)),
               ),
@@ -161,22 +154,21 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 keyboardType: TextInputType.number,
                 autocorrect: false,
                 maxLines: 1,
-                onSaved: (String value) {
+                onSaved: (String? value) {
                   producto.concentracion =
-                      (double.tryParse(value) ?? 0).toString();
+                      (double.tryParse(value ?? '') ?? 0).toString();
                 },
                 validator: (value) {
-                  var num = double.tryParse(value);
-                  if (num == null || value.isEmpty) {
+                  var num = double.tryParse(value ?? '');
+                  if (num == null || value == null || value.isEmpty) {
                     return "Solo introduce la cantidad sin %";
                   }
                   return null;
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     labelText: 'Concentracion (%)',
                     hintText: 'Concentracion',
-                    //filled: true,
-                    icon: const Icon(Icons.colorize),
+                    icon: Icon(Icons.colorize),
                     labelStyle:
                         TextStyle(decorationStyle: TextDecorationStyle.solid)),
               ),
@@ -185,22 +177,21 @@ class _AddProductDialogState extends State<AddProductDialog> {
                 keyboardType: TextInputType.number,
                 autocorrect: false,
                 maxLines: 1,
-                onSaved: (String value) {
+                onSaved: (String? value) {
                   producto.intervaloSeguridad =
-                      (int.tryParse(value) ?? 0).toString();
+                      (int.tryParse(value ?? '') ?? 0).toString();
                 },
                 validator: (value) {
-                  var num = int.tryParse(value);
-                  if (num == null || value.isEmpty) {
+                  var num = int.tryParse(value ?? '');
+                  if (num == null || value == null || value.isEmpty) {
                     return "Introduce la cantidad de dias";
                   }
                   return null;
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     labelText: 'Intervalo (Dias)',
                     hintText: 'Intervalo de seguridad',
-                    //filled: true,
-                    icon: const Icon(Icons.av_timer),
+                    icon: Icon(Icons.av_timer),
                     labelStyle:
                         TextStyle(decorationStyle: TextDecorationStyle.solid)),
               ),
@@ -209,14 +200,12 @@ class _AddProductDialogState extends State<AddProductDialog> {
         )),
       ),
       actions: <Widget>[
-        FlatButton(
-          child: isEdit ? Text("Editar") : Text("Agregar"),
+        TextButton(
+          child: isEdit ? const Text("Editar") : const Text("Agregar"),
           onPressed: () {
             final form = _formKey.currentState;
-            if (form.validate()) {
-              // Text forms was validated.
+            if (form != null && form.validate()) {
               form.save();
-              //Return new Product to add to list
               Navigator.pop(context, producto);
             }
           },
@@ -226,9 +215,9 @@ class _AddProductDialogState extends State<AddProductDialog> {
   }
 }
 
-Future<Producto> addEditProductDialog(BuildContext context,
-    {Producto producto}) {
-  return showDialog(
+Future<Producto?> addEditProductDialog(BuildContext context,
+    {Producto? producto}) {
+  return showDialog<Producto?>(
       context: context,
       builder: (context) {
         return AddProductDialog(

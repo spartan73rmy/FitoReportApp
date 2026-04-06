@@ -5,7 +5,7 @@ import 'package:photo_view/photo_view.dart';
 
 class ZoomImage extends StatefulWidget {
   final File image;
-  ZoomImage(this.image, {Key key}) : super(key: key);
+  ZoomImage(this.image, {super.key});
 
   @override
   _ZoomImageState createState() => _ZoomImageState();
@@ -19,11 +19,10 @@ class _ZoomImageState extends State<ZoomImage> {
             centerTitle: true,
             leading: InkWell(
               onTap: () {
-                //  Navigator.pop(context);
               },
-              child: Icon(Icons.close),
+              child: const Icon(Icons.close),
             ),
-            title: Text('Zoom Image')),
+            title: const Text('Zoom Image')),
         body: Container(
           child: PhotoView(
             imageProvider: FileImage(widget.image),

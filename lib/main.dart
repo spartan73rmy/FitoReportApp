@@ -1,13 +1,13 @@
 import 'dart:io';
-import '../Login/Login.dart';
-import '../Services/syncData.dart';
-import '../Services/auth.dart';
-import '../Services/conectionService.dart';
-import '../Services/enfermedadService.dart';
-import '../Services/etapaFService.dart';
-import '../Services/plagaService.dart';
-import '../Services/reportService.dart';
-import '../Services/userService.dart';
+import 'Login/Login.dart';
+import 'Services/syncData.dart';
+import 'Services/auth.dart';
+import 'Services/conectionService.dart';
+import 'Services/enfermedadService.dart';
+import 'Services/etapaFService.dart';
+import 'Services/plagaService.dart';
+import 'Services/reportService.dart';
+import 'Services/UserService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -15,11 +15,13 @@ String _title = "FitoReport";
 
 void main() {
   instanceGetIt();
-  HttpOverrides.global = new MyHttpOverrides();
-  runApp(MyApp());
+  HttpOverrides.global = MyHttpOverrides();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -48,7 +50,7 @@ void instanceGetIt() {
 
 class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context) {
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;

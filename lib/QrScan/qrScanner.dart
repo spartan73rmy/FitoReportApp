@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import '../CommonWidgets/alert.dart';
 import '../Pdf/pdfPrinter.dart';
 import 'package:flutter/material.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 class QrScaner extends StatefulWidget {
   @override
@@ -13,19 +13,26 @@ class QrScaner extends StatefulWidget {
 
 class _QrScanerState extends State<QrScaner> {
   Uint8List bytes = Uint8List(0);
-  String url;
+  String url = "http://192.168.43.141:8080/details/";
+  MobileScannerController? controller;
+
   @override
-  initState() {
-    url = "http://192.168.43.141:8080/details/";
+  void initState() {
     super.initState();
-    _scan();
+    controller = MobileScannerController();
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Escaner QR"),
+          title: const Text("Escaner QR"),
         ),
         body: Builder(
           builder: (BuildContext context) {
@@ -37,34 +44,71 @@ class _QrScanerState extends State<QrScaner> {
         persistentFooterButtons: [
           FloatingActionButton.extended(
               heroTag: null,
-              icon: Icon(Icons.photo),
+              icon: const Icon(Icons.photo),
               backgroundColor: Theme.of(context).primaryColor,
               onPressed: () => {_scanPhoto()},
-              label: Text("Galeria")),
+              label: const Text("Galeria")),
           FloatingActionButton.extended(
               heroTag: null,
-              icon: Icon(Icons.qr_code_scanner),
+              icon: const Icon(Icons.qr_code_scanner),
               backgroundColor: Theme.of(context).primaryColor,
               onPressed: () => {_scan()},
-              label: Text("Camara"))
+              label: const Text("Camara"))
         ]);
   }
 
-  Future _scan() async {
-    String barcode = await scanner.scan();
-    if (barcode != null) {
-      int id = parseUrl(barcode);
-      navigateToPdfPrint(id);
-    }
+  Future<void> _scan() async {
+    controller?.barcodes;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Escanear QR'),
+        content: SizedBox(
+          width: 300,
+          height: 300,
+          child: MobileScanner(
+            controller: controller,
+            onDetect: (capture) {
+              final List<Barcode> barcodes = capture.barcodes;
+              for (final barcode in barcodes) {
+                if (barcode.rawValue != null) {
+                  Navigator.of(context).pop();
+                  int id = parseUrl(barcode.rawValue!);
+                  navigateToPdfPrint(id);
+                  return;
+                }
+              }
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancelar'),
+          ),
+        ],
+      ),
+    );
   }
 
-  Future _scanPhoto() async {
-    String barcode = await scanner.scanPhoto();
-    int id = parseUrl(barcode);
-    navigateToPdfPrint(id);
+  Future<void> _scanPhoto() async {
+    if (controller == null) return;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Seleccionar QR'),
+        content: const Text('Use la camara para escanear'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
-  navigateToPdfPrint(int id) {
+  void navigateToPdfPrint(int id) {
     if (id == 0) {
       alertDiag(context, "Error", "El Qr escaneado no se leyo correctamente");
     } else {

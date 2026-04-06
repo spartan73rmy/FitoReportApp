@@ -1,6 +1,6 @@
 class Plaga {
-  int id;
-  String nombre;
+  int? id;
+  String? nombre;
   bool selected;
   Plaga({this.id, this.nombre, this.selected = false});
 
@@ -17,12 +17,12 @@ class Plaga {
 }
 
 class PlagaList {
-  List<Plaga> plagas;
+  List<Plaga>? plagas;
 
   PlagaList({this.plagas});
 
   List<Plaga> toList(PlagaList lista) {
-    return lista.plagas;
+    return lista.plagas ?? [];
   }
 
   Map<String, dynamic> toJson() {
@@ -33,7 +33,7 @@ class PlagaList {
 
   factory PlagaList.fromJSON(Map<String, dynamic> parsedJson) {
     var list = parsedJson['plagas'] as List;
-    List<Plaga> plagas = list.map((i) => Plaga.fromJSON(i)).toList();
+    List<Plaga> plagas = list.map((i) => Plaga.fromJSON(i as Map<String, dynamic>)).toList();
     return PlagaList(plagas: plagas);
   }
 }

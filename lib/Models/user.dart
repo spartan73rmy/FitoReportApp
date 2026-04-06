@@ -1,12 +1,12 @@
 class User {
-  String email;
-  String userName;
-  String pass;
-  String nombre;
-  String aPaterno;
-  String aMaterno;
-  int type;
-  bool aproved;
+  String? email;
+  String? userName;
+  String? pass;
+  String? nombre;
+  String? aPaterno;
+  String? aMaterno;
+  int? type;
+  bool? aproved;
 
   User(
       {this.email,
@@ -45,17 +45,17 @@ class User {
 }
 
 class UserList {
-  List<User> usuarios;
+  List<User>? usuarios;
 
   UserList({this.usuarios});
 
   List<User> toList(UserList lista) {
-    return lista.usuarios;
+    return lista.usuarios ?? [];
   }
 
   factory UserList.fromJSON(Map<String, dynamic> parsedJson) {
     var list = parsedJson['usuarios'] as List;
-    List<User> usuarios = list.map((i) => User.fromJSON(i)).toList();
+    List<User> usuarios = list.map((i) => User.fromJSON(i as Map<String, dynamic>)).toList();
     return UserList(usuarios: usuarios);
   }
 }

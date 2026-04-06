@@ -1,45 +1,45 @@
 import 'dart:convert';
-import '../Models/APIResponse.dart';
 import '../Models/HttpModel.dart';
+import '../Models/apiResponse.dart';
 import '../Models/enfermedad.dart';
 import 'package:http/http.dart' as http;
 
 class EnfermedadService extends HttpModel {
   String url = "Enfermedad/";
 
-  Future<APIResponse<List<Enfermedad>>> getListEnfermedad(authToken) {
+  Future<APIResponse<List<Enfermedad>>> getListEnfermedad(String authToken) {
     return http
         .get(
-          HttpModel.getUrl + url + "GetEnfermedades",
+          Uri.parse(HttpModel.getUrl + url + "GetEnfermedades"),
           headers: {'Authorization': "Bearer " + authToken},
         )
-        .timeout(Duration(seconds: 15))
+        .timeout(const Duration(seconds: 15))
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);
             final enfermedadList = EnfermedadList.fromJSON(jsonData);
             return APIResponse<List<Enfermedad>>(
-                data: enfermedadList.enfermedades);
+                data: enfermedadList.enfermedades ?? []);
           }
           return APIResponse<List<Enfermedad>>(
-              data: new List<Enfermedad>(),
+              data: <Enfermedad>[],
               error: true,
               errorMessage: "La sesion ha caducado, reinicie sesion");
         })
         .catchError((error) => APIResponse<List<Enfermedad>>(
-            data: new List<Enfermedad>(),
+            data: <Enfermedad>[],
             error: true,
             errorMessage:
                 "Ocurrio un error al conectar a internet " + error.toString()));
   }
 
-  Future<APIResponse<bool>> deleteEnfermedad(int idEnfermedad, authToken) {
+  Future<APIResponse<bool>> deleteEnfermedad(int idEnfermedad, String authToken) {
     return http
-        .delete(HttpModel.getUrl + url + "Delete/$idEnfermedad", headers: {
+        .delete(Uri.parse(HttpModel.getUrl + url + "Delete/$idEnfermedad"), headers: {
           'Authorization': "Bearer " + authToken,
           'Content-Type': 'application/json'
         })
-        .timeout(Duration(seconds: 15))
+        .timeout(const Duration(seconds: 15))
         .then((data) {
           if (data.statusCode == 200) {
             return APIResponse<bool>(data: true);
@@ -59,7 +59,6 @@ class EnfermedadService extends HttpModel {
             data: false,
             error: true,
             errorMessage: "Ocurrio un error al conectar a internet \n" +
-                    error.toString() ??
-                ""));
+                error.toString()));
   }
 }

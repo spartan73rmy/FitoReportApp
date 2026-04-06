@@ -2,9 +2,9 @@ import '../Models/enfermedad.dart';
 import 'package:flutter/material.dart';
 
 class AddEditEnfermedadDialog extends StatefulWidget {
-  final Enfermedad enfermedad;
+  final Enfermedad? enfermedad;
 
-  AddEditEnfermedadDialog({this.enfermedad});
+  const AddEditEnfermedadDialog({super.key, this.enfermedad});
 
   @override
   _AddEditEnfermedadDialogState createState() =>
@@ -14,8 +14,8 @@ class AddEditEnfermedadDialog extends StatefulWidget {
 class _AddEditEnfermedadDialogState extends State<AddEditEnfermedadDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Enfermedad e = new Enfermedad();
-  bool isEdit;
-  List<TextEditingController> c;
+  late bool isEdit;
+  late List<TextEditingController> c;
   @override
   void initState() {
     super.initState();
@@ -26,7 +26,7 @@ class _AddEditEnfermedadDialogState extends State<AddEditEnfermedadDialog> {
     isEdit = widget.enfermedad != null;
 
     if (isEdit) {
-      e = widget.enfermedad;
+      e = widget.enfermedad!;
       c[0].text = "${e.nombre}";
     }
   }
@@ -34,8 +34,8 @@ class _AddEditEnfermedadDialogState extends State<AddEditEnfermedadDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: EdgeInsets.only(left: 25, right: 25),
-      title: Center(child: Text("Enfermedad")),
+      contentPadding: const EdgeInsets.only(left: 25, right: 25),
+      title: const Center(child: Text("Enfermedad")),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       content: Container(
@@ -47,7 +47,7 @@ class _AddEditEnfermedadDialogState extends State<AddEditEnfermedadDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
@@ -55,20 +55,19 @@ class _AddEditEnfermedadDialogState extends State<AddEditEnfermedadDialog> {
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 maxLines: 1,
-                onSaved: (String value) {
+                onSaved: (String? value) {
                   e.nombre = value;
                 },
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return "Introduce el nombre";
                   }
                   return null;
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     labelText: 'Enfermedad',
                     hintText: 'Enfermedad',
-                    //filled: true,
-                    icon: const Icon(Icons.bug_report),
+                    icon: Icon(Icons.bug_report),
                     labelStyle:
                         TextStyle(decorationStyle: TextDecorationStyle.solid)),
               ),
@@ -77,11 +76,11 @@ class _AddEditEnfermedadDialogState extends State<AddEditEnfermedadDialog> {
         )),
       ),
       actions: <Widget>[
-        FlatButton(
-          child: isEdit ? Text("Editar") : Text("Agregar"),
+        TextButton(
+          child: isEdit ? const Text("Editar") : const Text("Agregar"),
           onPressed: () {
             final form = _formKey.currentState;
-            if (form.validate()) {
+            if (form != null && form.validate()) {
               form.save();
               Navigator.pop(context, e);
             }
@@ -92,9 +91,9 @@ class _AddEditEnfermedadDialogState extends State<AddEditEnfermedadDialog> {
   }
 }
 
-Future<Enfermedad> addEditEnfermedadDialog(BuildContext context,
-    {Enfermedad enfermedad}) {
-  return showDialog(
+Future<Enfermedad?> addEditEnfermedadDialog(BuildContext context,
+    {Enfermedad? enfermedad}) {
+  return showDialog<Enfermedad?>(
       context: context,
       builder: (context) {
         return AddEditEnfermedadDialog(

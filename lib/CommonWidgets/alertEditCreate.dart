@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 
 class SelectCreateEdit extends StatelessWidget {
-  final String tittle, text;
-  const SelectCreateEdit({Key key, this.tittle, this.text}) : super(key: key);
+  final String? tittle;
+  final String? text;
+  const SelectCreateEdit({super.key, this.tittle, this.text});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: AlertDialog(
-        title: Text(tittle),
-        content: Text(text),
+        title: Text(tittle ?? ''),
+        content: Text(text ?? ''),
         actions: [
-          FlatButton(
-            child: Text("Crear"),
+          TextButton(
+            child: const Text("Crear"),
             onPressed: () {
               Navigator.pop(context, true);
             },
           ),
-          FlatButton(
-            child: Text("Editar"),
+          TextButton(
+            child: const Text("Editar"),
             onPressed: () {
               Navigator.pop(context, false);
             },

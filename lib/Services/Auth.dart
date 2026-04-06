@@ -9,12 +9,12 @@ class Auth {
   static final String nameKey = 'nombreUsuario';
   static final String roleKey = 'tipoUsuario';
 
-  static String getToken(SharedPreferences prefs) {
+  static String? getToken(SharedPreferences prefs) {
     return prefs.getString(authTokenKey);
   }
 
   static bool isAdmin(SharedPreferences prefs) {
-    return (prefs.getInt(roleKey) ?? -1) == UserType.adminT; //See value
+    return (prefs.getInt(roleKey) ?? -1) == UserType.adminT;
   }
 
   static bool isLogged(SharedPreferences prefs) {
@@ -23,30 +23,30 @@ class Auth {
   }
 
   static DateTime getExpDate(SharedPreferences prefs) {
-    DateTime date = DateTime.tryParse(prefs.getString(expDate));
-    date ?? DateTime.fromMicrosecondsSinceEpoch(0, isUtc: true);
+    DateTime? date = DateTime.tryParse(prefs.getString(expDate) ?? '');
+    date ??= DateTime.fromMicrosecondsSinceEpoch(0, isUtc: true);
     print(date);
     return date;
   }
 
   static logoutUser(SharedPreferences prefs) {
-    prefs.setString(Auth.authTokenKey, null);
-    prefs.setString(Auth.refToken, null);
+    prefs.setString(Auth.authTokenKey, '');
+    prefs.setString(Auth.refToken, '');
     prefs.setString(Auth.expDate,
         DateTime.fromMicrosecondsSinceEpoch(0, isUtc: true).toString());
-    prefs.setString(Auth.userIdKey, null);
-    prefs.setString(Auth.nameKey, null);
-    prefs.setString(Auth.roleKey, null);
+    prefs.setString(Auth.userIdKey, '');
+    prefs.setString(Auth.nameKey, '');
+    prefs.setString(Auth.roleKey, '');
   }
 
   static insertDetails(SharedPreferences prefs, var response) {
-    prefs.setString(authTokenKey, response['token']);
-    prefs.setString(refToken, response['refreshToken']);
-    prefs.setString(expDate, response['expirationDate']);
+    prefs.setString(authTokenKey, response['token'] ?? '');
+    prefs.setString(refToken, response['refreshToken'] ?? '');
+    prefs.setString(expDate, response['expirationDate'] ?? '');
 
     var user = response['user'];
-    prefs.setInt(userIdKey, user['idUsuario']);
-    prefs.setString(nameKey, user['nombreUsuario']);
-    prefs.setInt(roleKey, user['tipoUsuario']);
+    prefs.setInt(userIdKey, user['idUsuario'] ?? 0);
+    prefs.setString(nameKey, user['nombreUsuario'] ?? '');
+    prefs.setInt(roleKey, user['tipoUsuario'] ?? 0);
   }
 }

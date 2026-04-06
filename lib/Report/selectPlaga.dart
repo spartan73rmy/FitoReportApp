@@ -1,8 +1,8 @@
-import '../CommonWidgets/plagaDialog.dart';
 import '../CommonWidgets/alert.dart';
 import '../CommonWidgets/deleteDialog.dart';
 import '../CommonWidgets/loadingScreen.dart';
-import '../Models/apiResponse.dart';
+import '../CommonWidgets/plagaDialog.dart';
+import '../Models/APIResponse.dart';
 import '../Models/plaga.dart';
 import '../Models/reportData.dart';
 import '../Report/selectEnfermedad.dart';
@@ -17,22 +17,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectPlaga extends StatefulWidget {
   final ReportData data;
-  SelectPlaga({this.data});
+  const SelectPlaga({super.key, required this.data});
   @override
   _SelectPlagaState createState() => _SelectPlagaState();
 }
 
 class _SelectPlagaState extends State<SelectPlaga> {
-  ReportData data;
+  late ReportData data;
   bool isLoading = true;
   bool isOnline = true;
 
   Ping get ping => GetIt.I<Ping>();
   PlagaService get service => GetIt.I<PlagaService>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  SharedPreferences _sharedPreferences;
-  APIResponse<List<Plaga>> res;
-  final selected = List<Plaga>();
+  late SharedPreferences _sharedPreferences;
+  APIResponse<List<Plaga>>? res;
+  final selected = <Plaga>[];
 
   @override
   void initState() {
@@ -45,15 +45,15 @@ class _SelectPlagaState extends State<SelectPlaga> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: UniqueKey(),
-        appBar: AppBar(title: Text('Plagas'), actions: <Widget>[
-          FlatButton(
-            padding: EdgeInsets.all(10.0),
-            child: Row(
-              // Replace with a Row for horizontal icon + text
+        appBar: AppBar(title: const Text('Plagas'), actions: <Widget>[
+          TextButton(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.all(10.0),
+            ),
+            child: const Row(
               children: <Widget>[
                 Center(
-                  child:
-                      Text("Siguiente", style: TextStyle(color: Colors.white)),
+                  child: Text("Siguiente", style: TextStyle(color: Colors.white)),
                 ),
                 Icon(
                   Icons.navigate_next,
@@ -76,52 +76,50 @@ class _SelectPlagaState extends State<SelectPlaga> {
             return LoadingScreen();
           }
 
-          if (isOnline && res.error ?? false) {
-            return Center(child: Text(res.errorMessage));
+          if (isOnline && res?.error == true) {
+            return Center(child: Text(res?.errorMessage ?? ''));
           }
           return Container(
               child: ListView.builder(
-                  itemCount: res.data.length,
-                  padding: EdgeInsets.all(16.0),
+                  itemCount: res?.data?.length ?? 0,
+                  padding: const EdgeInsets.all(16.0),
                   itemBuilder: (context, i) {
                     return Dismissible(
-                        key: ValueKey(res.data[i].id),
+                        key: ValueKey(res?.data?[i].id),
                         direction: DismissDirection.startToEnd,
                         onDismissed: (direction) {},
                         confirmDismiss: (direction) async {
                           final result = await showDialog(
                                   context: context,
-                                  builder: (_) => DeleteDialog()) ??
+                                  builder: (_) => const DeleteDialog()) ??
                               false;
-                          //If delete is confirmed delete from list and selected list if exist
                           if (result) {
-                            await deletePlaga(res.data[i]);
+                            await deletePlaga(res!.data![i]);
                           }
                           return result;
                         },
                         background: Container(
                           color: Colors.blue,
-                          padding: EdgeInsets.only(left: 16),
-                          child: Align(
+                          padding: const EdgeInsets.only(left: 16),
+                          child: const Align(
                             child: Icon(Icons.delete, color: Colors.white),
                             alignment: Alignment.centerLeft,
                           ),
                         ),
-                        child: buildRow(res.data[i]));
+                        child: buildRow(res!.data![i]));
                   }));
         }),
         persistentFooterButtons: [
           FloatingActionButton.extended(
-            icon: Icon(Icons.add),
-            label: Text("Agregar Plaga"),
+            icon: const Icon(Icons.add),
+            label: const Text("Agregar Plaga"),
             onPressed: () {
-              //If is valid add to list else return
               addEditPlagaDialog(context).then((value) {
                 if (value == null) return;
                 bool isValid = value.nombre != null;
                 if (isValid)
                   setState(() {
-                    res.data.add(value);
+                    res?.data?.add(value);
                   });
               });
             },
@@ -130,21 +128,20 @@ class _SelectPlagaState extends State<SelectPlaga> {
   }
 
   deletePlaga(Plaga plaga) async {
-    isOnline = await ping.ping() ?? false;
+    isOnline = await ping.ping();
     bool isNotLocal = plaga.id != null;
 
     if (isNotLocal && isOnline) {
       _sharedPreferences = await _prefs;
-      String authToken = Auth.getToken(_sharedPreferences);
-      var resp = await service.deletePlaga(plaga.id, authToken);
+      String authToken = Auth.getToken(_sharedPreferences) ?? '';
+      var resp = await service.deletePlaga(plaga.id!, authToken);
       if (resp.error)
-        await alertDiag(context, "Error", resp.errorMessage);
+        await alertDiag(context, "Error", resp.errorMessage ?? '');
       else if (selected.contains(plaga)) selected.remove(plaga);
-      if (res.data.contains(plaga)) res.data.remove(plaga);
+      if (res?.data?.contains(plaga) == true) res?.data?.remove(plaga);
     } else {
-      //Remove from local
       if (selected.contains(plaga)) selected.remove(plaga);
-      if (res.data.contains(plaga)) res.data.remove(plaga);
+      if (res?.data?.contains(plaga) == true) res?.data?.remove(plaga);
     }
   }
 
@@ -153,14 +150,14 @@ class _SelectPlagaState extends State<SelectPlaga> {
 
     _showLoading();
     List<Plaga> resp = await localS.readPlagas();
-    if (resp.length == 0) {
+    if (resp.isEmpty) {
       await alertDiag(context, "Error",
           "No hay datos para cargar, favor de conectarse a internet");
     }
 
     setState(() {
       res =
-          APIResponse<List<Plaga>>(data: resp, error: false, errorMessage: "");
+          APIResponse<List<Plaga>>(data: resp, error: false, errorMessage: '');
     });
     _hideLoading();
   }
@@ -173,8 +170,8 @@ class _SelectPlagaState extends State<SelectPlaga> {
         color: alreadySaved ? Colors.blue : null,
       ),
       title: Text(
-        plaga.nombre,
-        style: TextStyle(fontSize: 18.0),
+        plaga.nombre ?? '',
+        style: const TextStyle(fontSize: 18.0),
       ),
       onTap: () {
         setState(() {

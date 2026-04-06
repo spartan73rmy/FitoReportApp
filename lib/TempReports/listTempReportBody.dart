@@ -7,16 +7,16 @@ import '../TempReports/listTempReportCard.dart';
 import 'package:flutter/material.dart';
 
 class ListTempReportBody extends StatefulWidget {
-  ListTempReportBody();
+  const ListTempReportBody({super.key});
 
   @override
   _ListTempReportBodyState createState() => _ListTempReportBodyState();
 }
 
 class _ListTempReportBodyState extends State<ListTempReportBody> {
-  Future<List<ReportData>> data;
+  late Future<List<ReportData>> data;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
   @override
   void initState() {
     data = getData();
@@ -30,12 +30,12 @@ class _ListTempReportBodyState extends State<ListTempReportBody> {
   }
 
   Future<List<ReportData>> getData() async {
-    LocalStorage localStorage = new LocalStorage(FileName().report);
+    LocalStorage localStorage = LocalStorage(FileName().report);
     return await localStorage.readReports();
   }
 
   Future<List<ReportData>> deleteReport(int index) async {
-    LocalStorage localStorage = new LocalStorage(FileName().report);
+    LocalStorage localStorage = LocalStorage(FileName().report);
     return await localStorage.deleteReport(index);
   }
 
@@ -43,7 +43,7 @@ class _ListTempReportBodyState extends State<ListTempReportBody> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: data,
-        builder: (context, AsyncSnapshot snapshot) {
+        builder: (context, AsyncSnapshot<List<ReportData>> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
               return Container();
@@ -59,17 +59,17 @@ class _ListTempReportBodyState extends State<ListTempReportBody> {
                     refreshData();
                   },
                   child: ListView.builder(
-                      itemCount: snapshot.data.length,
+                      itemCount: snapshot.data?.length ?? 0,
                       scrollDirection: Axis.vertical,
                       itemBuilder: (BuildContext context, int index) {
                         return Dismissible(
-                            key: ValueKey(snapshot.data[index].id),
+                            key: ValueKey(snapshot.data?[index].id),
                             direction: DismissDirection.startToEnd,
                             onDismissed: (direction) {},
                             confirmDismiss: (direction) async {
                               final result = await showDialog(
                                       context: context,
-                                      builder: (_) => DeleteDialog()) ??
+                                      builder: (_) => const DeleteDialog()) ??
                                   false;
                               if (result) {
                                 setState(() {
@@ -80,13 +80,13 @@ class _ListTempReportBodyState extends State<ListTempReportBody> {
                             },
                             background: Container(
                               color: Colors.blue,
-                              padding: EdgeInsets.only(left: 16),
-                              child: Align(
+                              padding: const EdgeInsets.only(left: 16),
+                              child: const Align(
                                 child: Icon(Icons.delete, color: Colors.white),
                                 alignment: Alignment.centerLeft,
                               ),
                             ),
-                            child: ListTempReportCard(snapshot.data[index]));
+                            child: ListTempReportCard(snapshot.data![index]));
                       }),
                 );
               }

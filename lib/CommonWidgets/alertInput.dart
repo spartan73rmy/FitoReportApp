@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-Future<String> alertInputDiag(
+Future<String?> alertInputDiag(
     BuildContext context, String tittle, String text, String error,
-    {TextInputType keyboard: TextInputType.number,
-    Icon icon: const Icon(Icons.opacity)}) {
+    {TextInputType keyboard = TextInputType.number,
+    Icon icon = const Icon(Icons.opacity)}) async {
   TextEditingController _controller = new TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String result;
-  return showDialog(
+  String? result;
+  return showDialog<String>(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -26,11 +26,11 @@ Future<String> alertInputDiag(
                               keyboardType: keyboard,
                               autocorrect: false,
                               maxLines: 1,
-                              onSaved: (String value) {
+                              onSaved: (String? value) {
                                 result = value;
                               },
                               validator: (value) {
-                                if (value.isEmpty) {
+                                if (value == null || value.isEmpty) {
                                   return error;
                                 }
                                 return null;
@@ -39,18 +39,17 @@ Future<String> alertInputDiag(
                                   labelText: text,
                                   hintText: text,
                                   icon: icon,
-                                  labelStyle: TextStyle(
+                                  labelStyle: const TextStyle(
                                       decorationStyle:
                                           TextDecorationStyle.solid)),
                             )
                           ])))),
           actions: <Widget>[
-            FlatButton(
-              child: Text("Aceptar"),
+            TextButton(
+              child: const Text("Aceptar"),
               onPressed: () {
                 final form = _formKey.currentState;
-                if (form.validate()) {
-                  // Text forms was validated.
+                if (form != null && form.validate()) {
                   form.save();
                   Navigator.pop(context, result);
                 }

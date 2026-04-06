@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 class MapArea extends StatefulWidget {
   final LatLng point;
-  MapArea(this.point, {Key key}) : super(key: key);
+  MapArea(this.point, {super.key});
 
   @override
   _MapAreaState createState() => _MapAreaState();
@@ -18,22 +18,20 @@ class _MapAreaState extends State<MapArea> {
       height: MediaQuery.of(context).size.height * 0.35,
       child: FlutterMap(
         options: MapOptions(
-          center: widget.point,
-          zoom: 15.0,
+          initialCenter: widget.point,
+          initialZoom: 15.0,
         ),
-        layers: [
-          TileLayerOptions(
+        children: [
+          TileLayer(
               urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-              subdomains: ['a', 'b', 'c']),
-          MarkerLayerOptions(
+              subdomains: const ['a', 'b', 'c']),
+          MarkerLayer(
             markers: [
               Marker(
                 width: 40.0,
                 height: 40.0,
                 point: widget.point,
-                builder: (ctx) => Container(
-                  child: FlutterLogo(),
-                ),
+                child: const FlutterLogo(),
               ),
             ],
           ),

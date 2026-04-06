@@ -1,5 +1,5 @@
 class FileHash {
-  String hash;
+  String? hash;
 
   FileHash({this.hash});
 
@@ -8,7 +8,7 @@ class FileHash {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['hash'] = this.hash;
     return data;
   }

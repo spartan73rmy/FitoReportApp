@@ -2,9 +2,9 @@ import '../Models/etapaFenologica.dart';
 import 'package:flutter/material.dart';
 
 class AddEditEtapaFenologicaDialog extends StatefulWidget {
-  final EtapaFenologica etapaFenologica;
+  final EtapaFenologica? etapaFenologica;
 
-  AddEditEtapaFenologicaDialog({this.etapaFenologica});
+  const AddEditEtapaFenologicaDialog({super.key, this.etapaFenologica});
 
   @override
   _AddEditEtapaFenologicaDialogState createState() =>
@@ -15,8 +15,8 @@ class _AddEditEtapaFenologicaDialogState
     extends State<AddEditEtapaFenologicaDialog> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   EtapaFenologica p = new EtapaFenologica();
-  bool isEdit;
-  List<TextEditingController> c;
+  late bool isEdit;
+  late List<TextEditingController> c;
   @override
   void initState() {
     super.initState();
@@ -27,7 +27,7 @@ class _AddEditEtapaFenologicaDialogState
     isEdit = widget.etapaFenologica != null;
 
     if (isEdit) {
-      p = widget.etapaFenologica;
+      p = widget.etapaFenologica!;
       c[0].text = "${p.nombre}";
     }
   }
@@ -35,8 +35,8 @@ class _AddEditEtapaFenologicaDialogState
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: EdgeInsets.only(left: 25, right: 25),
-      title: Center(child: Text("Etapa Fenologica")),
+      contentPadding: const EdgeInsets.only(left: 25, right: 25),
+      title: const Center(child: Text("Etapa Fenologica")),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       content: Container(
@@ -48,7 +48,7 @@ class _AddEditEtapaFenologicaDialogState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               TextFormField(
@@ -56,20 +56,19 @@ class _AddEditEtapaFenologicaDialogState
                 keyboardType: TextInputType.text,
                 autocorrect: false,
                 maxLines: 1,
-                onSaved: (String value) {
+                onSaved: (String? value) {
                   p.nombre = value;
                 },
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return "Introduce el nombre";
                   }
                   return null;
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     labelText: 'Etapa Fenologica',
                     hintText: 'Etapa Fenologica',
-                    //filled: true,
-                    icon: const Icon(Icons.bug_report),
+                    icon: Icon(Icons.bug_report),
                     labelStyle:
                         TextStyle(decorationStyle: TextDecorationStyle.solid)),
               ),
@@ -78,11 +77,11 @@ class _AddEditEtapaFenologicaDialogState
         )),
       ),
       actions: <Widget>[
-        FlatButton(
-          child: isEdit ? Text("Editar") : Text("Agregar"),
+        TextButton(
+          child: isEdit ? const Text("Editar") : const Text("Agregar"),
           onPressed: () {
             final form = _formKey.currentState;
-            if (form.validate()) {
+            if (form != null && form.validate()) {
               form.save();
               Navigator.pop(context, p);
             }
@@ -93,9 +92,9 @@ class _AddEditEtapaFenologicaDialogState
   }
 }
 
-Future<EtapaFenologica> addEditEtapaFenologicaDialog(BuildContext context,
-    {EtapaFenologica etapaFenologica}) {
-  return showDialog(
+Future<EtapaFenologica?> addEditEtapaFenologicaDialog(BuildContext context,
+    {EtapaFenologica? etapaFenologica}) {
+  return showDialog<EtapaFenologica?>(
       context: context,
       builder: (context) {
         return AddEditEtapaFenologicaDialog(

@@ -1,6 +1,5 @@
 import '../CommonWidgets/loadingScreen.dart';
 import '../Login/login.dart';
-import '../Map/map.dart';
 import '../QrScan/qrScanner.dart';
 import '../Services/auth.dart';
 import '../Syncing/Syncing.dart';
@@ -9,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerContent extends StatefulWidget {
-  final bool isAdmin;
-  DrawerContent({this.isAdmin, key}) : super(key: key);
+  final bool? isAdmin;
+  const DrawerContent({super.key, this.isAdmin});
 
   @override
   _DrawerContentState createState() => _DrawerContentState();
@@ -18,7 +17,7 @@ class DrawerContent extends StatefulWidget {
 
 class _DrawerContentState extends State<DrawerContent> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  SharedPreferences _sharedPreferences;
+  late SharedPreferences _sharedPreferences;
   bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
@@ -44,12 +43,12 @@ class _DrawerContentState extends State<DrawerContent> {
     Navigator.of(context).popUntil((route) => route.isFirst);
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Login("FitoReport")),
+      MaterialPageRoute(builder: (context) => const Login("FitoReport")),
     );
     _hideLoading();
   }
 
-  Drawer drawerContent(BuildContext context) {
+  Widget drawerContent(BuildContext context) {
     if (_isLoading) {
       return Drawer(child: LoadingScreen());
     }
@@ -60,7 +59,7 @@ class _DrawerContentState extends State<DrawerContent> {
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
           ),
-          child: Text(
+          child: const Text(
             'FitoReportApp Bienvenido',
             style: TextStyle(
               color: Colors.white,
@@ -69,8 +68,8 @@ class _DrawerContentState extends State<DrawerContent> {
           ),
         ),
         ListTile(
-          leading: Icon(Icons.qr_code_scanner_outlined),
-          title: Text('Escanear QR'),
+          leading: const Icon(Icons.qr_code_scanner_outlined),
+          title: const Text('Escanear QR'),
           onTap: () async {
             Navigator.push(
               context,
@@ -79,29 +78,26 @@ class _DrawerContentState extends State<DrawerContent> {
           },
         ),
         ListTile(
-          enabled: widget.isAdmin,
-          leading: Icon(Icons.supervised_user_circle),
-          title: Text('Usuarios'),
-          subtitle: Text.rich(
-            TextSpan(
-                text: "Aprobar usuarios nuevos",
-                style:
-                    TextStyle(color: Color(Colors.black.value), fontSize: 15)),
+          enabled: widget.isAdmin == true,
+          leading: const Icon(Icons.supervised_user_circle),
+          title: const Text('Usuarios'),
+          subtitle: const Text(
+            "Aprobar usuarios nuevos",
           ),
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ListUsers()),
+              MaterialPageRoute(builder: (context) => const ListUsers()),
             );
           },
         ),
         ListTile(
-          leading: Icon(Icons.cloud_download),
-          title: Text('Sincronizar Catalogos'),
+          leading: const Icon(Icons.cloud_download),
+          title: const Text('Sincronizar Catalogos'),
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SyncingData()),
+              MaterialPageRoute(builder: (context) => const SyncingData()),
             );
           },
         ),
@@ -109,8 +105,8 @@ class _DrawerContentState extends State<DrawerContent> {
             child: Align(
           alignment: Alignment.bottomCenter,
           child: ListTile(
-            leading: Icon(Icons.close),
-            title: Text('Cerrar Sesion'),
+            leading: const Icon(Icons.close),
+            title: const Text('Cerrar Sesion'),
             onTap: () async {
               await logOut();
             },

@@ -7,38 +7,38 @@ import 'package:http/http.dart' as http;
 class EtapaFService extends HttpModel {
   String url = "EtapaFenologica/";
 
-  Future<APIResponse<List<EtapaFenologica>>> getListEtapas(authToken) {
+  Future<APIResponse<List<EtapaFenologica>>> getListEtapas(String authToken) {
     return http
         .get(
-          HttpModel.getUrl + url + "GetAllEtapas",
+          Uri.parse(HttpModel.getUrl + url + "GetAllEtapas"),
           headers: {'Authorization': "Bearer " + authToken},
         )
-        .timeout(Duration(seconds: 15))
+        .timeout(const Duration(seconds: 15))
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);
             final etapasList = EtapaFList.fromJSON(jsonData);
-            return APIResponse<List<EtapaFenologica>>(data: etapasList.etapas);
+            return APIResponse<List<EtapaFenologica>>(data: etapasList.etapas ?? []);
           }
           return APIResponse<List<EtapaFenologica>>(
-              data: new List<EtapaFenologica>(),
+              data: <EtapaFenologica>[],
               error: true,
               errorMessage: "La sesion ha caducado, reinicie sesion");
         })
         .catchError((error) => APIResponse<List<EtapaFenologica>>(
-            data: new List<EtapaFenologica>(),
+            data: <EtapaFenologica>[],
             error: true,
             errorMessage:
                 "Ocurrio un error al conectar a internet " + error.toString()));
   }
 
-  Future<APIResponse<bool>> deleteEtapa(int idEtapa, authToken) {
+  Future<APIResponse<bool>> deleteEtapa(int idEtapa, String authToken) {
     return http
-        .delete(HttpModel.getUrl + url + "Delete/$idEtapa", headers: {
+        .delete(Uri.parse(HttpModel.getUrl + url + "Delete/$idEtapa"), headers: {
           'Authorization': "Bearer " + authToken,
           'Content-Type': 'application/json'
         })
-        .timeout(Duration(seconds: 15))
+        .timeout(const Duration(seconds: 15))
         .then((data) {
           if (data.statusCode == 200) {
             return APIResponse<bool>(data: true);

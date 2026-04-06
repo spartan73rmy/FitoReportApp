@@ -1,7 +1,7 @@
 class Token {
-  String token;
-  String refreshToken;
-  DateTime expToken;
+  String? token;
+  String? refreshToken;
+  DateTime? expToken;
   Token({this.token, this.refreshToken, this.expToken});
 
   factory Token.fromJSON(Map<String, dynamic> item) {

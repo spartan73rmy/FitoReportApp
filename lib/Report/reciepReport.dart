@@ -11,7 +11,7 @@ import 'reciepReportBody.dart';
 
 class ReciepReport extends StatefulWidget {
   final ReportData data;
-  ReciepReport({this.data, Key key}) : super(key: key);
+  const ReciepReport({super.key, required this.data});
 
   @override
   _ReciepReportState createState() {
@@ -20,8 +20,8 @@ class ReciepReport extends StatefulWidget {
 }
 
 class _ReciepReportState extends State<ReciepReport> {
-  ReportData data;
-  List<Producto> products;
+  late ReportData data;
+  List<Producto> products = [];
   bool typing = false;
 
   @override
@@ -29,11 +29,11 @@ class _ReciepReportState extends State<ReciepReport> {
     return Scaffold(
       key: UniqueKey(),
       appBar: AppBar(title: Text('Recomendacion'), actions: <Widget>[
-        FlatButton(
+        TextButton(
           onPressed: () {
             alertInputDiag(context, "Litros", "Cantidad", "Introduce un numero")
                 .then((result) {
-              int l = int.tryParse(result);
+              int? l = int.tryParse(result ?? '');
               if (l != null && l >= 0) {
                 setState(() {
                   data.litros = l;
@@ -41,10 +41,10 @@ class _ReciepReportState extends State<ReciepReport> {
               }
             });
           },
-          child: Center(child: Text("${data.litros ?? 0} L agua")),
+          child: Center(child: Text("${data.litros} L agua")),
         ),
         IconButton(
-          icon: Icon(Icons.save),
+          icon: const Icon(Icons.save),
           onPressed: () async {
             await getGeoLocation();
             await saveData();
@@ -59,16 +59,13 @@ class _ReciepReportState extends State<ReciepReport> {
       ]),
       body: ReciepReportBody(products),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () {
           addEditProductDialog(context).then((value) {
             if (value == null) return;
-            bool isValidProduct = value.nombre != null &&
-                value.cantidad != null &&
-                value.unidad != null &&
-                value.concentracion != null &&
-                value.ingredienteActivo != null &&
-                value.intervaloSeguridad != null;
+            bool isValidProduct = value.nombre.isNotEmpty &&
+                value.cantidad > 0 &&
+                value.unidad.isNotEmpty;
             if (isValidProduct) addProduct(value);
           });
         },
@@ -78,7 +75,6 @@ class _ReciepReportState extends State<ReciepReport> {
 
   @override
   void initState() {
-    products = new List<Producto>();
     data = widget.data;
     data.litros = 0;
     super.initState();
@@ -86,11 +82,10 @@ class _ReciepReportState extends State<ReciepReport> {
 
   @override
   void dispose() {
-    this.data = null;
     super.dispose();
   }
 
-  addProduct(Producto product) {
+  void addProduct(Producto product) {
     setState(() {
       products.add(product);
     });
@@ -98,21 +93,21 @@ class _ReciepReportState extends State<ReciepReport> {
 
   Future<void> getGeoLocation() async {
     print("GPS...");
-    bool isEnabled = await isLocationServiceEnabled();
+    bool isEnabled = await Geolocator.isLocationServiceEnabled();
     if (isEnabled) {
-      LocationPermission permission = await checkPermission();
+      LocationPermission permission = await Geolocator.checkPermission();
       if (permission != LocationPermission.always &&
           permission != LocationPermission.whileInUse) {
-        permission = await requestPermission();
+        permission = await Geolocator.requestPermission();
         final Position position =
-            await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+            await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
         setState(() {
           data.latitude = position.latitude;
           data.longitud = position.longitude;
         });
       } else {
         final Position position =
-            await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+            await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
         setState(() {
           data.latitude = position.latitude;
           data.longitud = position.longitude;

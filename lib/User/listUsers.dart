@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Models/APIResponse.dart';
 
 class ListUsers extends StatefulWidget {
-  ListUsers({Key key}) : super(key: key);
+  const ListUsers({super.key});
 
   @override
   _ListUsersState createState() => _ListUsersState();
@@ -19,9 +19,9 @@ class ListUsers extends StatefulWidget {
 
 class _ListUsersState extends State<ListUsers> {
   bool _isLoading = false;
-  APIResponse<List<User>> res;
+  late APIResponse<List<User>> res;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  SharedPreferences _sharedPreferences;
+  late SharedPreferences _sharedPreferences;
 
   UserService get service => GetIt.I<UserService>();
   @override
@@ -34,7 +34,7 @@ class _ListUsersState extends State<ListUsers> {
     _showLoading();
 
     _sharedPreferences = await _prefs;
-    String authToken = Auth.getToken(_sharedPreferences);
+    String authToken = Auth.getToken(_sharedPreferences) ?? '';
     var resp = await service.getListUser(authToken);
 
     setState(() {
@@ -58,16 +58,16 @@ class _ListUsersState extends State<ListUsers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Usuarios')),
+        appBar: AppBar(title: const Text('Usuarios')),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => Register()))
+                .push(MaterialPageRoute(builder: (_) => const Register()))
                 .then((_) {
               _fetchUsers();
             });
           },
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
         ),
         body: Builder(
           builder: (_) {
@@ -76,7 +76,7 @@ class _ListUsersState extends State<ListUsers> {
             }
 
             if (res.error) {
-              return Center(child: Text(res.errorMessage));
+              return Center(child: Text(res.errorMessage ?? ''));
             }
 
             return ListView.separated(
@@ -84,31 +84,31 @@ class _ListUsersState extends State<ListUsers> {
                   Divider(height: 1, color: Theme.of(context).primaryColor),
               itemBuilder: (context, index) {
                 return Dismissible(
-                  key: ValueKey(res.data[index].userName),
+                  key: ValueKey(res.data?[index].userName),
                   direction: DismissDirection.startToEnd,
                   onDismissed: (direction) {},
                   confirmDismiss: (direction) async {
                     final result = await showDialog(
-                            context: context, builder: (_) => DeleteDialog()) ??
+                            context: context, builder: (_) => const DeleteDialog()) ??
                         false;
 
                     if (result) {
                       _sharedPreferences = await _prefs;
-                      String authToken = Auth.getToken(_sharedPreferences);
+                      String authToken = Auth.getToken(_sharedPreferences) ?? '';
 
                       final deleteResult = await service.deleteUser(
-                          res.data[index].userName, authToken);
-                      var message = '';
+                          res.data?[index].userName ?? '', authToken);
+                      String message = '';
 
-                      if (deleteResult != null && deleteResult.data == true) {
+                      if (deleteResult.data == true) {
                         message = 'El usuario fue eliminado';
                       } else {
                         message =
-                            deleteResult?.errorMessage ?? 'Ocurrio un error';
+                            deleteResult.errorMessage ?? 'Ocurrio un error';
                       }
-                      Scaffold.of(context).showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(message),
-                          duration: new Duration(milliseconds: 1000)));
+                          duration: const Duration(milliseconds: 1000)));
 
                       return deleteResult.data ?? false;
                     }
@@ -116,8 +116,8 @@ class _ListUsersState extends State<ListUsers> {
                   },
                   background: Container(
                     color: Colors.red,
-                    padding: EdgeInsets.only(left: 16),
-                    child: Align(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: const Align(
                       child: Icon(Icons.delete, color: Colors.white),
                       alignment: Alignment.centerLeft,
                     ),
@@ -125,70 +125,68 @@ class _ListUsersState extends State<ListUsers> {
                   child: ListTile(
                     title: RichText(
                       text: TextSpan(
-                        text: res.data[index].nombre +
-                            " " +
-                            res.data[index].aPaterno +
-                            " " +
-                            res.data[index].aMaterno,
-                        style: !res.data[index].aproved
-                            ? TextStyle(
+                        text: '${res.data?[index].nombre ?? ''}'
+                            ' '
+                            '${res.data?[index].aPaterno ?? ''}'
+                            ' '
+                            '${res.data?[index].aMaterno ?? ''}',
+                        style: !(res.data?[index].aproved ?? false)
+                            ? const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold)
-                            : TextStyle(
+                            : const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal),
                       ),
                     ),
                     subtitle: RichText(
                         text: TextSpan(
-                            text: "${res.data[index].email}\n",
-                            style: TextStyle(
+                            text: "${res.data?[index].email ?? ''}\n",
+                            style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal),
                             children: [
                           TextSpan(
                             text:
-                                "${(res.data[index].type == 1) ? "Administrador" : "Usuario"}",
-                            style: !res.data[index].aproved
-                                ? TextStyle(
+                                "${(res.data?[index].type == 1) ? "Administrador" : "Usuario"}",
+                            style: !(res.data?[index].aproved ?? false)
+                                ? const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold)
-                                : TextStyle(
+                                : const TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.normal),
                           ),
                         ])),
                     onTap: () async {
                       final result = await showDialog(
-                          context: context, builder: (_) => AproveUser());
+                          context: context, builder: (_) => const AproveUser());
 
-                      if (result) {
+                      if (result == true) {
                         _sharedPreferences = await _prefs;
-                        String authToken = Auth.getToken(_sharedPreferences);
+                        String authToken = Auth.getToken(_sharedPreferences) ?? '';
 
                         final aproveResult = await service.aproveUser(
-                            res.data[index].userName, authToken);
-                        var message = '';
+                            res.data?[index].userName ?? '', authToken);
+                        String message = '';
 
-                        if (aproveResult != null && aproveResult.data == true) {
-                          message = 'El usuario fue aprovado';
-                        } else {
-                          message =
-                              aproveResult?.errorMessage ?? 'Ocurrio un error';
-                        }
-                        Scaffold.of(context).showSnackBar(SnackBar(
+                      if (aproveResult.data == true) {
+                        message = 'El usuario foi aprovado';
+                      } else {
+                        message =
+                            aproveResult.errorMessage ?? 'Ocurrio un error';
+                      }
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(message),
-                            duration: new Duration(milliseconds: 1000)));
+                            duration: const Duration(milliseconds: 1000)));
 
                         await _fetchUsers();
-
-                        return aproveResult.data ?? false;
                       }
                     },
                   ),
                 );
               },
-              itemCount: res.data.length,
+              itemCount: res.data?.length ?? 0,
             );
           },
         ));

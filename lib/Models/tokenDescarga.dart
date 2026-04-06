@@ -1,5 +1,5 @@
 class TokenDescarga {
-  String hashArchivo;
+  String? hashArchivo;
 
   TokenDescarga(this.hashArchivo);
 
@@ -8,23 +8,23 @@ class TokenDescarga {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['hashArchivo'] = this.hashArchivo;
     return data;
   }
 }
 
 class TokenHashDescarga {
-  String tokenDescarga;
-  String hash;
+  String? tokenDescarga;
+  String? hash;
   TokenHashDescarga(this.tokenDescarga, {this.hash});
 
   TokenHashDescarga.fromJson(Map<String, dynamic> json) {
     tokenDescarga = json['tokenDescarga'];
+    hash = json['hashArchivo'];
   }
 
   Map<String, dynamic> toJson() {
-    // return {'hashArchivo': "cdscs213", 'tokenDescarga': "123vd"};
     return {'hashArchivo': this.hash, 'tokenDescarga': this.tokenDescarga};
   }
 }

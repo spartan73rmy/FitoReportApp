@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AproveUser extends StatefulWidget {
-  AproveUser({Key key}) : super(key: key);
+  const AproveUser({super.key});
 
   @override
   _AproveUserState createState() => _AproveUserState();
@@ -11,17 +11,17 @@ class _AproveUserState extends State<AproveUser> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Advertencia'),
-      content: Text('Desea aprobar a este usuario?'),
+      title: const Text('Advertencia'),
+      content: const Text('Desea aprobar a este usuario?'),
       actions: <Widget>[
-        FlatButton(
-          child: Text('Si'),
+        TextButton(
+          child: const Text('Si'),
           onPressed: () {
             Navigator.of(context).pop(true);
           },
         ),
-        FlatButton(
-          child: Text('No'),
+        TextButton(
+          child: const Text('No'),
           onPressed: () {
             Navigator.of(context).pop(false);
           },

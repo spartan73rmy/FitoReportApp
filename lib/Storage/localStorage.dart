@@ -20,8 +20,8 @@ class LocalStorage {
   }
 
   Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/$fileName');
+    final p = await _localPath;
+    return File('$p/$fileName');
   }
 
   Future<File> createFile(var data) async {
@@ -30,7 +30,6 @@ class LocalStorage {
     file.createSync();
     fileExists = true;
 
-    // Write the file.
     return file.writeAsString(dataToWrite);
   }
 
@@ -38,13 +37,11 @@ class LocalStorage {
     final file = await _localFile;
 
     if (file.existsSync()) {
-      // print("File exists");
       Map<String, String> jsonFileContent =
-          json.decode(file.readAsStringSync());
-      jsonFileContent.addAll(data);
+          json.decode(file.readAsStringSync()) as Map<String, String>;
+      jsonFileContent.addAll(data as Map<String, String>);
       file.writeAsStringSync(json.encode(jsonFileContent));
     } else {
-      // print("File does not exist!");
       createFile(data);
     }
   }
@@ -54,7 +51,6 @@ class LocalStorage {
     file.createSync();
     fileExists = true;
 
-    // Write the file.
     return file.writeAsString(data);
   }
 
@@ -70,32 +66,31 @@ class LocalStorage {
 
   Future<void> clearReportFile() async {
     String jsonData =
-        jsonEncode(ReportDataList(reportes: new List<ReportData>()));
+        jsonEncode(ReportDataList(reportes: <ReportData>[]));
     writeJsonToFile(jsonData);
   }
 
   Future<void> clearEtapasFile() async {
     String jsonData = jsonEncode(
-        new EtapaFList(etapas: new List<EtapaFenologica>()).toJson());
+        EtapaFList(etapas: <EtapaFenologica>[]).toJson());
     writeJsonToFile(jsonData);
   }
 
   Future<void> clearPlagasFile() async {
     String jsonData =
-        jsonEncode(new PlagaList(plagas: new List<Plaga>()).toJson());
-    // print("Clear this $jsonData");
+        jsonEncode(PlagaList(plagas: <Plaga>[]).toJson());
     writeJsonToFile(jsonData);
   }
 
   Future<void> clearEnfermedadesFile() async {
     String jsonData = jsonEncode(
-        new EnfermedadList(enfermedades: new List<Enfermedad>()).toJson());
+        EnfermedadList(enfermedades: <Enfermedad>[]).toJson());
     writeJsonToFile(jsonData);
   }
 
   Future<void> refreshEtapas(List<EtapaFenologica> lista) async {
     await clearEtapasFile();
-    EtapaFList etapas = new EtapaFList(etapas: lista);
+    EtapaFList etapas = EtapaFList(etapas: lista);
 
     String jsonData = jsonEncode(etapas.toJson());
     writeJsonToFile(jsonData);
@@ -103,44 +98,41 @@ class LocalStorage {
 
   Future<void> refreshPlagas(List<Plaga> lista) async {
     await clearPlagasFile();
-    String jsonData = jsonEncode(new PlagaList(plagas: lista).toJson());
-    // print("Guarda $jsonData");
+    String jsonData = jsonEncode(PlagaList(plagas: lista).toJson());
     writeJsonToFile(jsonData);
   }
 
   Future<void> refreshEnfermedades(List<Enfermedad> lista) async {
     await clearEnfermedadesFile();
     String jsonData =
-        jsonEncode(new EnfermedadList(enfermedades: lista).toJson());
-    // print("Guarda $jsonData");
+        jsonEncode(EnfermedadList(enfermedades: lista).toJson());
     writeJsonToFile(jsonData);
   }
 
   Future<void> refreshReportes(List<ReportData> lista) async {
     await clearReportFile();
-    String jsonData = jsonEncode(new ReportDataList(reportes: lista).toJson());
-    // print("Guarda $jsonData");
+    String jsonData = jsonEncode(ReportDataList(reportes: lista)
+        .toJson());
     writeJsonToFile(jsonData);
   }
 
   Future<void> addReport(ReportData reporte) async {
-    reporte.id = IdGen.getId(); //Get Temp ID to save report and its own images
+    reporte.id = IdGen.getId();
     final file = await _localFile;
     List<ReportData> lista;
 
     if (file.existsSync()) {
       String contents = await file.readAsString();
-      lista = ReportDataList.fromJSON(json.decode(contents)).reportes;
+      lista = ReportDataList.fromJSON(json.decode(contents)).reportes ?? [];
       lista.add(reporte);
     } else {
-      lista = new List<ReportData>();
+      lista = <ReportData>[];
       lista.add(reporte);
     }
-    //Save Images with IdReport
-    await writeImages(reporte.images, reporte.id);
+    await writeImages(reporte.images, reporte.id!);
 
-    String jsonData = jsonEncode(new ReportDataList(reportes: lista)
-        .toJson()); // this will automatically call toJson
+    String jsonData = jsonEncode(ReportDataList(reportes: lista)
+        .toJson());
     writeJsonToFile(jsonData);
   }
 
@@ -148,10 +140,9 @@ class LocalStorage {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
-      var lista = ReportDataList.fromJSON(json.decode(contents)).reportes;
+      var lista = ReportDataList.fromJSON(json.decode(contents)).reportes ?? [];
       if (lista.length > index && lista.length > 0 && index >= 0) {
-        //Delete Images in the index of report
-        deleteImages(lista[index].id);
+        deleteImages(lista[index].id ?? 0);
         lista.removeAt(index);
         refreshReportes(lista);
       }
@@ -159,7 +150,7 @@ class LocalStorage {
     } catch (e) {
       print("File corrupt -> $e");
       await clearReportFile();
-      return new List<ReportData>();
+      return <ReportData>[];
     }
   }
 
@@ -167,12 +158,12 @@ class LocalStorage {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
-      var lista = ReportDataList.fromJSON(json.decode(contents)).reportes;
+      var lista = ReportDataList.fromJSON(json.decode(contents)).reportes ?? [];
       return lista;
     } catch (e) {
       print("File corrupt -> $e");
       await clearReportFile();
-      return new List<ReportData>();
+      return <ReportData>[];
     }
   }
 
@@ -180,17 +171,16 @@ class LocalStorage {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
-      var lista = ReportDataList.fromJSON(json.decode(contents)).reportes;
+      var lista = ReportDataList.fromJSON(json.decode(contents)).reportes ?? [];
 
-      //Set images from directory and set to report data
       for (int i = 0; i < lista.length; i++)
-        lista[i].images = await readImages(lista[i].id);
+        lista[i].images = await readImages(lista[i].id ?? 0);
 
       return lista;
     } catch (e) {
       print("File corrupt -> $e");
       await clearReportFile();
-      return new List<ReportData>();
+      return <ReportData>[];
     }
   }
 
@@ -198,12 +188,12 @@ class LocalStorage {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
-      var lista = EtapaFList.fromJSON(json.decode(contents)).etapas;
+      var lista = EtapaFList.fromJSON(json.decode(contents)).etapas ?? [];
       return lista;
     } catch (e) {
       print("File corrupt -> $e");
       await clearEtapasFile();
-      return new List<EtapaFenologica>();
+      return <EtapaFenologica>[];
     }
   }
 
@@ -211,12 +201,12 @@ class LocalStorage {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
-      var lista = PlagaList.fromJSON(json.decode(contents)).plagas;
+      var lista = PlagaList.fromJSON(json.decode(contents)).plagas ?? [];
       return lista;
     } catch (e) {
       print("File corrupt -> $e");
       await clearPlagasFile();
-      return new List<Plaga>();
+      return <Plaga>[];
     }
   }
 
@@ -224,18 +214,18 @@ class LocalStorage {
     try {
       final file = await _localFile;
       String contents = await file.readAsString();
-      var lista = EnfermedadList.fromJSON(json.decode(contents)).enfermedades;
+      var lista = EnfermedadList.fromJSON(json.decode(contents)).enfermedades ?? [];
       return lista;
     } catch (e) {
       print("File corrupt -> $e");
       await clearEnfermedadesFile();
-      return new List<Enfermedad>();
+      return <Enfermedad>[];
     }
   }
 
   Future<void> deleteAllImages() async {
-    final path = await _localPath;
-    Directory dir = Directory('$path/images/');
+    final p = await _localPath;
+    Directory dir = Directory('$p/images/');
     if (dir.existsSync()) await dir.delete(recursive: true);
     print('All images are deleted');
   }
@@ -247,7 +237,7 @@ class LocalStorage {
   }
 
   Future<List<File>> readImages(int id) async {
-    var filesList = new List<File>();
+    var filesList = <File>[];
     Directory dir = await imagesDir(id);
     dir.listSync(recursive: true).forEach((element) {
       if (element is File) {
@@ -257,7 +247,7 @@ class LocalStorage {
     return filesList;
   }
 
-  Future<void> writeImages(List<File> images, int id) async {
+  Future<void> writeImages(List<File>? images, int id) async {
     if (images == null) return;
     String route = (await imagesDir(id)).path;
     for (int i = 0; i < images.length; i++) {
@@ -268,8 +258,8 @@ class LocalStorage {
   }
 
   Future<Directory> imagesDir(int idReport) async {
-    final path = await _localPath;
-    Directory imagesDir = Directory('$path/images/$idReport/');
+    final p = await _localPath;
+    Directory imagesDir = Directory('$p/images/$idReport/');
     bool exist = await imagesDir.exists();
     print(exist);
     if (exist) {

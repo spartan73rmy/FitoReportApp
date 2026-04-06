@@ -17,23 +17,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectEnfermedad extends StatefulWidget {
   final ReportData data;
-  SelectEnfermedad({this.data});
+  const SelectEnfermedad({super.key, required this.data});
   @override
   _SelectEnfermedadState createState() => _SelectEnfermedadState();
 }
 
 class _SelectEnfermedadState extends State<SelectEnfermedad> {
-  ReportData data;
+  late ReportData data;
   bool _isLoading = true;
   bool isOnline = true;
 
   Ping get ping => GetIt.I<Ping>();
   EnfermedadService get service => GetIt.I<EnfermedadService>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  SharedPreferences _sharedPreferences;
-  APIResponse<List<Enfermedad>> res;
+  late SharedPreferences _sharedPreferences;
+  APIResponse<List<Enfermedad>>? res;
 
-  final selected = List<Enfermedad>();
+  final selected = <Enfermedad>[];
   @override
   void initState() {
     data = widget.data;
@@ -44,11 +44,12 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Enfermedades'), actions: <Widget>[
-        FlatButton(
-          padding: EdgeInsets.all(10.0),
-          child: Row(
-            // Replace with a Row for horizontal icon + text
+      appBar: AppBar(title: const Text('Enfermedades'), actions: <Widget>[
+        TextButton(
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.all(10.0),
+          ),
+          child: const Row(
             children: <Widget>[
               Center(
                 child: Text("Siguiente", style: TextStyle(color: Colors.white)),
@@ -73,51 +74,49 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
           return LoadingScreen();
         }
 
-        if (isOnline && res.error ?? false) {
-          return Center(child: Text(res.errorMessage));
+        if (isOnline && res?.error == true) {
+          return Center(child: Text(res?.errorMessage ?? ''));
         }
 
         return ListView.builder(
-            itemCount: res.data.length,
-            padding: EdgeInsets.all(16.0),
+            itemCount: res?.data?.length ?? 0,
+            padding: const EdgeInsets.all(16.0),
             itemBuilder: /*1*/ (context, i) {
               return Dismissible(
-                  key: ValueKey(res.data[i].id),
+                  key: ValueKey(res?.data?[i].id),
                   direction: DismissDirection.startToEnd,
                   onDismissed: (direction) {},
                   confirmDismiss: (direction) async {
                     final result = await showDialog(
-                            context: context, builder: (_) => DeleteDialog()) ??
+                            context: context, builder: (_) => const DeleteDialog()) ??
                         false;
-                    //If delete is confirmed delete from list and selected list if exist
                     if (result) {
-                      await deleteEnfermedad(res.data[i]);
+                      await deleteEnfermedad(res!.data![i]);
                     }
                     return result;
                   },
                   background: Container(
                     color: Colors.blue,
-                    padding: EdgeInsets.only(left: 16),
-                    child: Align(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: const Align(
                       child: Icon(Icons.delete, color: Colors.white),
                       alignment: Alignment.centerLeft,
                     ),
                   ),
-                  child: buildRow(res.data[i]));
+                  child: buildRow(res!.data![i]));
             });
       }),
       persistentFooterButtons: [
         FloatingActionButton.extended(
-          icon: Icon(Icons.add),
-          label: Text("Agregar Enfermedad"),
+          icon: const Icon(Icons.add),
+          label: const Text("Agregar Enfermedad"),
           onPressed: () {
-            //If is valid add to list else return
             addEditEnfermedadDialog(context).then((value) {
               if (value == null) return;
               bool isValid = value.nombre != null;
               if (isValid)
                 setState(() {
-                  res.data.add(value);
+                  res?.data?.add(value);
                 });
             });
           },
@@ -127,21 +126,20 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
   }
 
   deleteEnfermedad(Enfermedad enfermedad) async {
-    isOnline = await ping.ping() ?? false;
+    isOnline = await ping.ping();
     bool isNotLocal = enfermedad.id != null;
 
     if (isNotLocal && isOnline) {
       _sharedPreferences = await _prefs;
-      String authToken = Auth.getToken(_sharedPreferences);
-      var resp = await service.deleteEnfermedad(enfermedad.id, authToken);
+      String authToken = Auth.getToken(_sharedPreferences) ?? '';
+      var resp = await service.deleteEnfermedad(enfermedad.id!, authToken);
       if (resp.error)
-        await alertDiag(context, "Error", resp.errorMessage);
+        await alertDiag(context, "Error", resp.errorMessage ?? '');
       else if (selected.contains(enfermedad)) selected.remove(enfermedad);
-      if (res.data.contains(enfermedad)) res.data.remove(enfermedad);
+      if (res?.data?.contains(enfermedad) == true) res?.data?.remove(enfermedad);
     } else {
-      //Remove from local
       if (selected.contains(enfermedad)) selected.remove(enfermedad);
-      if (res.data.contains(enfermedad)) res.data.remove(enfermedad);
+      if (res?.data?.contains(enfermedad) == true) res?.data?.remove(enfermedad);
     }
   }
 
@@ -150,13 +148,13 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
 
     _showLoading();
     List<Enfermedad> resp = await localS.readEnfermedades();
-    if (resp.length == 0)
+    if (resp.isEmpty)
       await alertDiag(context, "Error",
           "No hay datos para cargar, favor de conectarse a internet");
 
     setState(() {
       res = APIResponse<List<Enfermedad>>(
-          data: resp, error: false, errorMessage: null);
+          data: resp, error: false, errorMessage: '');
     });
     _hideLoading();
   }
@@ -165,8 +163,8 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
     final alreadySaved = selected.contains(enfermedad);
     return ListTile(
       title: Text(
-        enfermedad.nombre,
-        style: TextStyle(fontSize: 18.0),
+        enfermedad.nombre ?? '',
+        style: const TextStyle(fontSize: 18.0),
       ),
       trailing: Icon(
         alreadySaved ? Icons.check_box : Icons.check_box_outline_blank,

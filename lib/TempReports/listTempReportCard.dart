@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ListTempReportCard extends StatefulWidget {
   final ReportData data;
-  ListTempReportCard(this.data, {Key key}) : super(key: key);
+  const ListTempReportCard(this.data, {super.key});
 
   @override
   _ListTempReportCardState createState() => _ListTempReportCardState(this.data);
@@ -17,79 +17,79 @@ class _ListTempReportCardState extends State<ListTempReportCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: new Card(
+        child: Card(
             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
       ListTile(
           leading: const Icon(Icons.archive),
           title: RichText(
               text: TextSpan(
                   text: 'Productor: ',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
-                      color: Color(Colors.black.value)),
+                      color: Colors.black),
                   children: <TextSpan>[
                 TextSpan(
-                  text: '${data.productor}',
-                  style: TextStyle(
+                  text: '${data.productor ?? ''}',
+                  style: const TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 18,
-                      color: Color(Colors.black.value)),
+                      color: Colors.black),
                 ),
               ])),
           subtitle: RichText(
             text: TextSpan(
               text: 'Predio: ',
-              style: TextStyle(
+              style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Color(Colors.black45.value)),
+                  color: Colors.black45),
               children: <TextSpan>[
                 TextSpan(
-                  text: '${data.predio}',
-                  style: TextStyle(
+                  text: '${data.predio ?? ''}',
+                  style: const TextStyle(
                       fontWeight: FontWeight.normal,
-                      color: Color(Colors.black.value)),
+                      color: Colors.black),
                 ),
-                TextSpan(
+                const TextSpan(
                   text: '\nUbicacion: ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Color(Colors.black45.value)),
+                      color: Colors.black45),
                 ),
                 TextSpan(
-                  text: '${data.ubicacion}',
-                  style: TextStyle(
+                  text: '${data.ubicacion ?? ''}',
+                  style: const TextStyle(
                       fontWeight: FontWeight.normal,
-                      color: Color(Colors.black.value)),
+                      color: Colors.black),
                 ),
-                TextSpan(
+                const TextSpan(
                   text: '\nLugar: ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Color(Colors.black45.value)),
+                      color: Colors.black45),
                 ),
                 TextSpan(
-                  text: '${data.lugar}',
-                  style: TextStyle(
+                  text: '${data.lugar ?? ''}',
+                  style: const TextStyle(
                       fontWeight: FontWeight.normal,
-                      color: Color(Colors.black.value)),
+                      color: Colors.black),
                 ),
-                TextSpan(
+                const TextSpan(
                   text: '\nObservaciones: ',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Color(Colors.black45.value)),
+                      color: Colors.black45),
                 ),
                 TextSpan(
-                  text: '${data.observaciones}\n',
-                  style: TextStyle(
+                  text: '${data.observaciones ?? ''}\n',
+                  style: const TextStyle(
                       fontWeight: FontWeight.normal,
-                      color: Color(Colors.black.value)),
+                      color: Colors.black),
                 ),
               ],
             ),
           )),
-      new Divider(
+      const Divider(
         height: 2.0,
       ),
     ])));

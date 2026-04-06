@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 class Register extends StatefulWidget {
-  Register({Key key}) : super(key: key);
+  const Register({super.key});
 
   @override
   _RegisterState createState() => _RegisterState();
@@ -19,20 +19,20 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   bool _isLoading = false;
   bool _obscureText = true;
-  APIResponse<dynamic> res;
-  TextEditingController _userNameController,
-      _emailController,
-      _passwordController,
-      _nombreController,
-      _aPaternoController,
-      _aMaternoController;
-  String _emailError,
-      _passwordError,
-      _userError,
-      _nombreError,
-      _aPaternoError,
-      _aMaternoError;
-  String _selectedPermission;
+  late APIResponse<dynamic> res;
+  late TextEditingController _userNameController;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  late TextEditingController _nombreController;
+  late TextEditingController _aPaternoController;
+  late TextEditingController _aMaternoController;
+  String? _emailError;
+  String? _passwordError;
+  String? _userError;
+  String? _nombreError;
+  String? _aPaternoError;
+  String? _aMaternoError;
+  String? _selectedPermission;
 
   UserService get userService => GetIt.I<UserService>();
 
@@ -49,46 +49,42 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
         appBar: AppBar(
-          title: Text('Registrar'),
-          actions: <Widget>[],
+          title: const Text('Registrar'),
+          actions: const <Widget>[],
         ),
         body: _isLoading ? LoadingScreen() : registerScreen());
   }
 
   Widget registerScreen() {
-    return new Container(
-      child: new ListView(
+    return Container(
+      child: ListView(
         padding:
             const EdgeInsets.only(top: 2, left: 16.0, right: 16.0, bottom: 30),
         children: <Widget>[
-          new InputField("Nombre", _nombreController, _nombreError,
+          InputField("Nombre", _nombreController, _nombreError,
+              TextInputType.text),
+          InputField("Apellido Paterno", _aPaternoController,
+              _aPaternoError, TextInputType.text),
+          InputField("Apellido Materno", _aMaternoController,
+              _aMaternoError, TextInputType.text),
+          InputField("Usuario", _userNameController, _userError,
+              TextInputType.text),
+          InputField("E-mail", _emailController, _emailError,
               TextInputType.emailAddress),
-          new InputField("Apellido Paterno", _aPaternoController,
-              _aPaternoError, TextInputType.emailAddress),
-          new InputField("Apellido Materno", _aMaternoController,
-              _aMaternoError, TextInputType.emailAddress),
-          new InputField("Usuario", _userNameController, _userError,
-              TextInputType.emailAddress),
-          new InputField("E-mail", _emailController, _emailError,
-              TextInputType.emailAddress),
-          new PasswordField(
+          PasswordField(
             passwordController: _passwordController,
             obscureText: _obscureText,
             passwordError: _passwordError,
             togglePassword: _togglePassword,
           ),
-          DropdownButton(
-            hint: _selectedPermission == null
-                ? Text('Selecciona una opcion')
-                : Text(
-                    _selectedPermission,
-                    style: TextStyle(color: Colors.black),
-                  ),
+          DropdownButton<String>(
+            value: _selectedPermission,
+            hint: const Text('Selecciona una opcion'),
             isExpanded: true,
             iconSize: 30.0,
-            style: TextStyle(color: Colors.blue),
+            style: const TextStyle(color: Colors.blue),
             items: [UserType.admin, UserType.user].map(
               (val) {
                 return DropdownMenuItem<String>(
@@ -106,14 +102,14 @@ class _RegisterState extends State<Register> {
             },
           ),
           FloatingActionButton.extended(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             backgroundColor: Theme.of(context).primaryColor,
             onPressed: () async {
               if (_isValid()) {
                 await saveData();
               }
             },
-            label: Text("Registrar"),
+            label: const Text("Registrar"),
           )
         ],
       ),
@@ -200,8 +196,8 @@ class _RegisterState extends State<Register> {
           "El usuario fue registrado, espere la aprobacion del administrador para poder ingresar");
     }
 
-    if (res.error) {
-      alertDiag(context, "Error", res.errorMessage);
+    if (res.error == true) {
+      alertDiag(context, "Error", res.errorMessage ?? 'Error');
     }
 
     _hideLoading();

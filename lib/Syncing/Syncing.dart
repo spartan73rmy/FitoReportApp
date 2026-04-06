@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 class SyncingData extends StatefulWidget {
-  SyncingData({Key key}) : super(key: key);
+  const SyncingData({super.key});
 
   @override
   _SyncingDataState createState() => _SyncingDataState();
@@ -20,7 +20,7 @@ class _SyncingDataState extends State<SyncingData> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sincronizar Datos"),
+        title: const Text("Sincronizar Datos"),
       ),
       body: _isLoading
           ? LoadingScreen()
@@ -28,7 +28,7 @@ class _SyncingDataState extends State<SyncingData> {
               Center(
                 child: synced
                     ? IconButton(
-                        icon: Icon(Icons.cloud_download),
+                        icon: const Icon(Icons.cloud_download),
                         iconSize: 64,
                         onPressed: () async {
                           _showLoading();
@@ -47,7 +47,7 @@ class _SyncingDataState extends State<SyncingData> {
                         },
                       )
                     : IconButton(
-                        icon: Icon(Icons.sync),
+                        icon: const Icon(Icons.sync),
                         iconSize: 64,
                         onPressed: () async {
                           _showLoading();
@@ -68,8 +68,8 @@ class _SyncingDataState extends State<SyncingData> {
               ),
               Center(
                 child: synced
-                    ? Text("Datos Syncronizados")
-                    : Text("Se necesita syncronizacion"),
+                    ? const Text("Datos Syncronizados")
+                    : const Text("Se necesita syncronizacion"),
               )
             ]),
     );

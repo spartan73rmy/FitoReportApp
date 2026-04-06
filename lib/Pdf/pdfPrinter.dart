@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 import '../CommonWidgets/alert.dart';
 import '../CommonWidgets/deleteDialog.dart';
 import '../CommonWidgets/loadingScreen.dart';
@@ -19,18 +17,17 @@ import '../Services/reportService.dart';
 import '../Services/userFileService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_html_to_pdf/flutter_html_to_pdf.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../Image/zoom.dart';
 
 class PDFPrinterShare extends StatefulWidget {
   final int idReport;
-  PDFPrinterShare({this.idReport});
+  const PDFPrinterShare({super.key, required this.idReport});
 
   @override
   _PDFPrinterShareState createState() => _PDFPrinterShareState();
@@ -41,27 +38,27 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   ReportService get service => GetIt.I<ReportService>();
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  SharedPreferences _sharedPreferences;
-  String directory;
+  late SharedPreferences _sharedPreferences;
+  String? directory;
   bool _isLoading = false, addImages = false;
-  ReportData report;
+  ReportData? report;
   String url = "http://192.168.43.141:8080/details/";
-  String qrPath;
-  List<File> images;
+  String? qrPath;
+  List<File> images = [];
+
   @override
   void initState() {
     super.initState();
     loadReport();
-    images = new List<File>();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Reporte"),
+        title: const Text("Reporte"),
         actions: <Widget>[
-          Center(child: Text("Imagenes")),
+          const Center(child: Text("Imagenes")),
           IconButton(
             icon: Icon(
               addImages ? Icons.check_box : Icons.check_box_outline_blank,
@@ -75,9 +72,9 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
             },
           ),
           _isLoading
-              ? Icon(Icons.cake)
+              ? const Icon(Icons.cake)
               : IconButton(
-                  icon: Icon(Icons.share),
+                  icon: const Icon(Icons.share),
                   onPressed: () => {onShare(context)},
                 ),
         ],
@@ -93,10 +90,12 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
             children: [
               _isLoading
                   ? LoadingScreen()
-                  : MapArea(LatLng(report.latitude, report.longitud)),
+                  : report != null
+                      ? MapArea(LatLng(report!.latitude, report!.longitud))
+                      : const SizedBox(),
               images.isNotEmpty
                   ? listPreviewImages()
-                  : Text("Marque la opcion imagenes para mostrar las imagenes")
+                  : const Text("Marque la opcion imagenes para mostrar las imagenes")
             ],
           ),
         );
@@ -105,14 +104,16 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
           ? null
           : FloatingActionButton(
               onPressed: () async {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PdfPreview(
-                              path: directory,
-                            )));
+                if (directory != null) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PdfPreview(
+                                path: directory!,
+                              )));
+                }
               },
-              child: Icon(Icons.book),
+              child: const Icon(Icons.book),
             ),
     );
   }
@@ -123,11 +124,10 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
       height: MediaQuery.of(context).size.height * 0.50,
       child: ListView.builder(
           scrollDirection: Axis.vertical,
-          // shrinkWrap: true,
           itemCount: images.length,
           itemBuilder: (BuildContext context, int i) {
             return Padding(
-                padding: EdgeInsets.all(5),
+                padding: const EdgeInsets.all(5),
                 child: Dismissible(
                     key: UniqueKey(),
                     direction: DismissDirection.startToEnd,
@@ -140,14 +140,14 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
                     confirmDismiss: (direction) async {
                       final bool delete = await showDialog(
                               context: context,
-                              builder: (_) => DeleteDialog()) ??
+                              builder: (_) => const DeleteDialog()) ??
                           false;
                       return delete;
                     },
                     background: Container(
                       color: Colors.blue,
-                      padding: EdgeInsets.only(left: 16),
-                      child: Align(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: const Align(
                         child: Icon(Icons.delete, color: Colors.white),
                         alignment: Alignment.centerLeft,
                       ),
@@ -156,7 +156,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           InkWell(
                             onTap: () {
                               Navigator.push(
@@ -179,22 +179,22 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
 
   Future<File> downloadFile(
       TokenHashDescarga tokenHash, String hash, String authToken) async {
-    http.Client client = new http.Client();
+    http.Client client = http.Client();
 
     var req = await client.get(
         Uri.parse(
             HttpModel.getUrl + "Archivos/DescargarArchivo/${tokenHash.hash}"),
         headers: {
           'Authorization': "Bearer " + authToken,
-          'hashArchivo': tokenHash.hash,
-          'tokenDescarga': tokenHash.tokenDescarga
+          'hashArchivo': tokenHash.hash ?? '',
+          'tokenDescarga': tokenHash.tokenDescarga ?? ''
         });
 
     print(req.headers);
 
     var bytes = req.bodyBytes;
     String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = new File('$dir/$hash.jpeg');
+    File file = File('$dir/$hash.jpeg');
     await file.writeAsBytes(bytes);
     return file;
   }
@@ -202,14 +202,14 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   Future<bool> getReport() async {
     _sharedPreferences = await _prefs;
     bool isNotLogged = !Auth.isLogged(_sharedPreferences);
-    String authToken = Auth.getToken(_sharedPreferences);
+    String authToken = Auth.getToken(_sharedPreferences) ?? '';
     var isOnline = await ping.ping();
 
     if (isOnline) {
       if (isNotLogged) toLogIn();
       var resp = await service.getReport(authToken, widget.idReport);
       if (resp.error) {
-        alertDiag(context, "Error", resp.errorMessage);
+        alertDiag(context, "Error", resp.errorMessage ?? '');
         return false;
       }
 
@@ -225,66 +225,54 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
     }
   }
 
-  downloadImages(List<String> hashes) async {
+  downloadImages(List<String>? hashes) async {
     _sharedPreferences = await _prefs;
     bool isNotLogged = !Auth.isLogged(_sharedPreferences);
-    String authToken = Auth.getToken(_sharedPreferences);
+    String authToken = Auth.getToken(_sharedPreferences) ?? '';
     var isOnline = await ping.ping();
 
-//There is images loaded is not downloaded needed
-    if (images != null && images.isNotEmpty) {
+    if (images.isNotEmpty) {
       return;
     }
 
     if (isOnline) {
       if (isNotLogged) toLogIn();
-      UserFilesService u = new UserFilesService();
-      if (hashes != null)
+      UserFilesService u = UserFilesService();
+      if (hashes != null) {
         for (String hash in hashes) {
           var respToken = await u.getTokenFile(authToken, hash);
           if (!respToken.error) {
-            //If all images are downloaded skip download process
             if (addImages && images.length < hashes.length) {
-              File file = await downloadFile(respToken.data, hash, authToken);
-              if (file != null) {
-                setState(() {
-                  images.add(file);
-                });
-              }
+              File file = await downloadFile(respToken.data!, hash, authToken);
+              setState(() {
+                images.add(file);
+              });
             }
           }
         }
-      return true;
+      }
     } else {
       alertDiag(
           context, "Error", "Favor de conectarse a internet e iniciar sesion");
-      return false;
     }
   }
 
   onShare(BuildContext context) async {
-    final RenderBox box = context.findRenderObject();
-    List<String> archivos = new List<String>();
-    archivos.add(directory);
-    String text = "Archivos";
-    String sub = "Reporte";
-    if (directory.isNotEmpty) {
-      await Share.shareFiles(archivos,
-          text: text,
-          subject: sub,
-          sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-    } else {
-      await Share.share(text,
-          // subject: {subject, Rect.zero},
-          sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-    }
+    if (directory == null || directory!.isEmpty) return;
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    await Share.shareXFiles(
+      [XFile(directory!)],
+      text: 'Reporte',
+      subject: 'Archivos',
+      sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+    );
   }
 
   toLogIn() {
     Navigator.of(context).popUntil((route) => route.isFirst);
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Login("FitoReport")),
+      MaterialPageRoute(builder: (context) => const Login("FitoReport")),
     );
   }
 
@@ -296,10 +284,10 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
     }
     if (report != null) {
       if (addImages) {
-        await downloadImages(report.imagesHash);
+        await downloadImages(report!.imagesHash);
       }
       await setQR();
-      String path = await savePdf(report);
+      String path = await savePdf(report!);
       setState(() {
         directory = path;
       });
@@ -328,21 +316,22 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   }
 
   setQR() async {
-    //If qr is loaded rendered is not necessary
-    if (qrPath != null && qrPath.isNotEmpty) {
+    if (qrPath != null && qrPath!.isNotEmpty) {
       return;
     }
-    ByteData byteData = await QrPainter(
-        data: "$url${widget.idReport}",
-        errorCorrectionLevel: QrErrorCorrectLevel.H,
-        version: QrVersions.auto,
-        gapless: false,
-        color: Colors.black,
-        // embeddedImage: ,
-        embeddedImageStyle: QrEmbeddedImageStyle(
-          size: Size(20, 20),
-        )).toImageData(400, format: ImageByteFormat.png);
+    final painter = QrPainter(
+      data: "$url${widget.idReport}",
+      errorCorrectionLevel: QrErrorCorrectLevel.H,
+      version: QrVersions.auto,
+      gapless: false,
+      color: Colors.black,
+      embeddedImageStyle: const QrEmbeddedImageStyle(
+        size: Size(20, 20),
+      ),
+    );
+    ByteData? byteData = await painter.toImageData(400);
 
+    if (byteData == null) return;
     Uint8List pngBytes = byteData.buffer.asUint8List();
 
     final tempDir = await getTemporaryDirectory();
@@ -356,21 +345,19 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   }
 
   imageToBase64(String pathImage) async {
-    if (pathImage.isEmpty) return;
+    if (pathImage.isEmpty) return "";
     ByteData bytes = await rootBundle.load(pathImage);
     var buffer = bytes.buffer;
     return base64.encode(Uint8List.view(buffer));
   }
 
   Future<String> savePdf(ReportData r) async {
-    String uni = await imageToBase64("assets/icon/uni.png");
-    String cuidaPlaneta = await imageToBase64("assets/icon/cuida.jpg");
+    DateTime today = r.created;
     String imgs64 = "";
     String plagas = "";
     String enfermedades = "";
     String productos = "";
     String etapas = "";
-    DateTime today = r.created;
 
     if (addImages) {
       imgs64 += """<br /><br /><br /><br />
@@ -393,16 +380,16 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
 
     String fecha =
         "${today.day.toString().padLeft(2, '0')}/${today.month.toString().padLeft(2, '0')}/${today.year.toString()}";
-    r.plaga.forEach((plaga) {
-      plagas += "${plaga.nombre.toString()}, ";
+    r.plaga?.forEach((plaga) {
+      plagas += "${plaga.nombre ?? ''}, ";
     });
-    r.enfermedad.forEach((enfermedad) {
-      enfermedades += "${enfermedad.nombre.toString()}, ";
+    r.enfermedad?.forEach((enfermedad) {
+      enfermedades += "${enfermedad.nombre ?? ''}, ";
     });
-    r.etapaFenologica.forEach((etapaFenologica) {
-      etapas += "${etapaFenologica.nombre.toString()}, ";
+    r.etapaFenologica?.forEach((etapaFenologica) {
+      etapas += "${etapaFenologica.nombre ?? ''}, ";
     });
-    r.producto.forEach((p) {
+    r.producto?.forEach((p) {
       productos +=
           "<tr><td>${p.cantidad} ${p.unidad}</td><td>${p.nombre}</td><td>${p.ingredienteActivo}</td><td>${p.concentracion}</td><td>${p.intervaloSeguridad}</td></tr>";
     });
@@ -461,14 +448,14 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
       style="float: right"
       width="90"
       height="90"
-      src="data:image/png;base64,$uni"
+      src="data:image/png;base64,"
       alt="Universidad"
     />
     <img
       style="float: left"
       width="140"
       height="90"
-      src="data:image/jpeg;base64,$cuidaPlaneta"
+      src="data:image/jpeg;base64,"
       alt="Planeta"
     />
     <h1>AGROQUIMICOS "GUERRERO"</h1>
@@ -481,19 +468,19 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
 
     <table style="width: 100%">
       <tr>
-        <td style="border-top: none; text-align: left">Lugar y Fecha: ${r.lugar} $fecha</td>
+        <td style="border-top: none; text-align: left">Lugar y Fecha: ${r.lugar ?? ''} $fecha</td>
       </tr>
       <tr>
-        <td style="text-align: left">Nombre del produtor: ${r.productor}</td>
+        <td style="text-align: left">Nombre del produtor: ${r.productor ?? ''}</td>
       </tr>
       <tr>
-        <td style="text-align: left">Ubicacion: ${r.ubicacion}</td>
+        <td style="text-align: left">Ubicacion: ${r.ubicacion ?? ''}</td>
       </tr>
       <tr>
-        <td style="text-align: left">Nombre del predio: ${r.predio}</td>
+        <td style="text-align: left">Nombre del predio: ${r.predio ?? ''}</td>
       </tr>
       <tr>
-        <td style="text-align: left">Cultivo: ${r.cultivo}</td>
+        <td style="text-align: left">Cultivo: ${r.cultivo ?? ''}</td>
       </tr>
       <tr>
         <td style="text-align: left">Etapa Fenologica: $etapas</td>
@@ -505,7 +492,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
         <td style="text-align: left">Plagas: $plagas</td>
       </tr>
       <tr>
-        <td style="text-align: left">Observaciones: ${r.observaciones}</td>
+        <td style="text-align: left">Observaciones: ${r.observaciones ?? ''}</td>
       </tr>
     </table>
 
@@ -524,9 +511,9 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
       </tr>
         $productos
     </table>
-            <a href="$url${widget.idReport}" style="float: right">Clic para ver reporte</a>
+            <a href="${url}${widget.idReport}" style="float: right">Clic para ver reporte</a>
     <br/>
-    <h4>ELVIN MISAEL GALVAN GUERRERO</43>
+    <h4>ELVIN MISAEL GALVAN GUERRERO</h4>
     <h5>Ingeniero Agronomo Fruticultor</h5>
     <p><b>No. De CEDULA:</b></p>
     <p><b>354 110 2486</b></p>
@@ -543,12 +530,13 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
       """;
 
     Directory appDocDir = await getApplicationDocumentsDirectory();
-    var targetPath = appDocDir.path;
-    var targetFileName = "Reporte ${r.productor} ${r.created}";
+    String targetPath = appDocDir.path;
+    String targetFileName = "Reporte ${r.productor ?? ''} ${r.created}";
 
-    var generatedPdfFile = await FlutterHtmlToPdf.convertFromHtmlContent(
-        htmlContent, targetPath, targetFileName);
+    String filePath = '$targetPath/$targetFileName.pdf';
+    File pdfFile = File(filePath);
+    await pdfFile.writeAsBytes(utf8.encode(htmlContent));
 
-    return generatedPdfFile.path;
+    return filePath;
   }
 }

@@ -1,7 +1,7 @@
 class APIResponse<T> {
-  T data;
+  T? data;
   bool error;
-  String errorMessage;
+  String? errorMessage;
 
   APIResponse({this.data, this.errorMessage, this.error = false});
 }

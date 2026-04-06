@@ -1,6 +1,6 @@
 class EtapaFenologica {
-  int id;
-  String nombre;
+  int? id;
+  String? nombre;
   EtapaFenologica({this.id, this.nombre});
 
   factory EtapaFenologica.fromJSON(Map<String, dynamic> item) {
@@ -16,12 +16,12 @@ class EtapaFenologica {
 }
 
 class EtapaFList {
-  List<EtapaFenologica> etapas;
+  List<EtapaFenologica>? etapas;
 
   EtapaFList({this.etapas});
 
   List<EtapaFenologica> toList(EtapaFList lista) {
-    return lista.etapas;
+    return lista.etapas ?? [];
   }
 
   Map<String, dynamic> toJson() {
@@ -33,7 +33,7 @@ class EtapaFList {
   factory EtapaFList.fromJSON(Map<String, dynamic> parsedJson) {
     var list = parsedJson['etapaFenologica'] as List;
     List<EtapaFenologica> etapas =
-        list.map((i) => EtapaFenologica.fromJSON(i)).toList();
+        list.map((i) => EtapaFenologica.fromJSON(i as Map<String, dynamic>)).toList();
     return EtapaFList(etapas: etapas);
   }
 }
