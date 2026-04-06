@@ -1,18 +1,35 @@
-class Producto {
+import 'package:hive/hive.dart';
+
+part 'producto.g.dart';
+
+@HiveType(typeId: 3)
+class Producto extends HiveObject {
+  @HiveField(0)
   double cantidad = 0.0;
+
+  @HiveField(1)
   String unidad = "";
+
+  @HiveField(2)
   String nombre = '';
+
+  @HiveField(3)
   String ingredienteActivo = '';
+
+  @HiveField(4)
   String concentracion = '';
+
+  @HiveField(5)
   String intervaloSeguridad = '';
 
-  Producto(
-      {this.nombre = '',
-      this.cantidad = 0.0,
-      this.unidad = '',
-      this.ingredienteActivo = '',
-      this.concentracion = '',
-      this.intervaloSeguridad = ''});
+  Producto({
+    this.nombre = '',
+    this.cantidad = 0.0,
+    this.unidad = '',
+    this.ingredienteActivo = '',
+    this.concentracion = '',
+    this.intervaloSeguridad = '',
+  });
 
   factory Producto.fromJSON(Map<String, dynamic> item) {
     return Producto(
@@ -24,27 +41,15 @@ class Producto {
       intervaloSeguridad: item["intervaloSeguridad"] ?? '',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
-      "cantidad": this.cantidad,
-      "nombre": this.nombre,
-      "ingredienteActivo": this.ingredienteActivo,
-      "concentracion": this.concentracion,
-      "intervaloSeguridad": this.intervaloSeguridad,
-      "unidad": this.unidad
+      "cantidad": cantidad,
+      "nombre": nombre,
+      "ingredienteActivo": ingredienteActivo,
+      "concentracion": concentracion,
+      "intervaloSeguridad": intervaloSeguridad,
+      "unidad": unidad
     };
-  }
-}
-
-class ProductoList {
-  List<Producto>? productos;
-
-  ProductoList({this.productos});
-
-  factory ProductoList.fromJSON(Map<String, dynamic> parsedJson) {
-    var list = parsedJson['productos'] as List;
-    List<Producto> productos = list.map((i) => Producto.fromJSON(i as Map<String, dynamic>)).toList();
-
-    return ProductoList(productos: productos);
   }
 }

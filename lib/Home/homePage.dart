@@ -8,7 +8,6 @@ import '../Models/reportData.dart';
 import '../Services/auth.dart';
 import '../Services/conectionService.dart';
 import '../Services/reportService.dart';
-import '../Storage/files.dart';
 import '../Storage/localStorage.dart';
 import '../TempReports/listTempReport.dart';
 import 'package:flutter/material.dart';
@@ -55,13 +54,17 @@ class _HomePageState extends State<HomePage> {
         title: Text(this.widget.title),
         actions: <Widget>[
           IconButton(
-            icon: isOnline ? const Icon(Icons.cloud_upload) : const Icon(Icons.cloud_off),
+            icon: isOnline
+                ? const Icon(Icons.cloud_upload)
+                : const Icon(Icons.cloud_off),
             onPressed: () async {
               await uploadData();
             },
           ),
           IconButton(
-            icon: isOnline ? const Icon(Icons.search) : const Icon(Icons.search_off),
+            icon: isOnline
+                ? const Icon(Icons.search)
+                : const Icon(Icons.search_off),
             onPressed: () async {
               bool search = await getDataSearch();
               if (search && context.mounted)
@@ -134,7 +137,7 @@ class _HomePageState extends State<HomePage> {
       showLoading();
       String authToken = Auth.getToken(_sharedPreferences) ?? '';
 
-      LocalStorage localStorage = LocalStorage(FileName().report);
+      LocalStorage localStorage = GetIt.I<LocalStorage>();
       List<ReportData> tempReports = await localStorage.readReports();
 
       if (tempReports.isNotEmpty) {

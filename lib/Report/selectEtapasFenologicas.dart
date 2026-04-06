@@ -1,7 +1,7 @@
 import '../CommonWidgets/alert.dart';
 import '../CommonWidgets/deleteDialog.dart';
-import '../CommonWidgets/etapaDialog.dart';
 import '../CommonWidgets/loadingScreen.dart';
+import '../CommonWidgets/etapaDialog.dart';
 import '../Models/APIResponse.dart';
 import '../Models/etapaFenologica.dart';
 import '../Models/reportData.dart';
@@ -10,7 +10,6 @@ import '../Services/auth.dart';
 import '../Services/conectionService.dart';
 import '../Services/etapaFService.dart';
 import '../Services/syncData.dart';
-import '../Storage/files.dart';
 import '../Storage/localStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -109,7 +108,8 @@ class _SelectEtapaState extends State<SelectEtapa> {
                   onDismissed: (direction) {},
                   confirmDismiss: (direction) async {
                     final result = await showDialog(
-                            context: context, builder: (_) => const DeleteDialog()) ??
+                            context: context,
+                            builder: (_) => const DeleteDialog()) ??
                         false;
                     if (result) {
                       await deleteEtapaFenologica(res!.data![i]);
@@ -159,15 +159,17 @@ class _SelectEtapaState extends State<SelectEtapa> {
         await alertDiag(context, "Error", resp.errorMessage ?? '');
       else if (selected.contains(etapaFenologica))
         selected.remove(etapaFenologica);
-      if (res?.data?.contains(etapaFenologica) == true) res?.data?.remove(etapaFenologica);
+      if (res?.data?.contains(etapaFenologica) == true)
+        res?.data?.remove(etapaFenologica);
     } else {
       if (selected.contains(etapaFenologica)) selected.remove(etapaFenologica);
-      if (res?.data?.contains(etapaFenologica) == true) res?.data?.remove(etapaFenologica);
+      if (res?.data?.contains(etapaFenologica) == true)
+        res?.data?.remove(etapaFenologica);
     }
   }
 
   fetchEtapaFenologicas() async {
-    LocalStorage localS = LocalStorage(FileName().etapa);
+    LocalStorage localS = GetIt.I<LocalStorage>();
     _showLoading();
     List<EtapaFenologica> resp = await localS.readEtapas();
     needFetch = false;
@@ -221,7 +223,7 @@ class _SelectEtapaState extends State<SelectEtapa> {
 
   void saveData() {
     setState(() {
-      data.etapaFenologica = selected;
+      data.etapaFenologicaJson = selected.map((e) => e.toJson()).toList();
     });
   }
 }

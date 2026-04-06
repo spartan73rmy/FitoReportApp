@@ -42,7 +42,7 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
   String? directory;
   bool _isLoading = false, addImages = false;
   ReportData? report;
-  String url = "http://192.168.43.141:8080/details/";
+  String url = "https://192.168.1.33:5002/details/";
   String? qrPath;
   List<File> images = [];
 
@@ -95,7 +95,8 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
                       : const SizedBox(),
               images.isNotEmpty
                   ? listPreviewImages()
-                  : const Text("Marque la opcion imagenes para mostrar las imagenes")
+                  : const Text(
+                      "Marque la opcion imagenes para mostrar las imagenes")
             ],
           ),
         );
@@ -380,18 +381,18 @@ class _PDFPrinterShareState extends State<PDFPrinterShare> {
 
     String fecha =
         "${today.day.toString().padLeft(2, '0')}/${today.month.toString().padLeft(2, '0')}/${today.year.toString()}";
-    r.plaga?.forEach((plaga) {
-      plagas += "${plaga.nombre ?? ''}, ";
+    r.plagaJson.forEach((plaga) {
+      plagas += "${plaga['nombre'] ?? ''}, ";
     });
-    r.enfermedad?.forEach((enfermedad) {
-      enfermedades += "${enfermedad.nombre ?? ''}, ";
+    r.enfermedadJson.forEach((enfermedad) {
+      enfermedades += "${enfermedad['nombre'] ?? ''}, ";
     });
-    r.etapaFenologica?.forEach((etapaFenologica) {
-      etapas += "${etapaFenologica.nombre ?? ''}, ";
+    r.etapaFenologicaJson.forEach((etapaFenologica) {
+      etapas += "${etapaFenologica['nombre'] ?? ''}, ";
     });
-    r.producto?.forEach((p) {
+    r.productoJson.forEach((p) {
       productos +=
-          "<tr><td>${p.cantidad} ${p.unidad}</td><td>${p.nombre}</td><td>${p.ingredienteActivo}</td><td>${p.concentracion}</td><td>${p.intervaloSeguridad}</td></tr>";
+          "<tr><td>${p['cantidad']} ${p['unidad']}</td><td>${p['nombre']}</td><td>${p['ingredienteActivo']}</td><td>${p['concentracion']}</td><td>${p['intervaloSeguridad']}</td></tr>";
     });
 
     var htmlContent = """

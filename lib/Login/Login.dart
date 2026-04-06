@@ -10,7 +10,7 @@ import '../User/register.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Services/userService.dart';
+import '../Services/UserService.dart';
 
 class Login extends StatefulWidget {
   final String title;
@@ -68,7 +68,8 @@ class _LoginState extends State<Login> {
           FloatingActionButton.extended(
               icon: const Icon(Icons.supervised_user_circle_sharp),
               backgroundColor: Theme.of(context).primaryColor,
-              label: const Text("Iniciar Sesion", style: TextStyle(fontSize: 20)),
+              label:
+                  const Text("Iniciar Sesion", style: TextStyle(fontSize: 20)),
               onPressed: () => {_authenticateUser(false)}),
           Padding(
               padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -92,7 +93,8 @@ class _LoginState extends State<Login> {
             child: const Row(
               children: <Widget>[
                 Center(
-                  child: Text("Registrar", style: TextStyle(color: Colors.white)),
+                  child:
+                      Text("Registrar", style: TextStyle(color: Colors.white)),
                 ),
                 Icon(
                   Icons.account_box,

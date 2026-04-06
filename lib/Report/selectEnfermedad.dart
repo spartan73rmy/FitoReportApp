@@ -9,7 +9,6 @@ import '../Report/reciepReport.dart';
 import '../Services/auth.dart';
 import '../Services/conectionService.dart';
 import '../Services/enfermedadService.dart';
-import '../Storage/files.dart';
 import '../Storage/localStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -88,7 +87,8 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
                   onDismissed: (direction) {},
                   confirmDismiss: (direction) async {
                     final result = await showDialog(
-                            context: context, builder: (_) => const DeleteDialog()) ??
+                            context: context,
+                            builder: (_) => const DeleteDialog()) ??
                         false;
                     if (result) {
                       await deleteEnfermedad(res!.data![i]);
@@ -136,15 +136,17 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
       if (resp.error)
         await alertDiag(context, "Error", resp.errorMessage ?? '');
       else if (selected.contains(enfermedad)) selected.remove(enfermedad);
-      if (res?.data?.contains(enfermedad) == true) res?.data?.remove(enfermedad);
+      if (res?.data?.contains(enfermedad) == true)
+        res?.data?.remove(enfermedad);
     } else {
       if (selected.contains(enfermedad)) selected.remove(enfermedad);
-      if (res?.data?.contains(enfermedad) == true) res?.data?.remove(enfermedad);
+      if (res?.data?.contains(enfermedad) == true)
+        res?.data?.remove(enfermedad);
     }
   }
 
   fetchEnfermedades() async {
-    LocalStorage localS = LocalStorage(FileName().enfermedad);
+    LocalStorage localS = GetIt.I<LocalStorage>();
 
     _showLoading();
     List<Enfermedad> resp = await localS.readEnfermedades();
@@ -196,7 +198,7 @@ class _SelectEnfermedadState extends State<SelectEnfermedad> {
 
   void saveData() {
     setState(() {
-      data.enfermedad = selected;
+      data.enfermedadJson = selected.map((e) => e.toJson()).toList();
     });
   }
 }

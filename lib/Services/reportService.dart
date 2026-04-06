@@ -6,8 +6,8 @@ import '../Models/dataSearch.dart';
 import '../Models/idReporte.dart';
 import '../Models/reportData.dart';
 import '../Services/userFileService.dart';
-import '../Storage/files.dart';
 import '../Storage/localStorage.dart';
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
 class ReportService extends HttpModel {
@@ -28,8 +28,8 @@ class ReportService extends HttpModel {
         .then((data) async {
       if (data.statusCode == 200) {
         List<int>? idsReporte = IdReporte.fromJson(jsonDecode(data.body)).id;
-        bool complete =
-            await uploadFiles(lista.reportes ?? [], idsReporte ?? [], authToken);
+        bool complete = await uploadFiles(
+            lista.reportes ?? [], idsReporte ?? [], authToken);
 
         return APIResponse<bool>(data: complete);
       }
@@ -48,13 +48,13 @@ class ReportService extends HttpModel {
   Future<bool> uploadFiles(
       List<ReportData?> lista, List<int> id, String authToken) async {
     UserFilesService userFilesService = UserFilesService();
-    LocalStorage localStorage = LocalStorage(FileName().images);
+    LocalStorage localStorage = GetIt.I<LocalStorage>();
     List<String> hashes = <String>[];
     int index = 0;
     bool allComplete = true;
     for (var i in lista) {
-      if (i == null) continue;
-      List<File> images = await localStorage.readImages(i.id ?? 0);
+      if (i == null || i.id == null) continue;
+      List<File> images = await localStorage.readImages(i.id!);
       int idReporte = id[index];
 
       if (images.isNotEmpty)
@@ -115,7 +115,8 @@ class ReportService extends HttpModel {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);
             final dataSearchList = DataSearchList.fromJSON(jsonData);
-            return APIResponse<List<DataSearch>>(data: dataSearchList.busqueda ?? []);
+            return APIResponse<List<DataSearch>>(
+                data: dataSearchList.busqueda ?? []);
           }
           return APIResponse<List<DataSearch>>(
               data: <DataSearch>[],

@@ -21,15 +21,21 @@ class EtapaFService extends HttpModel {
             return APIResponse<List<EtapaFenologica>>(data: etapasList.etapas ?? []);
           }
           return APIResponse<List<EtapaFenologica>>(
+            
               data: <EtapaFenologica>[],
               error: true,
               errorMessage: "La sesion ha caducado, reinicie sesion");
         })
-        .catchError((error) => APIResponse<List<EtapaFenologica>>(
+        .catchError((error) {
+          
+          final r= APIResponse<List<EtapaFenologica>>(
             data: <EtapaFenologica>[],
             error: true,
-            errorMessage:
-                "Ocurrio un error al conectar a internet " + error.toString()));
+            errorMessage: error.toString());
+          return r;
+                }
+                );
+
   }
 
   Future<APIResponse<bool>> deleteEtapa(int idEtapa, String authToken) {

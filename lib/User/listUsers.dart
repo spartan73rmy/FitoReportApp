@@ -1,7 +1,7 @@
 import '../CommonWidgets/loadingScreen.dart';
 import '../Models/user.dart';
 import '../Services/auth.dart';
-import '../Services/userService.dart';
+import '../Services/UserService.dart';
 import '../User/aproveUser.dart';
 import '../User/register.dart';
 import '../CommonWidgets/deleteDialog.dart';
@@ -89,12 +89,14 @@ class _ListUsersState extends State<ListUsers> {
                   onDismissed: (direction) {},
                   confirmDismiss: (direction) async {
                     final result = await showDialog(
-                            context: context, builder: (_) => const DeleteDialog()) ??
+                            context: context,
+                            builder: (_) => const DeleteDialog()) ??
                         false;
 
                     if (result) {
                       _sharedPreferences = await _prefs;
-                      String authToken = Auth.getToken(_sharedPreferences) ?? '';
+                      String authToken =
+                          Auth.getToken(_sharedPreferences) ?? '';
 
                       final deleteResult = await service.deleteUser(
                           res.data?[index].userName ?? '', authToken);
@@ -164,18 +166,19 @@ class _ListUsersState extends State<ListUsers> {
 
                       if (result == true) {
                         _sharedPreferences = await _prefs;
-                        String authToken = Auth.getToken(_sharedPreferences) ?? '';
+                        String authToken =
+                            Auth.getToken(_sharedPreferences) ?? '';
 
                         final aproveResult = await service.aproveUser(
                             res.data?[index].userName ?? '', authToken);
                         String message = '';
 
-                      if (aproveResult.data == true) {
-                        message = 'El usuario foi aprovado';
-                      } else {
-                        message =
-                            aproveResult.errorMessage ?? 'Ocurrio un error';
-                      }
+                        if (aproveResult.data == true) {
+                          message = 'El usuario foi aprovado';
+                        } else {
+                          message =
+                              aproveResult.errorMessage ?? 'Ocurrio un error';
+                        }
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(message),
                             duration: const Duration(milliseconds: 1000)));

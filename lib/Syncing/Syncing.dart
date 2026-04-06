@@ -20,7 +20,7 @@ class _SyncingDataState extends State<SyncingData> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Sincronizar Datos"),
+        title: const Text("Sincronizar"),
       ),
       body: _isLoading
           ? LoadingScreen()

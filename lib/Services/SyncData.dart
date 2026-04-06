@@ -1,13 +1,11 @@
-import '../Services/Auth.dart';
-import '../Services/plagaService.dart';
-import '../Services/etapaFService.dart';
-import '../Storage/files.dart';
+import 'Auth.dart';
+import 'plagaService.dart';
+import 'etapaFService.dart';
+import 'enfermedadService.dart';
+import 'conectionService.dart';
 import '../Storage/localStorage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'enfermedadService.dart';
-import 'conectionService.dart';
 
 class SyncData {
   Ping get ping => GetIt.I<Ping>();
@@ -31,7 +29,7 @@ class SyncData {
   }
 
   Future<bool> fetchEnfermedades(String authToken, bool isOnline) async {
-    LocalStorage localS = LocalStorage(FileName().enfermedad);
+    LocalStorage localS = GetIt.I<LocalStorage>();
     EnfermedadService enfermedadService = EnfermedadService();
     if (isOnline) {
       var resp = await enfermedadService.getListEnfermedad(authToken);
@@ -42,7 +40,7 @@ class SyncData {
   }
 
   Future<bool> fetchPlagas(String authToken, bool isOnline) async {
-    LocalStorage localS = LocalStorage(FileName().plaga);
+    LocalStorage localS = GetIt.I<LocalStorage>();
     PlagaService plagaService = PlagaService();
     if (isOnline) {
       var resp = await plagaService.getListPlaga(authToken);
@@ -53,7 +51,7 @@ class SyncData {
   }
 
   Future<bool> fetchEtapa(String authToken, bool isOnline) async {
-    LocalStorage localS = LocalStorage(FileName().etapa);
+    LocalStorage localS = GetIt.I<LocalStorage>();
     EtapaFService etapaService = EtapaFService();
     if (isOnline) {
       var resp = await etapaService.getListEtapas(authToken);

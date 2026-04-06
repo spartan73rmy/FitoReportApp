@@ -2,10 +2,10 @@ import '../CommonWidgets/alertInput.dart';
 import '../Home/homePage.dart';
 import '../Models/reportData.dart';
 import '../Models/producto.dart';
-import '../Storage/files.dart';
 import '../Storage/localStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get_it/get_it.dart';
 import '../CommonWidgets/productDialog.dart';
 import 'reciepReportBody.dart';
 
@@ -99,15 +99,15 @@ class _ReciepReportState extends State<ReciepReport> {
       if (permission != LocationPermission.always &&
           permission != LocationPermission.whileInUse) {
         permission = await Geolocator.requestPermission();
-        final Position position =
-            await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+        final Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best);
         setState(() {
           data.latitude = position.latitude;
           data.longitud = position.longitude;
         });
       } else {
-        final Position position =
-            await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+        final Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best);
         setState(() {
           data.latitude = position.latitude;
           data.longitud = position.longitude;
@@ -118,12 +118,12 @@ class _ReciepReportState extends State<ReciepReport> {
 
   Future<void> saveData() async {
     setState(() {
-      data.producto = products;
+      data.productoJson = products.map((p) => p.toJson()).toList();
     });
   }
 
   Future<void> saveToLocal() async {
-    LocalStorage localS = LocalStorage(FileName().report);
-    localS.addReport(this.data);
+    LocalStorage localS = GetIt.I<LocalStorage>();
+    await localS.addReport(this.data);
   }
 }

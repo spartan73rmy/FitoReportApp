@@ -1,6 +1,6 @@
 name: fitoreport_app
 description: Application create fitosanitary reports.
-publish_to: "none" # Remove this line if you wish to publish to pub.dev
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
@@ -23,16 +23,19 @@ dependencies:
   latlong2: ^0.9.1
   image_picker: ^1.1.2
   shared_preferences: ^2.5.3
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   font_awesome_flutter: ^10.8.0
   pdf: ^3.11.1
   printing: ^5.14.2
   cupertino_icons: ^1.0.8
 dev_dependencies:
   flutter_launcher_icons: "^0.14.3"
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.8
   flutter_test:
     sdk: flutter
 
-# flutter pub run flutter_launcher_icons:main
 flutter_icons:
   image_path: "assets/icon/iconC.jpg"
   adaptive_icon_foreground: "assets/icon/iconC.jpg"

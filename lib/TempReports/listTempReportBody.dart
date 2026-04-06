@@ -1,10 +1,10 @@
 import '../CommonWidgets/deleteDialog.dart';
 import '../CommonWidgets/loadingScreen.dart';
 import '../Models/reportData.dart';
-import '../Storage/files.dart';
 import '../Storage/localStorage.dart';
 import '../TempReports/listTempReportCard.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class ListTempReportBody extends StatefulWidget {
   const ListTempReportBody({super.key});
@@ -30,12 +30,12 @@ class _ListTempReportBodyState extends State<ListTempReportBody> {
   }
 
   Future<List<ReportData>> getData() async {
-    LocalStorage localStorage = LocalStorage(FileName().report);
+    LocalStorage localStorage = GetIt.I<LocalStorage>();
     return await localStorage.readReports();
   }
 
   Future<List<ReportData>> deleteReport(int index) async {
-    LocalStorage localStorage = LocalStorage(FileName().report);
+    LocalStorage localStorage = GetIt.I<LocalStorage>();
     return await localStorage.deleteReport(index);
   }
 

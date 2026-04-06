@@ -5,7 +5,7 @@ import '../CommonWidgets/passField.dart';
 import '../Models/APIResponse.dart';
 import '../Models/user.dart';
 import '../Models/userType.dart';
-import '../Services/userService.dart';
+import '../Services/UserService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -63,14 +63,14 @@ class _RegisterState extends State<Register> {
         padding:
             const EdgeInsets.only(top: 2, left: 16.0, right: 16.0, bottom: 30),
         children: <Widget>[
-          InputField("Nombre", _nombreController, _nombreError,
+          InputField(
+              "Nombre", _nombreController, _nombreError, TextInputType.text),
+          InputField("Apellido Paterno", _aPaternoController, _aPaternoError,
               TextInputType.text),
-          InputField("Apellido Paterno", _aPaternoController,
-              _aPaternoError, TextInputType.text),
-          InputField("Apellido Materno", _aMaternoController,
-              _aMaternoError, TextInputType.text),
-          InputField("Usuario", _userNameController, _userError,
+          InputField("Apellido Materno", _aMaternoController, _aMaternoError,
               TextInputType.text),
+          InputField(
+              "Usuario", _userNameController, _userError, TextInputType.text),
           InputField("E-mail", _emailController, _emailError,
               TextInputType.emailAddress),
           PasswordField(

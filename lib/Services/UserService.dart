@@ -21,7 +21,7 @@ class UserService extends HttpModel {
             'Content-Type': 'application/json',
           },
         )
-        .timeout(const Duration(seconds: 15))
+        .timeout(const Duration(seconds: 5))
         .then((data) {
           if (data.statusCode == 200) {
             final jsonData = json.decode(data.body);

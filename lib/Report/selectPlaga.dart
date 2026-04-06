@@ -9,7 +9,6 @@ import '../Report/selectEnfermedad.dart';
 import '../Services/auth.dart';
 import '../Services/conectionService.dart';
 import '../Services/plagaService.dart';
-import '../Storage/files.dart';
 import '../Storage/localStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -53,7 +52,8 @@ class _SelectPlagaState extends State<SelectPlaga> {
             child: const Row(
               children: <Widget>[
                 Center(
-                  child: Text("Siguiente", style: TextStyle(color: Colors.white)),
+                  child:
+                      Text("Siguiente", style: TextStyle(color: Colors.white)),
                 ),
                 Icon(
                   Icons.navigate_next,
@@ -146,7 +146,7 @@ class _SelectPlagaState extends State<SelectPlaga> {
   }
 
   fetchPlaga() async {
-    LocalStorage localS = LocalStorage(FileName().plaga);
+    LocalStorage localS = GetIt.I<LocalStorage>();
 
     _showLoading();
     List<Plaga> resp = await localS.readPlagas();
@@ -187,7 +187,7 @@ class _SelectPlagaState extends State<SelectPlaga> {
 
   void saveData() {
     setState(() {
-      data.plaga = selected;
+      data.plagaJson = selected.map((e) => e.toJson()).toList();
     });
   }
 
